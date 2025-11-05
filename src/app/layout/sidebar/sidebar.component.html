@@ -1,0 +1,68 @@
+<aside class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-sm h-full">
+  <nav class="p-4">
+    <ul class="space-y-1">
+      <ng-container *ngFor="let item of nav(); trackBy: trackById">
+        <!-- Simple leaf item (route or external) -->
+        <li *ngIf="!item.children?.length">
+          <a
+            *ngIf="item.route; else externalLink"
+            [routerLink]="item.route"
+            routerLinkActive="bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 border-primary-600"
+            [routerLinkActiveOptions]="{ exact: item.exact ?? true }"
+            class="group flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          >
+            <!-- Icon (Material Symbols) -->
+            <!-- <span class="material-symbols-outlined w-4 h-4 mr-3 flex-shrink-0 leading-none">
+              {{ item.icon || 'circle' }}
+            </span> -->
+
+            <span class="font-medium">{{ item.labelKey | t }}</span>
+
+            <span *ngIf="item.badge as b"
+                  class="ml-auto inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
+                  [ngClass]="badgeClass(b.variant)">
+              {{ b.text || (b.i18nKey ? (b.i18nKey | t) : '') }}
+            </span>
+          </a>
+
+          <ng-template #externalLink>
+            <a
+              [href]="item.externalUrl"
+              rel="noopener noreferrer"
+              target="_blank"
+              class="group flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <span class="material-symbols-outlined w-4 h-4 mr-3 flex-shrink-0 leading-none">
+                {{ item.icon || 'link' }}
+              </span>
+              <span class="font-medium">{{ item.labelKey | t }}</span>
+              <span class="material-symbols-outlined ml-2 opacity-60 text-base leading-none">open_in_new</span>
+            </a>
+          </ng-template>
+        </li>
+
+        <!-- Nested group (if you add children later) -->
+        <li *ngIf="item.children?.length">
+          <div class="px-4 py-2 text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            {{ item.labelKey | t }}
+          </div>
+          <ul class="ml-1 space-y-1">
+            <li *ngFor="let child of item.children; trackBy: trackById">
+              <a
+                [routerLink]="child.route"
+                routerLinkActive="bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 border-r-2 border-primary-600"
+                [routerLinkActiveOptions]="{ exact: child.exact ?? true }"
+                class="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              >
+                <span class="material-symbols-outlined w-4 h-4 mr-3 flex-shrink-0 leading-none">
+                  {{ child.icon || 'circle' }}
+                </span>
+                <span class="font-medium">{{ child.labelKey | t }}</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ng-container>
+    </ul>
+  </nav>
+</aside>
