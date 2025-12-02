@@ -8,7 +8,7 @@ import { RefreshTokenService } from './refresh-token.service';
 import { StorageService } from '../storage/storage.service';
 import { CacheType } from '../../enums/cache-type.enum';
 import { STORAGE_KEYS } from '../../constants/storage-keys.constants';
-import { API_ENDPOINTS } from '../../constants/api.constants';
+import { ENDPOINTS } from '@data/http/endpoints';
 import { environment } from '../../../../environments/environment';
 import {
   ILoginRequest,
@@ -109,7 +109,7 @@ export class AuthService {
   login(credentials: ILoginRequest): Observable<IAuthResponse> {
     this.updateAuthState({ isLoading: true, error: null });
 
-    const url = `${environment.apiUrl}${API_ENDPOINTS.AUTH.LOGIN}`;
+    const url = `${environment.apiUrl}${ENDPOINTS.AUTH.LOGIN}`;
 
     return this.http.post<IApiResponse<IAuthResponse>>(url, credentials).pipe(
       map((response) => response.data),
@@ -145,7 +145,7 @@ export class AuthService {
   register(userData: IRegisterRequest): Observable<IAuthResponse> {
     this.updateAuthState({ isLoading: true, error: null });
 
-    const url = `${environment.apiUrl}${API_ENDPOINTS.AUTH.REGISTER}`;
+    const url = `${environment.apiUrl}${ENDPOINTS.AUTH.REGISTER}`;
 
     return this.http.post<IApiResponse<IAuthResponse>>(url, userData).pipe(
       map((response) => response.data),
@@ -215,7 +215,7 @@ export class AuthService {
   logout(): Observable<void> {
     this.updateAuthState({ isLoading: true });
 
-    const url = `${environment.apiUrl}${API_ENDPOINTS.AUTH.LOGOUT}`;
+    const url = `${environment.apiUrl}${ENDPOINTS.AUTH.LOGOUT}`;
 
     return this.http.post<void>(url, {}).pipe(
       tap(() => {

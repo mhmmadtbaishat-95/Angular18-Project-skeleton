@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError, timer } from 'rxjs';
 import { catchError, switchMap, tap, retry } from 'rxjs/operators';
 import { TokenService } from './token.service';
-import { API_ENDPOINTS } from '../../constants/api.constants';
+import { ENDPOINTS } from '@data/http/endpoints';
 import { environment } from '../../../../environments/environment';
 import { IRefreshTokenResponse } from '../../models/auth.model';
 import { TIMEOUTS } from '../../constants/app.constants';
@@ -41,7 +41,7 @@ export class RefreshTokenService {
 
     this.isRefreshingSubject.next(true);
 
-    const url = `${environment.apiUrl}${API_ENDPOINTS.AUTH.REFRESH}`;
+    const url = `${environment.apiUrl}${ENDPOINTS.AUTH.REFRESH}`;
 
     return this.http
       .post<IRefreshTokenResponse>(url, { refreshToken })

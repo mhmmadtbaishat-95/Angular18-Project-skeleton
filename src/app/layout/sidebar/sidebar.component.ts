@@ -5,7 +5,7 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { buildNav, RAW_NAV_ITEMS, FEATURE_FLAGS } from './app-navigation.config';
 import { INavItem } from './models/nav.types';
-import { TranslatePipe } from "../../shared/pipes/translate.pipe";
+import { TranslatePipe } from "@shared/pipes-directives/translate.pipe";
 // ...rest of your imports
 
 @Component({

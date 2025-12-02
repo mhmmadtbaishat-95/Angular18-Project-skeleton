@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { map } from 'rxjs/operators';
-import { LoadingSpinnerComponent } from './shared/components/loading-spinner/loading-spinner.component';
+import { LoadingSpinnerComponent } from './shared/ui/loading-spinner/loading-spinner.component';
 import { AppStateService } from './core/services/state/app-state.service';
 import { ThemeService } from './core/services/theme/theme.service';
 

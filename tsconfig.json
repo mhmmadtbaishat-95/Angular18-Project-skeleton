@@ -24,8 +24,11 @@
     "skipLibCheck": true,
     "paths": {
       "@core/*": ["src/app/core/*"],
+      "@config/*": ["src/app/config/*"],
       "@shared/*": ["src/app/shared/*"],
+      "@data/*": ["src/app/data-access/*"],
       "@features/*": ["src/app/features/*"],
+      "@layout/*": ["src/app/layout/*"],
       "@environments/*": ["src/environments/*"]
     }
   },

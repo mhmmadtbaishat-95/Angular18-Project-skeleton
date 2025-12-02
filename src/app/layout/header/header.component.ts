@@ -2,8 +2,8 @@ import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../core/services/theme/theme.service';
 import { AppStateService } from '../../core/services/state/app-state.service';
-import { LanguageSwitcherComponent } from '../../shared/components/language-switcher/language-switcher.component';
-import { TranslatePipe } from '../../shared/pipes/translate.pipe';
+import { LanguageSwitcherComponent } from '@shared/ui/language-switcher/language-switcher.component';
+import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 

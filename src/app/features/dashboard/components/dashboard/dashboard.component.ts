@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 /**
@@ -8,10 +8,14 @@ import { CommonModule } from '@angular/common';
   selector: 'app-dashboard',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="space-y-6">
-    <p>Hello World</p>
-    </div>
-  `
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent {}
+export class DashboardComponent implements OnInit {
+  items = signal<{ id: number; name: string }[]>([]);
+  vm = computed(() => ({ items: this.items() }));
+
+  ngOnInit() {
+    this.items.set([{ id: 1, name: 'Dashboard Item 1' }]);
+  }
+}
