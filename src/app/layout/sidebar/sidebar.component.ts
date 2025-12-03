@@ -7,6 +7,7 @@ import { buildNav, RAW_NAV_ITEMS, FEATURE_FLAGS } from './app-navigation.config'
 import { INavItem } from './models/nav.types';
 import { TranslatePipe } from "@shared/pipes-directives/translate.pipe";
 import { AppStateService } from '../../core/services/state/app-state.service';
+import { I18nService } from '../../core/services/i18n/i18n.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,11 +16,15 @@ import { AppStateService } from '../../core/services/state/app-state.service';
   templateUrl: './sidebar.component.html',
   styles: [`
     .modern-sidebar {
-      @apply h-full bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 relative;
+      @apply h-full bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 relative;
       width: 16rem; /* 256px */
       flex-shrink: 0;
       transition: width 0.2s ease-out;
       will-change: width;
+    }
+
+    :host-context(.rtl) .modern-sidebar {
+      @apply border-r-0 border-l border-l-gray-200 dark:border-l-slate-800;
     }
 
     .modern-sidebar.collapsed {
@@ -39,13 +44,17 @@ import { AppStateService } from '../../core/services/state/app-state.service';
     }
 
     .nav-link {
-      @apply flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900 transition-all;
+      @apply flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-all;
       white-space: nowrap;
       overflow: hidden;
 
       &:hover {
-        @apply text-gray-900 dark:text-white;
+        @apply text-gray-900 dark:text-slate-100;
       }
+    }
+
+    :host-context(.rtl) .nav-link {
+      flex-direction: row-reverse;
     }
 
     .modern-sidebar.collapsed .nav-link {
@@ -53,8 +62,7 @@ import { AppStateService } from '../../core/services/state/app-state.service';
     }
 
     .nav-link-active {
-      @apply bg-gradient-to-r from-[#8B1538] to-[#A01D45] text-white;
-      box-shadow: 0 4px 6px -1px rgba(139, 21, 56, 0.1);
+      @apply bg-gradient-to-r from-[#8B1538] to-[#A01D45] text-white dark:from-[#A01D45] dark:to-[#C1284C] shadow-lg;
 
       &:hover {
         @apply text-white;
@@ -63,6 +71,10 @@ import { AppStateService } from '../../core/services/state/app-state.service';
 
     .nav-icon {
       @apply w-5 h-5 flex-shrink-0;
+    }
+
+    :host-context(.rtl) .nav-icon {
+      transform: scaleX(-1);
     }
 
     .nav-text {
@@ -77,8 +89,14 @@ import { AppStateService } from '../../core/services/state/app-state.service';
     }
 
     .nav-badge {
-      @apply ml-auto inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold transition-opacity duration-300;
+      @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold transition-opacity duration-300;
       opacity: 1;
+      margin-left: auto;
+    }
+
+    :host-context(.rtl) .nav-badge {
+      margin-left: 0;
+      margin-right: auto;
     }
 
     .modern-sidebar.collapsed .nav-badge {
@@ -100,7 +118,7 @@ import { AppStateService } from '../../core/services/state/app-state.service';
     }
 
     .nav-group-title {
-      @apply px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 transition-opacity duration-300;
+      @apply px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400 transition-opacity duration-300;
       opacity: 1;
     }
 
@@ -112,7 +130,21 @@ import { AppStateService } from '../../core/services/state/app-state.service';
     }
 
     .nav-sublist {
-      @apply mt-1 space-y-1 ml-2 pl-4 border-l-2 border-gray-100 dark:border-gray-800;
+      @apply mt-1 space-y-1 ml-2 pl-4 border-l-2 border-gray-100 dark:border-slate-800;
+    }
+
+    :host-context(.rtl) .nav-sublist {
+      margin-left: 0;
+      margin-right: 2px;
+      padding-left: 0;
+      padding-right: 1rem;
+      border-left: none;
+      border-right: 2px solid;
+      border-right-color: rgb(243 244 246);
+    }
+
+    :host-context(.rtl) .dark .nav-sublist {
+      border-right-color: rgb(30 41 59);
     }
 
     .nav-sublink {
@@ -120,18 +152,29 @@ import { AppStateService } from '../../core/services/state/app-state.service';
     }
 
     .sidebar-toggle-btn {
-      @apply absolute -right-3 top-4 w-6 h-6 rounded-full bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-md hover:shadow-lg transition-all z-10 cursor-pointer;
-      @apply hover:bg-gray-50 dark:hover:bg-gray-700;
+      @apply absolute top-4 w-6 h-6 rounded-full bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 flex items-center justify-center shadow-md hover:shadow-lg transition-all z-10 cursor-pointer;
+      @apply hover:bg-gray-50 dark:hover:bg-slate-700 -right-3;
     }
-    
+
+    :host-context(.rtl) .sidebar-toggle-btn {
+      right: auto;
+      left: -0.75rem;
+    }
+
     .modern-sidebar.collapsed .sidebar-toggle-btn {
       @apply -right-3;
+    }
+
+    :host-context(.rtl) .modern-sidebar.collapsed .sidebar-toggle-btn {
+      right: auto;
+      left: -0.75rem;
     }
   `]
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   private translateService = inject(TranslateService);
   private appState = inject(AppStateService);
+  private i18nService = inject(I18nService);
   private subscription: Subscription | null = null;
   private stateSubscription: Subscription | null = null;
 
@@ -141,6 +184,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   nav = computed<INavItem[]>(() => buildNav(RAW_NAV_ITEMS, FEATURE_FLAGS, this.userRoles()));
 
   isCollapsed = signal(false);
+  isRTL = computed(() => this.i18nService.isRTL());
 
   forceUpdate = 0;
 

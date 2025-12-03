@@ -43,11 +43,8 @@ export class I18nService {
   }
 
   constructor() {
-    // Initialize after Angular is ready
-    // Use setTimeout to ensure all services are initialized
-    setTimeout(() => {
-      this.initializeLanguage();
-    }, 200);
+    // Initialize language immediately (language direction was already set in index.html)
+    this.initializeLanguage();
   }
 
   /**
@@ -65,8 +62,8 @@ export class I18nService {
       const browserLanguage = this.detectBrowserLanguage();
       const initialLanguage = savedLanguage || browserLanguage || this.defaultLanguage;
 
-      // Apply direction immediately
-      this.applyLanguageDirection(initialLanguage);
+      // Direction already applied in index.html, but ensure state is updated
+      this.appState.setLanguage(initialLanguage);
 
       // Try to set language with TranslateService (non-blocking)
       const translateService = this.getTranslateService();
@@ -76,7 +73,8 @@ export class I18nService {
             translateService.setDefaultLang('en');
             translateService.addLangs(['en', 'ar']);
           }
-          
+
+          // Set the initial language without re-applying direction (already done in index.html)
           if (translateService.currentLang !== initialLanguage) {
             translateService.use(initialLanguage).subscribe({
               next: () => {
@@ -97,7 +95,7 @@ export class I18nService {
       }
     } catch (error) {
       console.error('Error initializing i18n:', error);
-      // Fallback to default language
+      // Fallback to apply default language direction
       this.applyLanguageDirection(this.defaultLanguage);
     }
   }

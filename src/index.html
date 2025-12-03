@@ -1,11 +1,47 @@
 <!doctype html>
-<html lang="en" class="h-full">
+<html class="h-full">
 <head>
   <meta charset="utf-8">
   <title>Ministry of Commerce and Industry - Qatar</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- Initialize language/direction BEFORE any content renders -->
+  <script>
+    (function() {
+      try {
+        // Get saved language from localStorage before Angular loads
+        const storedLanguage = localStorage.getItem('language');
+        // Language is stored as JSON string (e.g., '"ar"' or '"en"'), so parse it
+        let savedLanguage = 'en'; // Default to English
+        if (storedLanguage) {
+          try {
+            savedLanguage = JSON.parse(storedLanguage);
+          } catch {
+            savedLanguage = storedLanguage; // Fallback if not valid JSON
+          }
+        }
+
+        const htmlElement = document.documentElement;
+
+        if (savedLanguage === 'ar') {
+          // Apply Arabic RTL direction immediately
+          htmlElement.setAttribute('dir', 'rtl');
+          htmlElement.setAttribute('lang', 'ar');
+          htmlElement.classList.add('rtl');
+          htmlElement.classList.remove('ltr');
+        } else {
+          // Apply English LTR direction
+          htmlElement.setAttribute('dir', 'ltr');
+          htmlElement.setAttribute('lang', 'en');
+          htmlElement.classList.add('ltr');
+          htmlElement.classList.remove('rtl');
+        }
+      } catch (e) {
+        // Silently fail if localStorage is not available
+      }
+    })();
+  </script>
 </head>
 <body class="h-full">
   <app-root></app-root>

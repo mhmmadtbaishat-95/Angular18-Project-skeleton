@@ -232,7 +232,14 @@
     "startApplicationNow": "Start your application now",
     "processingTime": "Processing Time",
     "startApplication": "Start Application",
-    "needHelpContact": "Need help? Contact us at"
+    "needHelpContact": "Need help? Contact us at",
+    "documents": {
+      "validQid": "Valid QID (Qatar ID)",
+      "tradeLicense": "Trade License (if applicable)",
+      "companyRegistration": "Company Registration Certificate",
+      "memorandumOfAssociation": "Memorandum of Association",
+      "powerOfAttorney": "Power of Attorney (if applicable)"
+    }
   },
   "requestList": {
     "title": "My Service Requests",

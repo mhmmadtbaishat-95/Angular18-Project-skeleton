@@ -1,6 +1,6 @@
 {
   "common": {
-    "welcome": "مرحباً",
+    "welco me": "مرحباً",
     "loading": "جاري التحميل...",
     "save": "حفظ",
     "cancel": "إلغاء",
@@ -232,7 +232,14 @@
     "startApplicationNow": "ابدأ طلبك الآن",
     "processingTime": "وقت المعالجة",
     "startApplication": "بدء الطلب",
-    "needHelpContact": "تحتاج مساعدة؟ اتصل بنا على"
+    "needHelpContact": "تحتاج مساعدة؟ اتصل بنا على",
+    "documents": {
+      "validQid": "بطاقة هوية قطرية صالحة (QID)",
+      "tradeLicense": "الترخيص التجاري (إن وجد)",
+      "companyRegistration": "شهادة تسجيل الشركة",
+      "memorandumOfAssociation": "عقد تأسيس الشركة",
+      "powerOfAttorney": "توكيل قانوني (إن وجد)"
+    }
   },
   "requestList": {
     "title": "طلبات الخدمات الخاصة بي",

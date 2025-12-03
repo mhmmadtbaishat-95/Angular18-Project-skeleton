@@ -79,16 +79,32 @@ export class ServiceDetailComponent implements OnInit {
   }
 
   /**
-   * Gets required documents
+   * Gets required documents translation keys
    */
   getRequiredDocuments(): string[] {
-    return this.service?.requiredDocuments || [
+    // Map of document keys to translation keys
+    const documentMap: Record<string, string> = {
+      'Valid QID (Qatar ID)': 'serviceDetail.documents.validQid',
+      'Trade License (if applicable)': 'serviceDetail.documents.tradeLicense',
+      'Company Registration Certificate': 'serviceDetail.documents.companyRegistration',
+      'Memorandum of Association': 'serviceDetail.documents.memorandumOfAssociation',
+      'Power of Attorney (if applicable)': 'serviceDetail.documents.powerOfAttorney'
+    };
+
+    const defaultDocs = [
       'Valid QID (Qatar ID)',
       'Trade License (if applicable)',
       'Company Registration Certificate',
       'Memorandum of Association',
       'Power of Attorney (if applicable)'
     ];
+
+    // If service has documents, return translation keys, otherwise return default keys
+    if (this.service?.requiredDocuments?.length) {
+      return this.service.requiredDocuments.map(doc => documentMap[doc] || doc);
+    }
+
+    return defaultDocs.map(doc => documentMap[doc] || doc);
   }
 
   /**

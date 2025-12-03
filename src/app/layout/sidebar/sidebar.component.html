@@ -1,11 +1,11 @@
-<aside class="modern-sidebar" [class.collapsed]="isCollapsed()">
-  <button 
-    (click)="toggleSidebar()" 
+<aside class="modern-sidebar" [class.collapsed]="isCollapsed()" [class.rtl]="isRTL()">
+  <button
+    (click)="toggleSidebar()"
     class="sidebar-toggle-btn"
     [attr.aria-label]="isCollapsed() ? ('header.toggleSidebar' | t) : ('header.toggleSidebar' | t)"
     [title]="isCollapsed() ? ('header.toggleSidebar' | t) : ('header.toggleSidebar' | t)"
   >
-    <svg class="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg class="w-4 h-4 text-gray-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" [style.transform]="isRTL() ? 'scaleX(-1)' : 'none'">
       <path *ngIf="!isCollapsed()" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
       <path *ngIf="isCollapsed()" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
     </svg>

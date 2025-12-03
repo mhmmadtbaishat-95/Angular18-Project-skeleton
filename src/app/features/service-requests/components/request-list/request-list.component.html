@@ -4,12 +4,12 @@
     <div class="header-container">
       <div class="header-left">
         <div class="breadcrumb-nav">
-          <a routerLink="/dashboard" class="breadcrumb-link">Home</a>
+          <a routerLink="/dashboard" class="breadcrumb-link">{{ 'pages.home' | t }}</a>
           <span class="breadcrumb-separator">/</span>
-          <span class="breadcrumb-current">My Requests</span>
+          <span class="breadcrumb-current">{{ 'navigation.myRequests' | t }}</span>
         </div>
-        <h1 class="header-title">My Service Requests</h1>
-        <p class="header-subtitle">Track and manage your service applications</p>
+        <h1 class="header-title">{{ 'requestList.title' | t }}</h1>
+        <p class="header-subtitle">{{ 'requestList.subtitle' | t }}</p>
       </div>
       <div class="header-right">
         <div class="header-stats-inline">
