@@ -1,0 +1,36 @@
+<div class="step-wizard" [class.vertical]="orientation === 'vertical'">
+  <div class="step-wizard-container">
+    <!-- Progress Bar -->
+    <div class="progress-bar-container">
+      <div class="progress-bar" [style.width.%]="progressPercentage"></div>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps-container">
+      <div
+        *ngFor="let step of steps; let i = index"
+        class="step-item"
+        [class]="getStepStatusClass(step, i)"
+        [class.clickable]="!step.disabled"
+        (click)="onStepClick(i, step)"
+      >
+        <!-- Step Circle -->
+        <div class="step-circle">
+          <span *ngIf="step.completed" class="step-icon check-icon">✓</span>
+          <span *ngIf="!step.completed && step.active" class="step-icon active-icon">{{ i + 1 }}</span>
+          <span *ngIf="!step.completed && !step.active" class="step-icon">{{ i + 1 }}</span>
+        </div>
+
+        <!-- Step Content -->
+        <div class="step-content">
+          <h3 class="step-title">{{ step.title }}</h3>
+          <p *ngIf="step.description" class="step-description">{{ step.description }}</p>
+        </div>
+
+        <!-- Connector Line -->
+        <div *ngIf="i < steps.length - 1" class="step-connector" [class.completed]="step.completed"></div>
+      </div>
+    </div>
+  </div>
+</div>
+

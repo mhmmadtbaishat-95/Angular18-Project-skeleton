@@ -1,0 +1,361 @@
+{
+  "id": "complex-service",
+  "title": "Premium Service Request - MOSI Qatar",
+  "description": "Complete this form to request our premium services. Payment is required upon submission.",
+  "includePayment": true,
+  "paymentAmount": 5000,
+  "paymentCurrency": "QAR",
+  "sections": [
+    {
+      "title": "Company Information",
+      "description": "Please provide your company details",
+      "fields": [
+        {
+          "key": "companyName",
+          "type": "text",
+          "label": "Company Name",
+          "required": true,
+          "validations": [
+            {
+              "type": "minLength",
+              "value": 2,
+              "message": "Company name must be at least 2 characters"
+            }
+          ]
+        },
+        {
+          "key": "companyType",
+          "type": "select",
+          "label": "Company Type",
+          "required": true,
+          "options": [
+            {
+              "label": "Select company type",
+              "value": ""
+            },
+            {
+              "label": "LLC",
+              "value": "llc"
+            },
+            {
+              "label": "WLL",
+              "value": "wll"
+            },
+            {
+              "label": "QSC",
+              "value": "qsc"
+            },
+            {
+              "label": "Branch",
+              "value": "branch"
+            },
+            {
+              "label": "Other",
+              "value": "other"
+            }
+          ]
+        },
+        {
+          "key": "tradeLicense",
+          "type": "text",
+          "label": "Trade License Number",
+          "required": true,
+          "placeholder": "Enter trade license number"
+        },
+        {
+          "key": "companyAddress",
+          "type": "textarea",
+          "label": "Company Address",
+          "required": true,
+          "rows": 3,
+          "placeholder": "Enter full company address"
+        }
+      ]
+    },
+    {
+      "title": "Contact Person Details",
+      "fields": [
+        {
+          "key": "contactName",
+          "type": "text",
+          "label": "Contact Person Name",
+          "required": true
+        },
+        {
+          "key": "contactEmail",
+          "type": "email",
+          "label": "Contact Email",
+          "required": true,
+          "validations": [
+            {
+              "type": "email",
+              "message": "Please enter a valid email address"
+            }
+          ]
+        },
+        {
+          "key": "contactPhone",
+          "type": "tel",
+          "label": "Contact Phone",
+          "required": true,
+          "placeholder": "+974 XXXX XXXX"
+        },
+        {
+          "key": "contactPosition",
+          "type": "text",
+          "label": "Position/Title",
+          "required": true
+        }
+      ]
+    },
+    {
+      "title": "Service Requirements",
+      "fields": [
+        {
+          "key": "serviceCategory",
+          "type": "select",
+          "label": "Service Category",
+          "required": true,
+          "options": [
+            {
+              "label": "Select category",
+              "value": ""
+            },
+            {
+              "label": "Enterprise Software Development",
+              "value": "enterprise-software"
+            },
+            {
+              "label": "Cloud Migration & Infrastructure",
+              "value": "cloud-migration"
+            },
+            {
+              "label": "Digital Transformation",
+              "value": "digital-transformation"
+            },
+            {
+              "label": "Custom Application Development",
+              "value": "custom-app"
+            },
+            {
+              "label": "System Integration",
+              "value": "system-integration"
+            },
+            {
+              "label": "Consulting & Advisory",
+              "value": "consulting"
+            }
+          ]
+        },
+        {
+          "key": "projectDuration",
+          "type": "select",
+          "label": "Expected Project Duration",
+          "required": true,
+          "options": [
+            {
+              "label": "Select duration",
+              "value": ""
+            },
+            {
+              "label": "1-3 months",
+              "value": "1-3"
+            },
+            {
+              "label": "3-6 months",
+              "value": "3-6"
+            },
+            {
+              "label": "6-12 months",
+              "value": "6-12"
+            },
+            {
+              "label": "12+ months",
+              "value": "12+"
+            }
+          ]
+        },
+        {
+          "key": "budgetRange",
+          "type": "select",
+          "label": "Budget Range (QAR)",
+          "required": true,
+          "options": [
+            {
+              "label": "Select budget range",
+              "value": ""
+            },
+            {
+              "label": "50,000 - 100,000",
+              "value": "50k-100k"
+            },
+            {
+              "label": "100,000 - 250,000",
+              "value": "100k-250k"
+            },
+            {
+              "label": "250,000 - 500,000",
+              "value": "250k-500k"
+            },
+            {
+              "label": "500,000 - 1,000,000",
+              "value": "500k-1m"
+            },
+            {
+              "label": "1,000,000+",
+              "value": "1m+"
+            }
+          ]
+        },
+        {
+          "key": "projectDescription",
+          "type": "textarea",
+          "label": "Project Description",
+          "required": true,
+          "rows": 6,
+          "placeholder": "Please provide a detailed description of your project requirements, objectives, and expected outcomes..."
+        },
+        {
+          "key": "technicalRequirements",
+          "type": "textarea",
+          "label": "Technical Requirements",
+          "rows": 4,
+          "placeholder": "List any specific technical requirements, integrations, or constraints..."
+        },
+        {
+          "key": "urgency",
+          "type": "radio",
+          "label": "Project Urgency",
+          "required": true,
+          "options": [
+            {
+              "label": "Low - Flexible timeline",
+              "value": "low"
+            },
+            {
+              "label": "Medium - Standard timeline",
+              "value": "medium"
+            },
+            {
+              "label": "High - Urgent, needs immediate attention",
+              "value": "high"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Additional Information",
+      "fields": [
+        {
+          "key": "hasExistingSystem",
+          "type": "checkbox",
+          "label": "We have existing systems that need integration",
+          "defaultValue": false
+        },
+        {
+          "key": "preferredStartDate",
+          "type": "date",
+          "label": "Preferred Start Date",
+          "required": true
+        },
+        {
+          "key": "supportRequired",
+          "type": "checkbox",
+          "label": "We require ongoing support and maintenance",
+          "defaultValue": false
+        },
+        {
+          "key": "additionalDocuments",
+          "type": "file",
+          "label": "Additional Documents",
+          "accept": ".pdf,.doc,.docx,.xls,.xlsx",
+          "multiple": true,
+          "helpText": "Upload any relevant documents (PDF, Word, Excel)"
+        },
+        {
+          "key": "specialRequirements",
+          "type": "textarea",
+          "label": "Special Requirements or Notes",
+          "rows": 3,
+          "placeholder": "Any additional information or special requirements..."
+        }
+      ]
+    },
+    {
+      "title": "Payment Information",
+      "description": "Secure payment processing. All transactions are encrypted.",
+      "fields": [
+        {
+          "key": "cardholderName",
+          "type": "text",
+          "label": "Cardholder Name",
+          "required": true,
+          "placeholder": "Name as it appears on card"
+        },
+        {
+          "key": "cardNumber",
+          "type": "card-number",
+          "label": "Card Number",
+          "required": true,
+          "placeholder": "1234 5678 9012 3456",
+          "validations": [
+            {
+              "type": "required",
+              "message": "Card number is required"
+            }
+          ]
+        },
+        {
+          "key": "cardExpiry",
+          "type": "card-expiry",
+          "label": "Expiry Date",
+          "required": true,
+          "placeholder": "MM/YY",
+          "validations": [
+            {
+              "type": "required",
+              "message": "Expiry date is required"
+            }
+          ]
+        },
+        {
+          "key": "cardCVV",
+          "type": "card-cvv",
+          "label": "CVV",
+          "required": true,
+          "placeholder": "123",
+          "validations": [
+            {
+              "type": "required",
+              "message": "CVV is required"
+            },
+            {
+              "type": "minLength",
+              "value": 3,
+              "message": "CVV must be 3-4 digits"
+            }
+          ]
+        },
+        {
+          "key": "billingAddress",
+          "type": "textarea",
+          "label": "Billing Address",
+          "required": true,
+          "rows": 3,
+          "placeholder": "Enter billing address"
+        },
+        {
+          "key": "agreeToTerms",
+          "type": "checkbox",
+          "label": "I agree to the terms and conditions and privacy policy",
+          "required": true,
+          "defaultValue": false
+        }
+      ]
+    }
+  ],
+  "submitLabel": "Submit & Pay",
+  "cancelLabel": "Cancel"
+}
+

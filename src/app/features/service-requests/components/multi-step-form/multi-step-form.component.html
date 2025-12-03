@@ -1,0 +1,136 @@
+<div class="multi-step-form-container" *ngIf="formDefinition">
+  <!-- Header with MOCI Branding -->
+  <div class="form-header">
+    <div class="header-content">
+      <div class="moci-logo-section">
+        <div class="moci-logo">
+          <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="30" r="28" fill="#8B1538"/>
+            <path d="M30 15L35 25H40L33 30L38 40L30 35L22 40L27 30L20 25H25L30 15Z" fill="white"/>
+          </svg>
+        </div>
+        <div class="moci-branding">
+          <h1 class="moci-title">{{ 'form.ministryTitle' | t }}</h1>
+          <p class="moci-subtitle">{{ 'form.stateOfQatar' | t }}</p>
+        </div>
+      </div>
+      <div class="form-title-section">
+        <h2 class="form-title">{{ formDefinition.title }}</h2>
+        <p *ngIf="formDefinition.description" class="form-description">{{ formDefinition.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step Wizard -->
+  <div class="step-wizard-wrapper">
+    <app-step-wizard
+      [steps]="steps"
+      [currentStepIndex]="currentStepIndex"
+      (stepClick)="goToStep($event)"
+    ></app-step-wizard>
+  </div>
+
+  <!-- Form Content -->
+  <div class="form-content-wrapper" *ngIf="form && stepDefinitions.length > 0">
+    <div class="form-content">
+      <!-- All Steps - Rendered at once, only active step visible -->
+      <div class="step-form-container">
+        <form [formGroup]="form" class="step-form">
+          <ng-container *ngFor="let step of stepDefinitions; let stepIndex = index; trackBy: trackByStep">
+            <div 
+              class="step-form-section" 
+              [class.active]="stepIndex === currentStepIndex"
+              [class.hidden]="stepIndex !== currentStepIndex"
+            >
+              <div class="step-header">
+                <h3 class="step-title">{{ step.title }}</h3>
+                <p *ngIf="step.description" class="step-description">{{ step.description }}</p>
+              </div>
+
+              <ng-container *ngFor="let section of step.sections; trackBy: trackBySection">
+                <div class="form-section">
+                  <div *ngIf="section.title" class="section-header">
+                    <h4 class="section-title">{{ section.title }}</h4>
+                    <p *ngIf="section.description" class="section-description">{{ section.description }}</p>
+                  </div>
+
+                  <div class="fields-grid">
+                    <ng-container *ngFor="let field of section.fields; trackBy: trackByField">
+                      <app-field-renderer
+                        [field]="field"
+                        [form]="form"
+                      ></app-field-renderer>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </form>
+      </div>
+
+      <!-- Payment Summary Sidebar - Always visible when payment is included -->
+      <div *ngIf="formDefinition.includePayment" class="payment-sidebar">
+        <app-payment-summary
+          [amount]="formDefinition.paymentAmount || 0"
+          [currency]="formDefinition.paymentCurrency || 'QAR'"
+          [serviceFee]="(formDefinition.paymentAmount || 0) * 0.05"
+          [tax]="(formDefinition.paymentAmount || 0) * 0.05"
+        ></app-payment-summary>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="form-navigation">
+    <div class="nav-buttons">
+      <button
+        type="button"
+        (click)="onCancel()"
+        class="btn btn-secondary"
+      >
+        <span>{{ 'form.cancel' | t }}</span>
+      </button>
+
+      <div class="nav-actions">
+        <button
+          *ngIf="canGoBack()"
+          type="button"
+          (click)="previousStep()"
+          class="btn btn-outline"
+        >
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          </svg>
+          <span>{{ 'form.previous' | t }}</span>
+        </button>
+
+        <button
+          *ngIf="canProceedNext()"
+          type="button"
+          (click)="nextStep()"
+          class="btn btn-primary"
+        >
+          <span>{{ 'form.next' | t }}</span>
+          <svg class="w-5 h-5 ml-2 btn-arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+
+        <button
+          *ngIf="isLastStep()"
+          type="button"
+          (click)="onSubmit()"
+          [disabled]="form.invalid"
+          class="btn btn-primary btn-submit"
+        >
+          <span>{{ formDefinition.submitLabel || ('form.submit' | t) }}</span>
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,25 +1,34 @@
-<aside class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-sm h-full">
-  <nav class="p-4">
-    <ul class="space-y-1">
+<aside class="modern-sidebar" [class.collapsed]="isCollapsed()">
+  <button 
+    (click)="toggleSidebar()" 
+    class="sidebar-toggle-btn"
+    [attr.aria-label]="isCollapsed() ? ('header.toggleSidebar' | t) : ('header.toggleSidebar' | t)"
+    [title]="isCollapsed() ? ('header.toggleSidebar' | t) : ('header.toggleSidebar' | t)"
+  >
+    <svg class="w-4 h-4 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path *ngIf="!isCollapsed()" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+      <path *ngIf="isCollapsed()" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"/>
+    </svg>
+  </button>
+  <nav class="sidebar-nav">
+    <ul class="nav-list">
       <ng-container *ngFor="let item of nav(); trackBy: trackById">
         <!-- Simple leaf item (route or external) -->
-        <li *ngIf="!item.children?.length">
+        <li *ngIf="!item.children?.length" class="nav-item">
           <a
             *ngIf="item.route; else externalLink"
             [routerLink]="item.route"
-            routerLinkActive="bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 border-primary-600"
+            routerLinkActive="nav-link-active"
             [routerLinkActiveOptions]="{ exact: item.exact ?? true }"
-            class="group flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            class="nav-link"
           >
-            <!-- Icon (Material Symbols) -->
-            <!-- <span class="material-symbols-outlined w-4 h-4 mr-3 flex-shrink-0 leading-none">
-              {{ item.icon || 'circle' }}
-            </span> -->
-
-            <span class="font-medium">{{ item.labelKey | t }}</span>
+            <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path *ngIf="item.icon === 'home'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span class="nav-text">{{ item.labelKey | t }}</span>
 
             <span *ngIf="item.badge as b"
-                  class="ml-auto inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium"
+                  class="nav-badge"
                   [ngClass]="badgeClass(b.variant)">
               {{ b.text || (b.i18nKey ? (b.i18nKey | t) : '') }}
             </span>
@@ -30,34 +39,35 @@
               [href]="item.externalUrl"
               rel="noopener noreferrer"
               target="_blank"
-              class="group flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              class="nav-link"
             >
-              <span class="material-symbols-outlined w-4 h-4 mr-3 flex-shrink-0 leading-none">
+              <span class="material-symbols-outlined nav-icon">
                 {{ item.icon || 'link' }}
               </span>
-              <span class="font-medium">{{ item.labelKey | t }}</span>
-              <span class="material-symbols-outlined ml-2 opacity-60 text-base leading-none">open_in_new</span>
+              <span class="nav-text">{{ item.labelKey | t }}</span>
+              <span class="material-symbols-outlined text-sm opacity-60">open_in_new</span>
             </a>
           </ng-template>
         </li>
 
-        <!-- Nested group (if you add children later) -->
-        <li *ngIf="item.children?.length">
-          <div class="px-4 py-2 text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+        <!-- Nested group -->
+        <li *ngIf="item.children?.length" class="nav-group">
+          <div class="nav-group-title">
             {{ item.labelKey | t }}
           </div>
-          <ul class="ml-1 space-y-1">
-            <li *ngFor="let child of item.children; trackBy: trackById">
+          <ul class="nav-sublist">
+            <li *ngFor="let child of item.children; trackBy: trackById" class="nav-item">
               <a
                 [routerLink]="child.route"
-                routerLinkActive="bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-300 border-r-2 border-primary-600"
+                routerLinkActive="nav-link-active"
                 [routerLinkActiveOptions]="{ exact: child.exact ?? true }"
-                class="flex items-center px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                class="nav-link nav-sublink"
               >
-                <span class="material-symbols-outlined w-4 h-4 mr-3 flex-shrink-0 leading-none">
-                  {{ child.icon || 'circle' }}
-                </span>
-                <span class="font-medium">{{ child.labelKey | t }}</span>
+                <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path *ngIf="child.icon === 'apps'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                  <path *ngIf="child.icon === 'list'" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+                <span class="nav-text">{{ child.labelKey | t }}</span>
               </a>
             </li>
           </ul>

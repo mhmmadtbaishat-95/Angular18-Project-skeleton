@@ -17,6 +17,7 @@
   border-radius: 50%;
   width: 40px;
   height: 40px;
+  /* Using CSS animation for continuous rotation - most performant for infinite animations */
   animation: spin 1s linear infinite;
 }
 
@@ -24,4 +25,6 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Note: Keeping simple CSS animation for infinite spinner rotation as it's the most performant approach */
 

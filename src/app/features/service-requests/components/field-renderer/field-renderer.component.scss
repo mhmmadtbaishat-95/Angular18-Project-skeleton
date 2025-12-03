@@ -1,0 +1,8 @@
+.field-wrapper {
+  @apply mb-4;
+}
+
+.field-wrapper.col-span-full {
+  grid-column: 1 / -1;
+}
+

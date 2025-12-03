@@ -1,0 +1,37 @@
+<div *ngIf="isLoading" class="skeleton-loader-container">
+  <div class="bento-services-grid">
+    <div
+      *ngFor="let item of skeletonArray"
+      class="bento-service-card skeleton-card"
+    >
+      <!-- Skeleton Header -->
+      <div class="service-header">
+        <div class="skeleton-icon-wrapper"></div>
+        <div class="skeleton-badge"></div>
+      </div>
+
+      <!-- Skeleton Content -->
+      <div class="service-content">
+        <div class="skeleton-title"></div>
+        <div class="skeleton-desc"></div>
+        <div class="skeleton-desc short"></div>
+      </div>
+
+      <!-- Skeleton Meta -->
+      <div class="service-meta">
+        <div class="skeleton-meta-item">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-text"></div>
+        </div>
+        <div class="skeleton-meta-item">
+          <div class="skeleton-icon"></div>
+          <div class="skeleton-text"></div>
+        </div>
+      </div>
+
+      <!-- Skeleton Button -->
+      <div class="skeleton-button"></div>
+    </div>
+  </div>
+</div>
+

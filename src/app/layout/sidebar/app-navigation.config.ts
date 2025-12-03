@@ -2,6 +2,7 @@ import { IFeatureConfig, INavItem } from "./models/nav.types";
 
 export const FEATURE_FLAGS: Record<string, IFeatureConfig> = {
   dashboard: { key: 'dashboard', enabled: true },
+  serviceRequests: { key: 'serviceRequests', enabled: true },
 };
 
 export const RAW_NAV_ITEMS: INavItem[] = [
@@ -12,6 +13,29 @@ export const RAW_NAV_ITEMS: INavItem[] = [
     route: '/dashboard',
     exact: true,
     featureFlag: 'dashboard',
+  },
+  {
+    id: 'service-requests',
+    labelKey: 'navigation.serviceRequests',
+    icon: 'description',
+    route: '/service-requests',
+    featureFlag: 'serviceRequests',
+    children: [
+      {
+        id: 'service-catalog',
+        labelKey: 'navigation.serviceCatalog',
+        icon: 'apps',
+        route: '/service-requests/catalog',
+        exact: true,
+      },
+      {
+        id: 'my-requests',
+        labelKey: 'navigation.myRequests',
+        icon: 'list',
+        route: '/service-requests/my-requests',
+        exact: true,
+      },
+    ],
   },
 ];
 

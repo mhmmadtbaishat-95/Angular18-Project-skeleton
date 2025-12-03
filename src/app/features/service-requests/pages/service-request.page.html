@@ -1,0 +1,17 @@
+<div class="service-request-page">
+  <!-- <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner> -->
+  
+  <div *ngIf="formDefinition && !isLoading" class="form-content">
+    <app-multi-step-form
+      [formDefinition]="formDefinition"
+      (formSubmit)="onFormSubmit($event)"
+      (formCancel)="onFormCancel()"
+    ></app-multi-step-form>
+  </div>
+  
+  <!-- Loading State -->
+  <div *ngIf="!formDefinition && !isLoading" class="text-center py-12">
+    <p class="text-gray-600 dark:text-gray-400">Form not found</p>
+  </div>
+</div>
+

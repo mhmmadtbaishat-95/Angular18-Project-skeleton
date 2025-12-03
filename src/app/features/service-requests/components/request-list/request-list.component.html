@@ -1,0 +1,127 @@
+<div class="request-list-page">
+  <!-- Compact Header -->
+  <div class="catalog-header-compact">
+    <div class="header-container">
+      <div class="header-left">
+        <div class="breadcrumb-nav">
+          <a routerLink="/dashboard" class="breadcrumb-link">Home</a>
+          <span class="breadcrumb-separator">/</span>
+          <span class="breadcrumb-current">My Requests</span>
+        </div>
+        <h1 class="header-title">My Service Requests</h1>
+        <p class="header-subtitle">Track and manage your service applications</p>
+      </div>
+      <div class="header-right">
+        <div class="header-stats-inline">
+          <div class="stat-inline">
+            <span class="stat-number">{{ requests.length }}</span>
+            <span class="stat-label">{{ 'requestList.total' | t }}</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-inline">
+            <span class="stat-number">{{ filteredRequests.length }}</span>
+            <span class="stat-label">{{ 'catalog.showing' | t }}</span>
+          </div>
+        </div>
+        <button routerLink="/service-requests/catalog" class="new-request-btn">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          {{ 'requestList.newRequest' | t }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compact Filters Bar -->
+  <div class="filters-bar">
+    <div class="filters-wrapper">
+      <div class="status-filters">
+        <button
+          *ngFor="let option of statusOptions"
+          [class.active]="selectedStatus === option.value"
+          (click)="filterByStatus(option.value)"
+          class="category-pill"
+        >
+          {{ option.labelKey | t }}
+          <span *ngIf="option.value !== 'all'" class="status-count">
+            ({{ getStatusCount(option.value) }})
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <app-skeleton-loader [isLoading]="isLoading" [count]="6" type="request"></app-skeleton-loader>
+
+    <div *ngIf="!isLoading && filteredRequests.length === 0" class="empty-state">
+      <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+      <h3 class="empty-title">{{ 'requestList.noRequestsFound' | t }}</h3>
+      <p class="empty-text">{{ 'requestList.noRequestsYet' | t }}</p>
+      <button routerLink="/service-requests/catalog" class="empty-action-btn">
+        {{ 'requestList.browseServices' | t }}
+      </button>
+    </div>
+
+    <div *ngIf="!isLoading && filteredRequests.length > 0" class="bento-services-grid">
+      <div
+        *ngFor="let request of filteredRequests"
+        class="bento-service-card"
+        (click)="viewRequest(request)"
+      >
+        <!-- Request Header with Icon -->
+        <div class="service-header">
+          <div class="service-icon-wrapper">
+            <svg class="service-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <div [class]="'service-code-badge status-badge ' + getStatusClass(request.status)">
+            {{ getStatusLabel(request.status) }}
+          </div>
+        </div>
+
+        <!-- Request Content -->
+        <div class="service-content">
+          <div class="request-number">{{ request.requestNumber }}</div>
+          <h3 class="service-title">{{ getServiceName(request.serviceName) }}</h3>
+        </div>
+
+        <!-- Request Meta -->
+        <div class="service-meta">
+          <div class="meta-item">
+            <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <span class="meta-text">{{ 'requestList.submitted' | t }}: {{ formatDate(request.submittedAt) }}</span>
+          </div>
+          <div *ngIf="request.updatedAt !== request.submittedAt" class="meta-item">
+            <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            <span class="meta-text">{{ 'requestList.updated' | t }}: {{ formatDate(request.updatedAt) }}</span>
+          </div>
+          <div *ngIf="request.completedAt" class="meta-item">
+            <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span class="meta-text">{{ 'requestList.completed' | t }}: {{ formatDate(request.completedAt) }}</span>
+          </div>
+        </div>
+
+        <!-- Request Action -->
+        <button class="service-btn">
+          {{ 'requestList.viewDetails' | t }}
+          <svg class="btn-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

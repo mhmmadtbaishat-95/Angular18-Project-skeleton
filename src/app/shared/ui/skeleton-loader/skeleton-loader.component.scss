@@ -1,0 +1,207 @@
+/* Skeleton Loader - Bento Grid Style */
+.skeleton-loader-container {
+  @apply w-full;
+}
+
+/* Skeleton Animation - Using simple opacity transition */
+
+/* Bento Grid for Skeletons */
+.bento-services-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  grid-auto-rows: minmax(200px, auto);
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Skeleton Card */
+.skeleton-card {
+  @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-3xl border border-gray-200/50 dark:border-gray-800/50 p-5;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 20px 40px -12px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+}
+
+/* Service Header Skeleton */
+.service-header {
+  @apply flex items-center justify-between mb-4;
+}
+
+.skeleton-icon-wrapper {
+  @apply w-12 h-12 rounded-2xl relative overflow-hidden;
+  background: rgba(229, 231, 235, 0.3);
+  @apply dark:bg-gray-700/30;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 100%
+    );
+    opacity: 0.6;
+    transition: opacity 0.3s ease-out;
+  }
+}
+
+.skeleton-badge {
+  @apply px-2.5 py-1 rounded-lg relative overflow-hidden;
+  width: 60px;
+  height: 24px;
+  background: rgba(229, 231, 235, 0.3);
+  @apply dark:bg-gray-700/30;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 100%
+    );
+    opacity: 0.6;
+    transition: opacity 0.3s ease-out;
+  }
+}
+
+/* Service Content Skeleton */
+.service-content {
+  @apply flex-1 mb-4 space-y-2;
+}
+
+.skeleton-title {
+  @apply h-5 rounded-lg relative overflow-hidden;
+  width: 80%;
+  background: rgba(229, 231, 235, 0.3);
+  @apply dark:bg-gray-700/30;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 100%
+    );
+    opacity: 0.6;
+    transition: opacity 0.3s ease-out;
+  }
+}
+
+.skeleton-desc {
+  @apply h-3 rounded-lg relative overflow-hidden;
+  width: 100%;
+  background: rgba(229, 231, 235, 0.3);
+  @apply dark:bg-gray-700/30;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 100%
+    );
+    opacity: 0.6;
+    transition: opacity 0.3s ease-out;
+  }
+  
+  &.short {
+    width: 70%;
+  }
+}
+
+/* Service Meta Skeleton */
+.service-meta {
+  @apply flex flex-col gap-2 mb-4 pb-4 border-b border-gray-100 dark:border-gray-800;
+}
+
+.skeleton-meta-item {
+  @apply flex items-center gap-2;
+}
+
+.skeleton-icon {
+  @apply w-4 h-4 rounded;
+  background: rgba(229, 231, 235, 0.3);
+  @apply dark:bg-gray-700/30;
+}
+
+.skeleton-text {
+  @apply h-3 rounded-lg relative overflow-hidden;
+  width: 120px;
+  background: rgba(229, 231, 235, 0.3);
+  @apply dark:bg-gray-700/30;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 100%
+    );
+    opacity: 0.6;
+    transition: opacity 0.3s ease-out;
+  }
+}
+
+/* Skeleton Button */
+.skeleton-button {
+  @apply w-full h-10 rounded-xl relative overflow-hidden;
+  background: rgba(229, 231, 235, 0.3);
+  @apply dark:bg-gray-700/30;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      transparent 100%
+    );
+    opacity: 0.6;
+    transition: opacity 0.3s ease-out;
+  }
+}
+
