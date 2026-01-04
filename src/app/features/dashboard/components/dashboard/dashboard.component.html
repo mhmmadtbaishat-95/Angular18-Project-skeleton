@@ -1,149 +1,142 @@
-<div class="modern-portal-dashboard">
-  <!-- Compact Hero Header -->
-  <div class="hero-compact">
-    <div class="hero-container">
-      <div class="hero-left">
-        <div class="greeting-section">
-          <h1 class="greeting-title">{{ 'dashboard.welcomeBack' | t }}</h1>
-          <p class="greeting-subtitle">{{ 'dashboard.portalName' | t }}</p>
-        </div>
+<div class="real-estate-dashboard" [dir]="isRTL() ? 'rtl' : 'ltr'">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <div class="header-content">
+      <!-- Breadcrumbs -->
+      <h1 class="page-title">{{ 'dashboard.title' | t }}</h1>
+      <div class="breadcrumb-nav">
+        <a routerLink="/" class="breadcrumb-link">{{ 'dashboard.breadcrumbHome' | t }}</a>
+        <span class="breadcrumb-separator">{{ !isRTL() ? '<' : '>' }}</span>
+        <span class="breadcrumb-current">{{ 'dashboard.breadcrumbIndicators' | t }}</span>
       </div>
-      <div class="hero-right">
-        <div class="quick-stats-inline">
-          <div class="stat-inline">
-            <span class="stat-number-inline">24</span>
-            <span class="stat-label-inline">{{ 'dashboard.services' | t }}</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-inline">
-            <span class="stat-number-inline">3</span>
-            <span class="stat-label-inline">{{ 'dashboard.pending' | t }}</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-inline">
-            <span class="stat-number-inline">12</span>
-            <span class="stat-label-inline">{{ 'dashboard.approved' | t }}</span>
-          </div>
-        </div>
+     
+    </div>
+  </div>
+
+  <!-- Filters Section -->
+  <div class="filters-section">
+    <div class="filters-container">
+      <div class="filter-group">
+        <select class="filter-dropdown" [(ngModel)]="selectedFilter" (change)="selectFilter($event)">
+          <option value="sales">{{ 'dashboard.filters.salesIndicator' | t }}</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <button class="filter-btn">{{ 'dashboard.filters.municipality' | t }}</button>
+      </div>
+      <div class="filter-group">
+        <button class="filter-btn">{{ 'dashboard.filters.realEstateArea' | t }}</button>
+      </div>
+      <div class="filter-group">
+        <button class="filter-btn">{{ 'dashboard.filters.propertyType' | t }}</button>
+      </div>
+      <div class="filter-group">
+        <button class="filter-btn">{{ 'dashboard.filters.propertyUse' | t }}</button>
+      </div>
+      <div class="filter-group">
+        <button class="filter-btn">{{ 'dashboard.filters.timePeriod' | t }}</button>
+      </div>
+      <div class="filter-group">
+        <button class="filter-btn">{{ 'dashboard.filters.year' | t }}</button>
       </div>
     </div>
   </div>
 
-  <!-- Main Content Container -->
-  <div class="main-container">
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Dashboard Title -->
+    <div class="dashboard-title-section">
+      <h2 class="dashboard-title">{{ 'dashboard.salesDashboardTitle' | t: {year: currentYear} }}</h2>
+    </div>
 
-    <!-- Bento Grid Layout -->
-    <div class="bento-grid">
-      <!-- Quick Actions - Large Card -->
-      <div class="bento-card bento-large">
-        <div class="bento-header">
-          <h2 class="bento-title">{{ 'dashboard.quickActions' | t }}</h2>
-          <p class="bento-subtitle">{{ 'dashboard.startYourTasks' | t }}</p>
-        </div>
-        <div class="quick-actions-grid">
-          <a routerLink="/service-requests/catalog" class="action-card">
-            <div class="action-icon">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-              </svg>
-            </div>
-            <span class="action-label">{{ 'dashboard.browseServices' | t }}</span>
-          </a>
-          <a routerLink="/service-requests/my-requests" class="action-card">
-            <div class="action-icon">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-              </svg>
-            </div>
-            <span class="action-label">{{ 'dashboard.myRequests' | t }}</span>
-          </a>
-          <a class="action-card">
-            <div class="action-icon">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
-            <span class="action-label">{{ 'dashboard.payments' | t }}</span>
-          </a>
-          <a class="action-card">
-            <div class="action-icon">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
-            <span class="action-label">{{ 'dashboard.help' | t }}</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Recent Activity - Tall Card -->
-      <div class="bento-card bento-tall">
-        <div class="bento-header">
-          <h2 class="bento-title">{{ 'dashboard.recentActivity' | t }}</h2>
-          <a routerLink="/service-requests/my-requests" class="view-link">
-            {{ 'dashboard.viewAll' | t }}
-            <svg class="view-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </a>
-        </div>
-        <div class="activity-list">
-          <div class="activity-item">
-            <div class="activity-dot status-review"></div>
-            <div class="activity-content">
-              <h4 class="activity-title">{{ getServiceName('Commercial License') }}</h4>
-              <p class="activity-meta">MOCI-2024-CL-001234</p>
-              <span class="activity-time">{{ 'dashboard.daysAgo' | t: {count: 3} }}</span>
-            </div>
-            <div class="activity-badge badge-review">{{ 'dashboard.review' | t }}</div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot status-approved"></div>
-            <div class="activity-content">
-              <h4 class="activity-title">{{ getServiceName('Trade License Renewal') }}</h4>
-              <p class="activity-meta">MOCI-2024-TL-001189</p>
-              <span class="activity-time">{{ 'dashboard.daysAgo' | t: {count: 5} }}</span>
-            </div>
-            <div class="activity-badge badge-approved">{{ 'dashboard.approved' | t }}</div>
-          </div>
-          <div class="activity-item">
-            <div class="activity-dot status-pending"></div>
-            <div class="activity-content">
-              <h4 class="activity-title">{{ getServiceName('Investment Permit') }}</h4>
-              <p class="activity-meta">MOCI-2024-IP-000987</p>
-              <span class="activity-time">{{ 'dashboard.weekAgo' | t: {count: 1} }}</span>
-            </div>
-            <div class="activity-badge badge-pending">{{ 'dashboard.pending' | t }}</div>
+    <!-- Content Grid -->
+    <div class="content-grid">
+      <!-- Left Side - Map -->
+      <div class="map-section">
+        <div class="map-container">
+          <!-- Qatar Map -->
+          <div class="qatar-map">
+            <img src="assets/Frame2106260098.png" alt="Qatar Map" class="map-image" />
           </div>
         </div>
       </div>
 
-      <!-- Info Card - Small -->
-      <div class="bento-card bento-small">
-        <div class="bento-header">
-          <h2 class="bento-title">{{ 'dashboard.support' | t }}</h2>
-        </div>
-        <div class="info-content">
-          <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
-          </svg>
-          <p class="info-text">{{ 'dashboard.needHelp' | t }}</p>
-          <button class="info-button">{{ 'dashboard.contactSupport' | t }}</button>
-        </div>
-      </div>
+      <!-- Right Side - Metrics Cards -->
+      <div class="metrics-section">
+        <div class="metrics-grid">
+          <!-- Metric Card 1 -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <h3 class="metric-title">{{ 'dashboard.metrics.totalSalesContracts' | t }}</h3>
+            </div>
+            <div class="metric-value">5,078</div>
+            <div class="metric-change positive">
+              <svg class="change-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+              </svg>
+              <span>34.34% YtD</span>
+            </div>
+          </div>
 
-      <!-- Quick Link - Small -->
-      <div class="bento-card bento-small bento-accent">
-        <div class="accent-content">
-          <svg class="accent-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-          </svg>
-          <h3 class="accent-title">{{ 'dashboard.fastTrack' | t }}</h3>
-          <p class="accent-text">{{ 'dashboard.expressProcessing' | t }}</p>
+          <!-- Metric Card 2 -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <h3 class="metric-title">{{ 'dashboard.metrics.totalPropertiesSold' | t }}</h3>
+            </div>
+            <div class="metric-value">6,165</div>
+            <div class="metric-change positive">
+              <svg class="change-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+              </svg>
+              <span>37.58% YtD</span>
+            </div>
+          </div>
+
+          <!-- Metric Card 3 -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <h3 class="metric-title">{{ 'dashboard.metrics.totalAreaSold' | t }}</h3>
+            </div>
+            <div class="metric-value">50,334,580</div>
+            <div class="metric-change positive">
+              <svg class="change-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+              </svg>
+              <span>8.07% YtD</span>
+            </div>
+          </div>
+
+          <!-- Metric Card 4 -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <h3 class="metric-title">{{ 'dashboard.metrics.totalSalesValue' | t }}</h3>
+            </div>
+            <div class="metric-value">24,899,648,204 <span class="currency">{{ 'dashboard.currency' | t }}</span></div>
+            <div class="metric-change positive">
+              <svg class="change-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+              </svg>
+              <span>37.58% YtD</span>
+            </div>
+          </div>
+
+          <!-- Metric Card 5 -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <h3 class="metric-title">{{ 'dashboard.metrics.avgPricePerUnit' | t }}</h3>
+            </div>
+            <div class="metric-message">{{ 'dashboard.metrics.adjustParameters' | t }}</div>
+          </div>
+
+          <!-- Metric Card 6 -->
+          <div class="metric-card">
+            <div class="metric-header">
+              <h3 class="metric-title">{{ 'dashboard.metrics.avgPricePerSqft' | t }}</h3>
+            </div>
+            <div class="metric-message">{{ 'dashboard.metrics.adjustParameters' | t }}</div>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
 </div>
-

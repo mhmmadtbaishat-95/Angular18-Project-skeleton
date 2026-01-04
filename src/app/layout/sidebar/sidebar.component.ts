@@ -1,8 +1,8 @@
 import { Component, inject, OnInit, OnDestroy, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Subscription, filter } from 'rxjs';
 import { buildNav, RAW_NAV_ITEMS, FEATURE_FLAGS } from './app-navigation.config';
 import { INavItem } from './models/nav.types';
 import { TranslatePipe } from "@shared/pipes-directives/translate.pipe";
@@ -16,15 +16,40 @@ import { I18nService } from '../../core/services/i18n/i18n.service';
   templateUrl: './sidebar.component.html',
   styles: [`
     .modern-sidebar {
-      @apply h-full bg-white dark:bg-slate-950 border-r border-gray-200 dark:border-slate-800 relative;
-      width: 16rem; /* 256px */
+      @apply h-full relative;
+      width: 5rem; /* 80px - just enough for icons */
       flex-shrink: 0;
       transition: width 0.2s ease-out;
       will-change: width;
+     
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modern-sidebar.collapsed {
+      width: 5rem; /* Keep same width - no collapse for icon-only sidebar */
+    }
+
+    .sidebar-header-lines {
+      @apply w-full;
+      padding-top: 0.5rem;
+    }
+
+    .line-blue {
+      height: 2px;
+      background: #3b82f6;
+      width: 100%;
+      margin-bottom: 2px;
+    }
+
+    .line-purple {
+      height: 4px;
+      background: #8b5cf6;
+      width: 100%;
     }
 
     :host-context(.rtl) .modern-sidebar {
-      @apply border-r-0 border-l border-l-gray-200 dark:border-l-slate-800;
+      
     }
 
     .modern-sidebar.collapsed {
@@ -32,128 +57,62 @@ import { I18nService } from '../../core/services/i18n/i18n.service';
     }
 
     .sidebar-nav {
-      @apply p-3;
+      @apply p-4 flex-1 flex items-center justify-center;
+      border-left: 1px solid #FFFFFF26;
     }
 
     .nav-list {
-      @apply space-y-1;
+      @apply space-y-8 flex flex-col items-center;
+      width: 100%;
     }
 
     .nav-item {
-      @apply block;
+      @apply block w-full flex justify-center;
     }
 
     .nav-link {
-      @apply flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 dark:text-slate-300 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-all;
-      white-space: nowrap;
-      overflow: hidden;
+      @apply flex items-center justify-center p-3 transition-all;
+      background: transparent;
+      border: none;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 0.5rem;
 
       &:hover {
-        @apply text-gray-900 dark:text-slate-100;
+        @apply bg-white/5;
       }
     }
 
-    :host-context(.rtl) .nav-link {
-      flex-direction: row-reverse;
-    }
-
-    .modern-sidebar.collapsed .nav-link {
-      @apply justify-center px-2;
-    }
-
-    .nav-link-active {
-      @apply bg-gradient-to-r from-[#8B1538] to-[#A01D45] text-white dark:from-[#A01D45] dark:to-[#C1284C] shadow-lg;
-
-      &:hover {
-        @apply text-white;
-      }
-    }
 
     .nav-icon {
-      @apply w-5 h-5 flex-shrink-0;
+      @apply w-8 h-8 flex-shrink-0;
+      color: white;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link-active .nav-icon {
+      color: #D4AF37;
     }
 
     :host-context(.rtl) .nav-icon {
       transform: scaleX(-1);
     }
 
-    .nav-text {
-      @apply flex-1 transition-opacity duration-300;
-      opacity: 1;
-    }
-
-    .modern-sidebar.collapsed .nav-text {
-      opacity: 0;
-      width: 0;
-      overflow: hidden;
-    }
-
-    .nav-badge {
-      @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold transition-opacity duration-300;
-      opacity: 1;
-      margin-left: auto;
-    }
-
-    :host-context(.rtl) .nav-badge {
-      margin-left: 0;
-      margin-right: auto;
-    }
-
-    .modern-sidebar.collapsed .nav-badge {
-      opacity: 0;
-      width: 0;
-      overflow: hidden;
-    }
-
-    .nav-group {
-      @apply mt-6 transition-opacity duration-300;
-      opacity: 1;
-    }
-
-    .modern-sidebar.collapsed .nav-group {
-      opacity: 0;
-      height: 0;
-      overflow: hidden;
-      margin: 0;
-    }
-
-    .nav-group-title {
-      @apply px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-slate-400 transition-opacity duration-300;
-      opacity: 1;
-    }
-
-    .modern-sidebar.collapsed .nav-group-title {
-      opacity: 0;
-      height: 0;
-      overflow: hidden;
-      padding: 0;
-    }
-
-    .nav-sublist {
-      @apply mt-1 space-y-1 ml-2 pl-4 border-l-2 border-gray-100 dark:border-slate-800;
-    }
-
-    :host-context(.rtl) .nav-sublist {
-      margin-left: 0;
-      margin-right: 2px;
-      padding-left: 0;
-      padding-right: 1rem;
-      border-left: none;
-      border-right: 2px solid;
-      border-right-color: rgb(243 244 246);
-    }
-
-    :host-context(.rtl) .dark .nav-sublist {
-      border-right-color: rgb(30 41 59);
-    }
-
-    .nav-sublink {
-      @apply py-2;
-    }
-
     .sidebar-toggle-btn {
-      @apply absolute top-4 w-6 h-6 rounded-full bg-white dark:bg-slate-800 border-2 border-gray-200 dark:border-slate-700 flex items-center justify-center shadow-md hover:shadow-lg transition-all z-10 cursor-pointer;
-      @apply hover:bg-gray-50 dark:hover:bg-slate-700 -right-3;
+      display: none; /* Hide toggle button for icon-only sidebar */
+    }
+
+    .sidebar-footer {
+      @apply p-4 flex items-center justify-center border-t border-white/20;
+      margin-top: auto;
+    }
+
+    .person-avatar {
+      @apply w-16 h-16;
+    }
+
+    .avatar-svg {
+      @apply w-full h-full;
     }
 
     :host-context(.rtl) .sidebar-toggle-btn {
@@ -175,8 +134,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   private translateService = inject(TranslateService);
   private appState = inject(AppStateService);
   private i18nService = inject(I18nService);
+  private router = inject(Router);
   private subscription: Subscription | null = null;
   private stateSubscription: Subscription | null = null;
+  private routerSubscription: Subscription | null = null;
 
   // Replace with roles from your auth store/service
   private userRoles = signal<string[]>(['admin']);
@@ -185,6 +146,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   isCollapsed = signal(false);
   isRTL = computed(() => this.i18nService.isRTL());
+  hasActiveRoute = signal(false);
 
   forceUpdate = 0;
 
@@ -192,9 +154,19 @@ export class SidebarComponent implements OnInit, OnDestroy {
     // Initialize collapsed state
     this.isCollapsed.set(this.appState.getState().sidebarCollapsed);
 
+    // Check initial route
+    this.checkActiveRoute();
+
     // Subscribe to state changes
     this.stateSubscription = this.appState.state$.subscribe(state => {
       this.isCollapsed.set(state.sidebarCollapsed);
+    });
+
+    // Subscribe to router events to detect active routes
+    this.routerSubscription = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.checkActiveRoute();
     });
 
     // Subscribe to language changes
@@ -206,6 +178,24 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
     this.stateSubscription?.unsubscribe();
+    this.routerSubscription?.unsubscribe();
+  }
+
+  checkActiveRoute(): void {
+    const url = this.router.url;
+    // Check if current route is not the home page (any route that's not just '/')
+    const isActive = url !== '/' && !url.startsWith('/auth');
+    this.hasActiveRoute.set(isActive);
+    
+    // Apply blur to background video when any sidebar item is selected
+    const video = document.querySelector('.background-video') as HTMLElement;
+    if (video) {
+      if (isActive) {
+        video.style.filter = 'blur(10px)';
+      } else {
+        video.style.filter = 'none';
+      }
+    }
   }
 
   toggleSidebar(): void {

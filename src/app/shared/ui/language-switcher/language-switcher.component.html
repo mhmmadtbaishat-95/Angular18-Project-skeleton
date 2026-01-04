@@ -2,7 +2,7 @@
   <button
     type="button"
     (click)="toggleDropdown()"
-    class="flex items-center space-x-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+    class="flex items-center space-x-2  transition-colors"
     [attr.aria-label]="'Switch language'"
   >
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,7 +23,7 @@
       <button
         *ngFor="let lang of languages"
         (click)="switchLanguage(lang.code)"
-        class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center justify-between"
+        class="w-full text-left transition-colors flex items-center justify-between"
         [class.bg-primary-50]="currentLanguage === lang.code"
         [class.dark:bg-primary-900]="currentLanguage === lang.code"
       >

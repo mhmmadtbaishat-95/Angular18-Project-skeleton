@@ -86,6 +86,16 @@ export class ServiceRequestService {
   }
 
   /**
+   * Gets a specific service by ID
+   */
+  getService(serviceId: string): Observable<Service | null> {
+    // In production: return this.httpClient.get<Service>(`/api/services/${serviceId}`);
+    const services = this.getMockServices();
+    const service = services.find(s => s.id === serviceId) || null;
+    return of(service).pipe(delay(300));
+  }
+
+  /**
    * Gets mock services for demo
    */
   private getMockServices(): Service[] {

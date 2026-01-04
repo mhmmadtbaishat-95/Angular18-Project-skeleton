@@ -150,13 +150,13 @@ export class ServiceCatalogComponent implements OnInit {
    */
   getProcessingTime(service: Service): string {
     const currentLang = this.translateService.currentLang || 'en';
-    const processingTime = currentLang === 'ar' && service.estimatedProcessingTimeAr 
+    let processingTime = currentLang === 'ar' && service.estimatedProcessingTimeAr 
       ? service.estimatedProcessingTimeAr 
       : service.estimatedProcessingTime;
     
-    // Replace "business days" with translated version if not already translated
-    if (currentLang === 'ar' && !service.estimatedProcessingTimeAr) {
-      return processingTime.replace(/business days/gi, this.translateService.instant('common.businessDays'));
+    // Replace "business days" with translated version
+    if (currentLang === 'ar') {
+      processingTime = processingTime.replace(/business days/gi, this.translateService.instant('common.businessDays'));
     }
     
     return processingTime;

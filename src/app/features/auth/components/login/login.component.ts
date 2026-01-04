@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services/auth/auth.service';
+import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 
 /**
  * Login component
@@ -10,7 +11,7 @@ import { AuthService } from '@core/services/auth/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslatePipe],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -18,6 +19,8 @@ export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage: string | null = null;
+  showSelectionScreen = true;
+  loginType: 'user' | 'employee' | null = null;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -25,10 +28,27 @@ export class LoginComponent {
     private readonly router: Router
   ) {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      username: ['', Validators.required],
       password: ['', Validators.required],
       rememberMe: [false]
     });
+  }
+
+  selectLoginType(type: 'user' | 'employee'): void {
+    this.loginType = type;
+    this.showSelectionScreen = false;
+  }
+
+  goBackToSelection(): void {
+    this.showSelectionScreen = true;
+    this.loginType = null;
+    this.loginForm.reset();
+    this.errorMessage = null;
+  }
+
+  onSmartCardLogin(): void {
+    // Handle smart card login
+    console.log('Smart card login clicked');
   }
 
   onSubmit(): void {
@@ -36,7 +56,14 @@ export class LoginComponent {
       this.isLoading = true;
       this.errorMessage = null;
       
-      this.authService.login(this.loginForm.value).subscribe({
+      // Map username to email for API compatibility
+      const loginData = {
+        email: this.loginForm.value.username,
+        password: this.loginForm.value.password,
+        rememberMe: this.loginForm.value.rememberMe
+      };
+      
+      this.authService.login(loginData).subscribe({
         next: () => {
           this.isLoading = false;
           this.router.navigate(['/dashboard']);

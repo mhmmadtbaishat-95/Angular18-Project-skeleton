@@ -1,51 +1,73 @@
-import { Component, computed, signal, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 import { TranslateService } from '@ngx-translate/core';
+import { I18nService } from '@core/services/i18n/i18n.service';
+import { DOCUMENT } from '@angular/common';
+import { Subscription, filter } from 'rxjs';
+import { Router, NavigationEnd } from '@angular/router';
 
 /**
- * Dashboard component
+ * Dashboard component - Real Estate Indicators
  */
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslatePipe],
+  imports: [CommonModule, RouterLink, TranslatePipe, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   private readonly translateService = inject(TranslateService);
-  
-  items = signal<{ id: number; name: string }[]>([]);
-  vm = computed(() => ({ items: this.items() }));
+  private readonly i18nService = inject(I18nService);
+  private readonly document = inject(DOCUMENT);
+  private readonly router = inject(Router);
+  private langChangeSubscription?: Subscription;
+  private routerSubscription?: Subscription;
 
-  ngOnInit() {
-    this.items.set([{ id: 1, name: 'Dashboard Item 1' }]);
+  isRTL = signal(this.i18nService.isRTL());
+  currentYear = new Date().getFullYear();
+  selectedFilter = 'sales';
+
+  ngOnInit(): void {
+    // Subscribe to language changes to update RTL state
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(() => {
+      this.updateRTLState();
+    });
+    
+    // Subscribe to route changes to update RTL state
+    this.routerSubscription = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.updateRTLState();
+    });
+    
+    // Set initial RTL state
+    this.updateRTLState();
+  }
+
+  ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe();
+    this.routerSubscription?.unsubscribe();
   }
 
   /**
-   * Gets translated service name for activity items
+   * Updates RTL state from document or service
    */
-  getServiceName(serviceName: string): string {
-    const currentLang = this.translateService.currentLang || 'en';
-    
-    // Map service names to translation keys
-    const serviceNameMap: Record<string, string> = {
-      'Commercial License': 'services.commercialLicenseApplication',
-      'Trade License Renewal': 'services.tradeLicenseRenewal',
-      'Investment Permit': 'services.investmentLicense',
-      'Consumer Complaint': 'services.consumerComplaint',
-      'Industrial License': 'services.industrialLicense',
-      'Trademark Registration': 'services.trademarkRegistration'
-    };
+  private updateRTLState(): void {
+    const htmlDir = this.document.documentElement.getAttribute('dir');
+    const currentRTL = htmlDir === 'rtl' || this.i18nService.isRTL();
+    this.isRTL.set(currentRTL);
+  }
 
-    const translationKey = serviceNameMap[serviceName];
-    if (translationKey) {
-      const translated = this.translateService.instant(translationKey);
-      return translated !== translationKey ? translated : serviceName;
-    }
-    
-    return serviceName;
+  /**
+   * Selects a filter
+   */
+  selectFilter(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.selectedFilter = target.value;
+    // TODO: Implement filter logic
   }
 }

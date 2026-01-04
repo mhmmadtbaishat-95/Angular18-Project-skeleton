@@ -1,11 +1,14 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MultiStepFormComponent } from '../components/multi-step-form/multi-step-form.component';
-import { FormDefinition } from '../models/form-field.model';
+import { Router, ActivatedRoute, RouterLink, NavigationEnd } from '@angular/router';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServiceRequestService } from '../services/service-request.service';
 import { NotificationService } from '@core/services/notification/notification.service';
-import { LoadingSpinnerComponent } from '@shared/ui/loading-spinner/loading-spinner.component';
+import { TranslateService } from '@ngx-translate/core';
+import { I18nService } from '@core/services/i18n/i18n.service';
+import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
+import { DOCUMENT } from '@angular/common';
+import { Subscription, filter } from 'rxjs';
 
 /**
  * Service request page component
@@ -16,161 +19,192 @@ import { LoadingSpinnerComponent } from '@shared/ui/loading-spinner/loading-spin
   standalone: true,
   imports: [
     CommonModule,
-    MultiStepFormComponent,
-    LoadingSpinnerComponent
+    ReactiveFormsModule,
+    RouterLink,
+    TranslatePipe
   ],
   templateUrl: './service-request.page.html',
   styleUrls: ['./service-request.page.scss']
 })
-export class ServiceRequestPage implements OnInit {
+export class ServiceRequestPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
+  readonly router = inject(Router);
   private readonly serviceRequestService = inject(ServiceRequestService);
   private readonly notificationService = inject(NotificationService);
+  private readonly translateService = inject(TranslateService);
+  private readonly i18nService = inject(I18nService);
+  private readonly document = inject(DOCUMENT);
+  private readonly fb = inject(FormBuilder);
+  private langChangeSubscription?: Subscription;
+  private routerSubscription?: Subscription;
 
-  formDefinition: FormDefinition | null = null;
-  isLoading = true;
-  formId: string | null = null;
-  private loadedFormId: string | null = null;
+  requestForm: FormGroup;
+  isLoading = false;
+  requestId: string | null = null;
+  serviceId: string | null = null;
+  serviceName: string = '';
+  isRTL = signal(this.i18nService.isRTL());
+  showSuccessModal = false;
+  submittedRequestNumber: string = '';
+
+  constructor() {
+    this.requestForm = this.fb.group({
+      companyName: ['', Validators.required],
+      tradeName: [''],
+      commercialNumber: ['', Validators.required],
+      registrationDate: ['', Validators.required],
+      mainOfficeAddress: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]]
+    });
+  }
 
   ngOnInit(): void {
+    // Subscribe to language changes to update RTL state
+    this.langChangeSubscription = this.translateService.onLangChange.subscribe(() => {
+      this.updateRTLState();
+    });
+    
+    // Subscribe to route changes to update RTL state
+    this.routerSubscription = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.updateRTLState();
+    });
+    
+    // Set initial RTL state
+    this.updateRTLState();
+
     this.route.params.subscribe(params => {
-      this.formId = params['id'] || 'default';
-      // Only load if formId changed
-      if (this.formId !== this.loadedFormId) {
-        this.loadFormDefinition();
-      } else if (this.formDefinition) {
-        // If form already loaded, ensure loading is false
-        this.isLoading = false;
+      this.requestId = params['id'] || null;
+      this.loadServiceData();
+    });
+
+    this.route.queryParams.subscribe(queryParams => {
+      this.serviceId = queryParams['serviceId'] || null;
+      if (this.serviceId) {
+        this.loadServiceName();
       }
     });
   }
 
+  ngOnDestroy(): void {
+    this.langChangeSubscription?.unsubscribe();
+    this.routerSubscription?.unsubscribe();
+  }
+
   /**
-   * Loads form definition from service
+   * Updates RTL state from document or service
    */
-  private loadFormDefinition(): void {
-    if (!this.formId) {
-      this.isLoading = false;
-      return;
-    }
-    this.isLoading = true;
-    this.serviceRequestService.getFormDefinition(this.formId).subscribe({
-      next: (definition) => {
-        if (definition) {
-          this.formDefinition = definition;
-          this.loadedFormId = this.formId;
+  private updateRTLState(): void {
+    const htmlDir = this.document.documentElement.getAttribute('dir');
+    const currentRTL = htmlDir === 'rtl' || this.i18nService.isRTL();
+    this.isRTL.set(currentRTL);
+  }
+
+  /**
+   * Loads service data
+   */
+  private loadServiceData(): void {
+    // Load service data if needed
+  }
+
+  /**
+   * Loads service name
+   */
+  private loadServiceName(): void {
+    if (this.serviceId) {
+      this.serviceRequestService.getService(this.serviceId).subscribe({
+        next: (service) => {
+          if (service) {
+            this.serviceName = this.i18nService.isRTL() 
+              ? (service.nameAr || service.name || '') 
+              : (service.name || service.nameAr || '');
+          }
+        },
+        error: (error) => {
+          console.error('Failed to load service:', error);
         }
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Failed to load form definition:', error);
-        this.notificationService.error('Failed to load form. Please try again.');
-        this.formDefinition = null;
-        this.isLoading = false;
-      }
-    });
+      });
+    }
   }
 
   /**
    * Handles form submission
    */
-  onFormSubmit(formData: any): void {
-    this.isLoading = true;
-    
-    // Simulate payment processing if payment is included
-    if (this.formDefinition?.includePayment) {
-      this.processPayment(formData);
-    } else {
-      this.submitServiceRequest(formData);
-    }
-  }
+  onSubmit(): void {
+    if (this.requestForm.valid) {
+      this.isLoading = true;
+      
+      const formData = {
+        ...this.requestForm.value,
+        requestId: this.requestId,
+        serviceId: this.serviceId,
+        submittedAt: new Date().toISOString()
+      };
 
-  /**
-   * Processes payment
-   */
-  private processPayment(formData: any): void {
-    // Extract payment information
-    const paymentData = {
-      cardNumber: formData.cardNumber,
-      cardExpiry: formData.cardExpiry,
-      cardCVV: formData.cardCVV,
-      cardholderName: formData.cardholderName,
-      amount: this.formDefinition?.paymentAmount || 0,
-      currency: this.formDefinition?.paymentCurrency || 'QAR'
-    };
-
-    this.serviceRequestService.processPayment(paymentData).subscribe({
-      next: (paymentResult) => {
-        if (paymentResult.success) {
-          this.submitServiceRequest(formData, paymentResult.transactionId);
-        } else {
+      this.serviceRequestService.submitServiceRequest(formData).subscribe({
+        next: (response) => {
           this.isLoading = false;
-          this.notificationService.error(paymentResult.message || 'Payment failed. Please try again.');
+          this.submittedRequestNumber = response.id || `SR-${Date.now()}`;
+          this.showSuccessModal = true;
+        },
+        error: (error) => {
+          this.isLoading = false;
+          this.notificationService.error('Failed to submit service request. Please try again.');
+          console.error('Submission error:', error);
         }
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.notificationService.error('Payment processing failed. Please check your payment details.');
-        console.error('Payment error:', error);
-      }
-    });
-  }
-
-  /**
-   * Submits service request
-   */
-  private submitServiceRequest(formData: any, transactionId?: string): void {
-    const requestData = {
-      ...formData,
-      formId: this.formId,
-      transactionId,
-      submittedAt: new Date().toISOString()
-    };
-
-    this.serviceRequestService.submitServiceRequest(requestData).subscribe({
-      next: (response) => {
-        this.isLoading = false;
-        this.notificationService.success('Service request submitted successfully!');
-        // Redirect to success page or dashboard
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 2000);
-      },
-      error: (error) => {
-        this.isLoading = false;
-        this.notificationService.error('Failed to submit service request. Please try again.');
-        console.error('Submission error:', error);
-      }
-    });
+      });
+    } else {
+      // Mark all fields as touched to show validation errors
+      Object.keys(this.requestForm.controls).forEach(key => {
+        this.requestForm.get(key)?.markAsTouched();
+      });
+    }
   }
 
   /**
    * Handles form cancellation
    */
-  onFormCancel(): void {
-    this.router.navigate(['/dashboard']);
+  onCancel(): void {
+    if (this.serviceId) {
+      this.router.navigate(['/service-requests/service', this.serviceId]);
+    } else {
+      this.router.navigate(['/service-requests/services']);
+    }
   }
 
   /**
-   * Gets payment amount
+   * Gets field error message
    */
-  get paymentAmount(): number {
-    return this.formDefinition?.paymentAmount || 0;
+  getFieldError(fieldName: string): string {
+    const field = this.requestForm.get(fieldName);
+    if (field?.errors && field.touched) {
+      if (field.errors['required']) {
+        return this.translateService.instant('form.fieldRequired');
+      }
+      if (field.errors['email']) {
+        return this.translateService.instant('form.invalidEmail');
+      }
+    }
+    return '';
   }
 
   /**
-   * Gets service fee (5% of amount)
+   * Closes success modal and navigates to services list
    */
-  get serviceFee(): number {
-    return this.paymentAmount * 0.05;
+  goToServicesList(): void {
+    this.showSuccessModal = false;
+    this.router.navigate(['/service-requests/services']);
   }
 
   /**
-   * Gets tax (5% VAT for Qatar)
+   * Gets success message with parameters
    */
-  get tax(): number {
-    return this.paymentAmount * 0.05;
+  getSuccessMessage(): string {
+    return this.translateService.instant('serviceRequest.successMessage', {
+      requestNumber: this.submittedRequestNumber,
+      serviceName: this.serviceName || this.translateService.instant('serviceRequest.serviceName')
+    });
   }
 }
 

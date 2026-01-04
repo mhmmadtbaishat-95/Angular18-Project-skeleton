@@ -38,13 +38,24 @@
       "subtitle": "Or create a new account",
       "email": "Email address",
       "password": "Password",
+      "username": "Username",
       "rememberMe": "Remember me",
       "forgotPassword": "Forgot your password?",
       "signIn": "Sign in",
       "signingIn": "Signing in...",
+      "continue": "Continue",
+      "loginByUsername": "Login by Username",
+      "loginBySmartCard": "Login using Smart Card",
+      "loginWithSmartCard": "Login with Smart Card",
+      "smartCardFAQ": "Frequently Asked Questions about Smart Card",
+      "createNewAccount": "Create New Account",
+      "userRegistration": "User Registration",
+      "employeeRegistration": "Employee Registration",
+      "selectLoginType": "Select Login Type",
       "emailRequired": "Email is required",
       "emailInvalid": "Please enter a valid email",
       "passwordRequired": "Password is required",
+      "usernameRequired": "Username is required",
       "loginFailed": "Login failed. Please check your credentials."
     },
     "register": {
@@ -96,11 +107,23 @@
     "profile": "Profile",
     "myProfile": "My Profile",
     "settings": "Settings",
+    "help": "Help",
     "helpSupport": "Help & Support",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "logout": "Logout",
+    "login": "Login",
+    "mainWebsite": "Main Authority Website",
+    "inquiryByCadastral": "Inquiry by Cadastral Number",
+    "inquiryByAddress": "Inquiry about my Address",
+    "organizationName": "Public Authority for Regulating Real Estate",
+    "organizationNameShort": "Real Estate"
   },
   "footer": {
-    "copyright": "© {{year}} Ministry of Commerce and Industry - Qatar. All rights reserved."
+    "copyright": "© {{year}} Ministry of Commerce and Industry - Qatar. All rights reserved.",
+    "faq": "Frequently Asked Questions",
+    "disclaimer": "Disclaimer",
+    "privacyPolicy": "Privacy Policy",
+    "fullCopyright": "Public Authority for Regulating Real Estate - Real Estate is not responsible for any quotation from the site - All rights reserved to the Public Authority for Regulating Real Estate - Real Estate"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -185,7 +208,78 @@
     "needHelp": "Need help? Our team is available 24/7",
     "contactSupport": "Contact Support",
     "fastTrack": "Fast Track",
-    "expressProcessing": "Express processing available"
+    "expressProcessing": "Express processing available",
+    "title": "Real Estate Indicators",
+    "breadcrumbHome": "Home",
+    "breadcrumbIndicators": "Real Estate Indicators",
+    "salesDashboardTitle": "Sales Transaction Measurement Dashboard ({{year}})",
+    "currency": "QAR",
+    "filters": {
+      "salesIndicator": "Sales Indicator",
+      "year": "Year",
+      "timePeriod": "Time Period",
+      "propertyUse": "Property Use",
+      "propertyType": "Property Type",
+      "realEstateArea": "Real Estate Area",
+      "municipality": "Municipality"
+    },
+    "metrics": {
+      "totalSalesContracts": "Total Number of Sales Contracts",
+      "totalPropertiesSold": "Total Number of Properties | Units Sold",
+      "totalAreaSold": "Total Area Sold \"square feet\"",
+      "totalSalesValue": "Total Value of Sales Contracts",
+      "avgPricePerUnit": "Average Sale Price per Unit | Property",
+      "avgPricePerSqft": "Average Sale Price per \"square foot\"",
+      "adjustParameters": "Values of some parameters must be adjusted to display data"
+    },
+    "regions": {
+      "north": "North",
+      "khor": "Al Khor",
+      "ghuwairiya": "Al Ghuwairiya",
+      "ummSalal": "Umm Salal",
+      "doha": "Doha",
+      "rayyan": "Al Rayyan",
+      "jumailiya": "Al Jumailiya",
+      "wakrah": "Al Wakrah",
+      "jariyanBatnah": "Jariyan Al Batnah"
+    }
+  },
+  "services": {
+    "title": "Services",
+    "breadcrumbHome": "Home",
+    "breadcrumbServices": "Services",
+    "service1": {
+      "title": "Real Estate Developer Licensing Services",
+      "description": "Includes issuing and renewing real estate developer licenses electronically to obtain official accreditation"
+    },
+    "service2": {
+      "title": "Real Estate Development Facility Management and Maintenance Company Licensing Services",
+      "description": "Allows issuing and renewing licenses for companies specialized in managing and maintaining real estate development facilities"
+    },
+    "service3": {
+      "title": "Real Estate Development Licensing Services",
+      "description": "Enables issuing and renewing real estate developer licenses through the platform easily and conveniently"
+    },
+    "service4": {
+      "title": "Real Estate Developer Guarantee Account Tracking Services",
+      "description": "Allows tracking developers' guarantee accounts electronically to ensure financial compliance with projects"
+    },
+    "service5": {
+      "title": "Real Estate Development Project Tracking Services",
+      "description": "Enables tracking the progress of real estate development projects and ensuring compliance with standards"
+    },
+    "service6": {
+      "title": "Real Estate Development Dispute Resolution Committee Services",
+      "description": "Allows raising and tracking disputes related to real estate development projects electronically"
+    },
+    "service7": {
+      "title": "Rental Dispute Resolution Committees Services",
+      "description": "Allows submitting applications and tracking rental disputes electronically before the competent committees"
+    },
+    "service8": {
+      "title": "Real Estate Appraiser Registration Services",
+      "description": "Enables registration and accreditation of real estate notaries to practice real estate notarization tasks"
+    }
   },
   "catalog": {
     "title": "Service Catalog",
@@ -205,6 +299,11 @@
     "consumerProtection": "Consumer Protection"
   },
   "serviceDetail": {
+    "executionDuration": "Execution Duration",
+    "fees": "Fees",
+    "feesDescription": "Real estate developer registration fees are 1000 Qatari Riyals, and additional fees are paid upon annual renewal of registration.",
+    "serviceDetails": "Service Details",
+    "serviceDetailsDescription": "This service allows developers to apply electronically for official registration in the register of accredited real estate developers, which enables them to implement real estate development projects according to regulatory standards. Registration includes a specific validity period that can be renewed after fulfilling the necessary requirements.",
     "fee": "Fee",
     "processing": "Processing",
     "requiredDocuments": "Required Documents",
@@ -239,6 +338,27 @@
       "companyRegistration": "Company Registration Certificate",
       "memorandumOfAssociation": "Memorandum of Association",
       "powerOfAttorney": "Power of Attorney (if applicable)"
+    },
+    "filters": {
+      "all": "All",
+      "newRequests": "New Request Services",
+      "renewal": "Renewal Services",
+      "modification": "Modification Services",
+      "termination": "Termination Services"
+    },
+    "request": {
+      "new": "New Request",
+      "termination": "Termination"
+    },
+    "requests": {
+      "registration": "Registration in the Real Estate Developers Register",
+      "renewal": "Renewal of Registration in the Real Estate Developers Register",
+      "modification": "Modification of Registration in the Real Estate Developers Register",
+      "termination": "Termination of Registration in the Real Estate Developers Register"
+    },
+    "actions": {
+      "details": "Details",
+      "submit": "Submit"
     }
   },
   "requestList": {
@@ -285,7 +405,30 @@
     "cancel": "Cancel",
     "previous": "Previous",
     "next": "Next",
-    "submit": "Submit"
+    "submit": "Submit",
+    "fieldRequired": "This field is required",
+    "invalidEmail": "Please enter a valid email address"
+  },
+  "serviceRequest": {
+    "applicationTitle": "Application for Registration in the Real Estate Developers Register",
+    "submitApplication": "Submit Application",
+    "basicData": "Basic Data",
+    "companyName": "Company Name",
+    "companyNamePlaceholder": "Enter company name",
+    "tradeName": "Trade Name (if any)",
+    "tradeNamePlaceholder": "Enter trade name",
+    "commercialNumber": "Commercial Number",
+    "commercialNumberPlaceholder": "Enter commercial number",
+    "registrationDate": "Registration Date in Commercial Register",
+    "mainOfficeAddress": "Main Office Address",
+    "mainOfficeAddressPlaceholder": "Enter main office address",
+    "email": "Email",
+    "emailPlaceholder": "Enter email address",
+    "submitRequest": "Submit Request",
+    "serviceName": "Service Name",
+    "successTitle": "Request Submitted Successfully",
+    "successMessage": "Your service request [{{requestNumber}}] for {{serviceName}} has been successfully submitted and is now under review.",
+    "goToServicesList": "Go to Services List"
   },
   "payment": {
     "paymentSummary": "Payment Summary",
@@ -295,7 +438,7 @@
     "total": "Total",
     "securePayment": "Secure payment processing. Your payment information is encrypted and secure."
   },
-  "services": {
+  "serviceTypes": {
     "commercialLicenseApplication": "Commercial License Application",
     "industrialLicense": "Industrial License",
     "tradeLicenseRenewal": "Trade License Renewal",

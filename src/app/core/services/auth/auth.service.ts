@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError, of, delay } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { TokenService } from './token.service';
 import { RefreshTokenService } from './refresh-token.service';
@@ -19,6 +19,7 @@ import {
 import { IUser } from '../../models/user.model';
 import { IApiResponse } from '../../models/api-response.model';
 import { AuthenticationError } from '../../models/error.model';
+import { UserRole } from '../../enums/user-role.enum';
 
 /**
  * Authentication service
@@ -70,16 +71,29 @@ export class AuthService {
     const accessToken = this.tokenService.getAccessToken();
     const refreshToken = this.tokenService.getRefreshToken();
 
-    if (user && accessToken && !this.tokenService.isAccessTokenExpired()) {
-      this.updateAuthState({
-        isAuthenticated: true,
-        user,
-        accessToken,
-        refreshToken,
-        isLoading: false,
-        error: null
-      });
-      this.refreshTokenService.startAutoRefresh();
+    // Check if this is a simulation user (for development/testing)
+    const isSimulationUser = user?.email === 'mohammad.tubishat@pwc.com';
+
+    if (user && accessToken) {
+      // For simulation users, skip token expiration check
+      // For real users, check if token is expired
+      const isTokenValid = isSimulationUser || !this.tokenService.isAccessTokenExpired();
+      
+      if (isTokenValid) {
+        this.updateAuthState({
+          isAuthenticated: true,
+          user,
+          accessToken,
+          refreshToken,
+          isLoading: false,
+          error: null
+        });
+        if (!isSimulationUser) {
+          this.refreshTokenService.startAutoRefresh();
+        }
+      } else {
+        this.clearAuth();
+      }
     } else {
       this.clearAuth();
     }
@@ -109,6 +123,12 @@ export class AuthService {
   login(credentials: ILoginRequest): Observable<IAuthResponse> {
     this.updateAuthState({ isLoading: true, error: null });
 
+    // Simulation mode: Check if email matches the simulation user
+    if (credentials.email === 'mohammad.tubishat@pwc.com' || 
+        credentials.email.toLowerCase() === 'mohammad.tubishat@pwc.com') {
+      return this.simulateLogin(credentials.rememberMe);
+    }
+
     const url = `${environment.apiUrl}${ENDPOINTS.AUTH.LOGIN}`;
 
     return this.http.post<IApiResponse<IAuthResponse>>(url, credentials).pipe(
@@ -122,6 +142,60 @@ export class AuthService {
           error: error.message || 'Login failed'
         });
         return throwError(() => new AuthenticationError(error.message));
+      })
+    );
+  }
+
+  /**
+   * Simulates login for development/testing purposes
+   * Stores user data in local storage
+   * @param rememberMe - Whether to remember the user
+   * @private
+   */
+  private simulateLogin(rememberMe: boolean = false): Observable<IAuthResponse> {
+    // Generate mock tokens (simple base64 encoded strings for simulation)
+    const mockAccessToken = btoa(JSON.stringify({
+      sub: 'user-123',
+      email: 'mohammad.tubishat@pwc.com',
+      username: 'Mohammad Tubishat',
+      role: UserRole.USER,
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
+    }));
+
+    const mockRefreshToken = btoa(JSON.stringify({
+      sub: 'user-123',
+      tokenId: 'refresh-token-123',
+      exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60) // 7 days
+    }));
+
+    // Create mock user object
+    const mockUser: IUser = {
+      id: 'user-123',
+      email: 'mohammad.tubishat@pwc.com',
+      username: 'Mohammad Tubishat',
+      firstName: 'Mohammad',
+      lastName: 'Tubishat',
+      role: UserRole.USER,
+      isActive: true,
+      isEmailVerified: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      lastLoginAt: new Date().toISOString()
+    };
+
+    const authResponse: IAuthResponse = {
+      accessToken: mockAccessToken,
+      refreshToken: mockRefreshToken,
+      user: mockUser,
+      expiresIn: 24 * 60 * 60 // 24 hours in seconds
+    };
+
+    // Simulate network delay
+    return of(authResponse).pipe(
+      delay(500), // 500ms delay to simulate API call
+      tap(() => {
+        this.handleAuthSuccess(authResponse, rememberMe);
       })
     );
   }
@@ -215,6 +289,21 @@ export class AuthService {
   logout(): Observable<void> {
     this.updateAuthState({ isLoading: true });
 
+    // Check if user is from simulation (check email in stored user)
+    const currentUser = this.getCurrentUser();
+    const isSimulation = currentUser?.email === 'mohammad.tubishat@pwc.com';
+
+    if (isSimulation) {
+      // Simulate logout for development
+      return of(void 0).pipe(
+        delay(200),
+        tap(() => {
+          this.clearAuth();
+          this.router.navigate(['/auth/login']);
+        })
+      );
+    }
+
     const url = `${environment.apiUrl}${ENDPOINTS.AUTH.LOGOUT}`;
 
     return this.http.post<void>(url, {}).pipe(
@@ -277,11 +366,20 @@ export class AuthService {
    */
   isAuthenticated(): boolean {
     const state = this.authStateSubject.value;
-    return (
-      state.isAuthenticated &&
-      !!state.accessToken &&
-      !this.tokenService.isAccessTokenExpired()
-    );
+    if (!state.isAuthenticated || !state.accessToken) {
+      return false;
+    }
+    
+    // Check if this is a simulation user (for development/testing)
+    const isSimulationUser = state.user?.email === 'mohammad.tubishat@pwc.com';
+    
+    // For simulation users, skip token expiration check
+    if (isSimulationUser) {
+      return true;
+    }
+    
+    // For real users, check if token is expired
+    return !this.tokenService.isAccessTokenExpired();
   }
 
   /**

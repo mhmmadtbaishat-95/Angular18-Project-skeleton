@@ -90,14 +90,12 @@
 
 /* Info Sections - Glassmorphism Style */
 .info-section {
-  @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-gray-200/50 dark:border-gray-800/50 p-5;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+  @apply  backdrop-blur-xl rounded-2xl ;
   @apply transition-all duration-200 ease-out;
 }
 
 .info-section:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 8px 24px -4px rgba(139, 21, 56, 0.12);
-  border-color: rgba(139, 21, 56, 0.2);
+ 
 }
 
 .section-header {
@@ -277,5 +275,199 @@
 
 .help-text a {
   @apply text-qatar-maroon hover:text-qatar-maroon-light font-semibold;
+}
+
+/* Service Detail View Styles */
+.service-detail-page {
+  @apply w-full;
+  min-height: calc(100vh - 12rem);
+  padding: 2rem 1rem;
+}
+
+.title-section {
+  @apply flex items-center gap-3 mb-4;
+  width: 100%;
+  max-width: 4xl;
+}
+
+.back-arrow-btn {
+  @apply w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all;
+  @apply hover:scale-110 flex-shrink-0;
+}
+
+.arrow-icon {
+  @apply w-5 h-5;
+}
+
+.page-title {
+  @apply text-2xl md:text-3xl lg:text-4xl font-bold;
+  background: linear-gradient(135deg, #D4AF37, #FFD700);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  flex: 1;
+}
+
+.breadcrumb-nav {
+  @apply flex items-center gap-2 mb-6;
+  font-size: 0.75rem;
+  width: 100%;
+  max-width: 4xl;
+}
+
+.breadcrumb-link {
+  @apply text-gray-300 hover:text-white transition-colors;
+}
+
+.breadcrumb-separator {
+  @apply text-gray-400;
+}
+
+.breadcrumb-current {
+  @apply text-white font-medium;
+}
+
+.service-info-panel {
+  @apply w-full;
+  backdrop-filter: blur(30px);
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+.service-description-section {
+  @apply mb-8;
+}
+
+.description-text {
+  @apply text-white text-sm leading-relaxed;
+  font-size: 0.875rem;
+  line-height: 1.8;
+}
+
+.info-sections {
+}
+
+.info-section {
+  @apply mb-2;
+}
+
+.section-title {
+  @apply text-white font-semibold mb-3;
+  font-size: 1rem;
+}
+
+.section-content {
+  @apply text-white text-sm leading-relaxed;
+  font-size: 0.875rem;
+  line-height: 1.8;
+}
+
+.documents-list {
+  @apply space-y-2;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.document-item {
+  @apply flex items-start gap-2 text-white text-sm;
+  font-size: 0.875rem;
+  line-height: 1.8;
+}
+
+.document-bullet {
+  @apply text-white font-bold;
+  flex-shrink: 0;
+}
+
+/* RTL Support for Service Detail */
+.service-detail-page[dir="rtl"],
+[dir="rtl"] .service-detail-page,
+:host-context([dir="rtl"]) .service-detail-page,
+:host-context(.rtl) .service-detail-page {
+  direction: rtl !important;
+  text-align: right !important;
+
+  .title-section {
+    flex-direction: row-reverse !important;
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .breadcrumb-nav {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .breadcrumb-link,
+  .breadcrumb-current {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .document-item {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .back-arrow-btn {
+    order: 2;
+  }
+
+  .page-title {
+    order: 1;
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .description-text {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .section-title {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .section-content {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .service-info-panel {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .info-section {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .service-description-section {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .documents-list {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .service-info-panel {
+    padding: 1.5rem;
+  }
+
+  .page-title {
+    @apply text-xl md:text-2xl;
+  }
+
+  .title-section {
+    @apply flex-col items-start;
+  }
 }
 

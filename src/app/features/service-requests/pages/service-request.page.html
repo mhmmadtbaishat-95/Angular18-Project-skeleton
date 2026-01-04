@@ -1,17 +1,163 @@
-<div class="service-request-page">
-  <!-- <app-loading-spinner [isLoading]="isLoading"></app-loading-spinner> -->
-  
-  <div *ngIf="formDefinition && !isLoading" class="form-content">
-    <app-multi-step-form
-      [formDefinition]="formDefinition"
-      (formSubmit)="onFormSubmit($event)"
-      (formCancel)="onFormCancel()"
-    ></app-multi-step-form>
+<div class="service-request-page" [dir]="isRTL() ? 'rtl' : 'ltr'">
+  <!-- Header Section -->
+  <div class="request-header">
+    <div class="header-content">
+      <!-- Breadcrumbs -->
+      <div class="breadcrumb-nav">
+        <a routerLink="/" class="breadcrumb-link">{{ 'services.breadcrumbHome' | t }}</a>
+        <span class="breadcrumb-separator">{{ isRTL() ? '<' : '>' }}</span>
+        <a routerLink="/service-requests/services" class="breadcrumb-link">{{ 'services.breadcrumbServices' | t }}</a>
+        <span class="breadcrumb-separator">{{ isRTL() ? '<' : '>' }}</span>
+        <a *ngIf="serviceId" [routerLink]="['/service-requests/service', serviceId]" class="breadcrumb-link">{{ serviceName || ('serviceRequest.serviceName' | t) }}</a>
+        <span *ngIf="serviceId" class="breadcrumb-separator">{{ isRTL() ? '<' : '>' }}</span>
+        <span class="breadcrumb-current">{{ 'serviceRequest.submitApplication' | t }}</span>
+      </div>
+
+      <!-- Title Section -->
+      <div class="title-section">
+        <button class="back-arrow-btn" type="button" aria-label="Back" (click)="onCancel()">
+          <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M15 19l-7-7 7-7' : 'M9 19l7-7-7-7'"/>
+          </svg>
+        </button>
+        <h1 class="page-title">{{ 'serviceRequest.applicationTitle' | t }}</h1>
+      </div>
+    </div>
   </div>
-  
-  <!-- Loading State -->
-  <div *ngIf="!formDefinition && !isLoading" class="text-center py-12">
-    <p class="text-gray-600 dark:text-gray-400">Form not found</p>
+
+  <!-- Form Container -->
+  <div class="form-container">
+    <form [formGroup]="requestForm" (ngSubmit)="onSubmit()" class="request-form">
+      <!-- Basic Data Section -->
+      <div class="form-section">
+        <h2 class="section-title">{{ 'serviceRequest.basicData' | t }}</h2>
+        
+        <div class="form-grid">
+          <!-- Right Column (RTL) / Left Column (LTR) -->
+          <div class="form-column">
+            <div class="form-group">
+              <label for="companyName" class="form-label">{{ 'serviceRequest.companyName' | t }}</label>
+              <input
+                type="text"
+                id="companyName"
+                formControlName="companyName"
+                class="form-input"
+                [class.error]="requestForm.get('companyName')?.invalid && requestForm.get('companyName')?.touched"
+                placeholder="{{ 'serviceRequest.companyNamePlaceholder' | t }}"
+              />
+              <span *ngIf="requestForm.get('companyName')?.invalid && requestForm.get('companyName')?.touched" class="error-message">
+                {{ getFieldError('companyName') }}
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="commercialNumber" class="form-label">{{ 'serviceRequest.commercialNumber' | t }}</label>
+              <input
+                type="text"
+                id="commercialNumber"
+                formControlName="commercialNumber"
+                class="form-input"
+                [class.error]="requestForm.get('commercialNumber')?.invalid && requestForm.get('commercialNumber')?.touched"
+                placeholder="{{ 'serviceRequest.commercialNumberPlaceholder' | t }}"
+              />
+              <span *ngIf="requestForm.get('commercialNumber')?.invalid && requestForm.get('commercialNumber')?.touched" class="error-message">
+                {{ getFieldError('commercialNumber') }}
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="mainOfficeAddress" class="form-label">{{ 'serviceRequest.mainOfficeAddress' | t }}</label>
+              <input
+                type="text"
+                id="mainOfficeAddress"
+                formControlName="mainOfficeAddress"
+                class="form-input"
+                [class.error]="requestForm.get('mainOfficeAddress')?.invalid && requestForm.get('mainOfficeAddress')?.touched"
+                placeholder="{{ 'serviceRequest.mainOfficeAddressPlaceholder' | t }}"
+              />
+              <span *ngIf="requestForm.get('mainOfficeAddress')?.invalid && requestForm.get('mainOfficeAddress')?.touched" class="error-message">
+                {{ getFieldError('mainOfficeAddress') }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Left Column (RTL) / Right Column (LTR) -->
+          <div class="form-column">
+            <div class="form-group">
+              <label for="tradeName" class="form-label">{{ 'serviceRequest.tradeName' | t }}</label>
+              <input
+                type="text"
+                id="tradeName"
+                formControlName="tradeName"
+                class="form-input"
+                placeholder="{{ 'serviceRequest.tradeNamePlaceholder' | t }}"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="registrationDate" class="form-label">{{ 'serviceRequest.registrationDate' | t }}</label>
+              <input
+                type="date"
+                id="registrationDate"
+                formControlName="registrationDate"
+                class="form-input"
+                [class.error]="requestForm.get('registrationDate')?.invalid && requestForm.get('registrationDate')?.touched"
+              />
+              <span *ngIf="requestForm.get('registrationDate')?.invalid && requestForm.get('registrationDate')?.touched" class="error-message">
+                {{ getFieldError('registrationDate') }}
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="form-label">{{ 'serviceRequest.email' | t }}</label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-input"
+                [class.error]="requestForm.get('email')?.invalid && requestForm.get('email')?.touched"
+                placeholder="{{ 'serviceRequest.emailPlaceholder' | t }}"
+              />
+              <span *ngIf="requestForm.get('email')?.invalid && requestForm.get('email')?.touched" class="error-message">
+                {{ getFieldError('email') }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <button type="submit" class="submit-btn" [disabled]="isLoading || requestForm.invalid">
+          <span *ngIf="!isLoading">{{ 'serviceRequest.submitRequest' | t }}</span>
+          <span *ngIf="isLoading">{{ 'common.loading' | t }}...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Success Modal -->
+  <div *ngIf="showSuccessModal" class="success-modal-overlay" (click)="goToServicesList()">
+    <div class="success-modal" (click)="$event.stopPropagation()">
+      <!-- Success Icon -->
+      <div class="success-icon">
+        <svg class="checkmark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+
+      <!-- Success Title -->
+      <h2 class="success-title">{{ 'serviceRequest.successTitle' | t }}</h2>
+
+      <!-- Success Message -->
+      <p class="success-message">
+        {{ getSuccessMessage() }}
+      </p>
+
+      <!-- Action Button -->
+      <button type="button" class="success-btn" (click)="goToServicesList()">
+        {{ 'serviceRequest.goToServicesList' | t }}
+      </button>
+    </div>
   </div>
 </div>
-

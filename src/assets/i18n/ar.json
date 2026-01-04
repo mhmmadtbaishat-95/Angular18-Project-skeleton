@@ -1,6 +1,6 @@
 {
   "common": {
-    "welco me": "مرحباً",
+    "welcome": "مرحباً",
     "loading": "جاري التحميل...",
     "save": "حفظ",
     "cancel": "إلغاء",
@@ -38,13 +38,24 @@
       "subtitle": "أو إنشاء حساب جديد",
       "email": "عنوان البريد الإلكتروني",
       "password": "كلمة المرور",
+      "username": "اسم المستخدم",
       "rememberMe": "تذكرني",
       "forgotPassword": "نسيت كلمة المرور؟",
       "signIn": "تسجيل الدخول",
       "signingIn": "جاري تسجيل الدخول...",
+      "continue": "استمر",
+      "loginByUsername": "الدخول بواسطة إسم المستخدم",
+      "loginBySmartCard": "الدخول باستخدام البطاقة الذكية",
+      "loginWithSmartCard": "الدخول بالبطاقة الذكية",
+      "smartCardFAQ": "أسئلة متكررة عن البطاقة الذكية",
+      "createNewAccount": "إنشاء حساب جديد",
+      "userRegistration": "تسجيل المستخدمين",
+      "employeeRegistration": "تسجيل الموظفين",
+      "selectLoginType": "اختر نوع تسجيل الدخول",
       "emailRequired": "البريد الإلكتروني مطلوب",
       "emailInvalid": "يرجى إدخال بريد إلكتروني صحيح",
       "passwordRequired": "كلمة المرور مطلوبة",
+      "usernameRequired": "اسم المستخدم مطلوب",
       "loginFailed": "فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد."
     },
     "register": {
@@ -96,14 +107,25 @@
     "profile": "الملف الشخصي",
     "myProfile": "ملفي الشخصي",
     "settings": "الإعدادات",
+    "help": "المساعدة",
     "helpSupport": "المساعدة والدعم",
-    "signOut": "تسجيل الخروج"
+    "signOut": "تسجيل الخروج",
+    "logout": "تسجيل الخروج",
+    "login": "تسجيل الدخول",
+    "mainWebsite": "موقع الهيئة الرئيسي",
+    "inquiryByCadastral": "استعلام بالرقم المساحي",
+    "inquiryByAddress": "استعلام عن عنواني",
+    "organizationName": "الهيئة العامة للتنظيم القطاع العقاري",
+    "organizationNameShort": "عقارات"
   },
   "footer": {
-    "copyright": "© {{year}} وزارة التجارة والصناعة - قطر. جميع الحقوق محفوظة."
+    "copyright": "© {{year}} وزارة التجارة والصناعة - قطر. جميع الحقوق محفوظة.",
+    "faq": "الأسئلة المتكررة",
+    "disclaimer": "اخلاء مسؤلية",
+    "privacyPolicy": "سياسة الخصوصية",
+    "fullCopyright": "الهيئة العامة للتنظيم القطاع العقاري - عقارات غير مسؤولة عن أي اقتباس من الموقع - جميع الحقوق محفوظة للهيئة العامة لتنظيم القطاع العقاري - عقارات"
   },
   "dashboard": {
-    "title": "لوحة التحكم",
     "welcome": "مرحباً!",
     "description": "هذه هي لوحة التحكم الخاصة بك. تم تعطيل المصادقة حاليًا لأغراض الاختبار.",
     "description2": "يمكنك التنقل بين لوحة التحكم والمستخدمين والإعدادات باستخدام الشريط الجانبي.",
@@ -113,6 +135,62 @@
       "revenue": "الإيرادات",
       "orders": "الطلبات",
       "growth": "النمو"
+    },
+    "welcomeBack": "مرحباً بعودتك",
+    "portalName": "بوابة وزارة التجارة والصناعة",
+    "services": "الخدمات",
+    "pending": "قيد الانتظار",
+    "approved": "موافق عليه",
+    "quickActions": "إجراءات سريعة",
+    "startYourTasks": "ابدأ مهامك",
+    "browseServices": "تصفح الخدمات",
+    "myRequests": "طلباتي",
+    "payments": "المدفوعات",
+    "help": "المساعدة",
+    "recentActivity": "النشاط الأخير",
+    "viewAll": "عرض الكل",
+    "daysAgo": "منذ {{count}} يوم",
+    "weekAgo": "منذ {{count}} أسبوع",
+    "weeksAgo": "منذ {{count}} أسابيع",
+    "review": "قيد المراجعة",
+    "support": "الدعم",
+    "needHelp": "تحتاج مساعدة؟ فريقنا متاح على مدار الساعة",
+    "contactSupport": "اتصل بالدعم",
+    "fastTrack": "المعالجة السريعة",
+    "expressProcessing": "معالجة سريعة متاحة",
+    "title": "المؤشرات العقارية",
+    "breadcrumbHome": "الرئيسية",
+    "breadcrumbIndicators": "المؤشرات العقارية",
+    "salesDashboardTitle": "لوحة قياس معاملات البيع ({{year}})",
+    "currency": "ر.ق",
+    "filters": {
+      "salesIndicator": "مؤشر البيع",
+      "year": "السنة",
+      "timePeriod": "المدة الزمنية",
+      "propertyUse": "استخدام العقار",
+      "propertyType": "نوع العقار",
+      "realEstateArea": "المنطقة العقارية",
+      "municipality": "البلدية"
+    },
+    "metrics": {
+      "totalSalesContracts": "إجمالي عدد عقود البيع",
+      "totalPropertiesSold": "إجمالي عدد العقارات | الوحدات المباعة",
+      "totalAreaSold": "إجمالي المساحات المباعة \"قدم مربع\"",
+      "totalSalesValue": "إجمالي قيمة عقود البيع",
+      "avgPricePerUnit": "متوسط سعر البيع للوحدة | العقار",
+      "avgPricePerSqft": "متوسط سعر البيع لكل \"قدم مربع\"",
+      "adjustParameters": "يجب تعديل قيم بعض المحددات لعرض البيانات"
+    },
+    "regions": {
+      "north": "الشمال",
+      "khor": "الخور",
+      "ghuwairiya": "الغووايريية",
+      "ummSalal": "ام صلال",
+      "doha": "الدوحة",
+      "rayyan": "الريان",
+      "jumailiya": "الجوما يلييه",
+      "wakrah": "الوكرة",
+      "jariyanBatnah": "جريان البطنة"
     }
   },
   "users": {
@@ -163,29 +241,42 @@
     "loadingServiceInfo": "جاري تحميل معلومات الخدمة...",
     "loadingRequestInfo": "جاري تحميل معلومات الطلب..."
   },
-  "dashboard": {
-    "welcomeBack": "مرحباً بعودتك",
-    "portalName": "بوابة وزارة التجارة والصناعة",
-    "services": "الخدمات",
-    "pending": "قيد الانتظار",
-    "approved": "موافق عليه",
-    "quickActions": "إجراءات سريعة",
-    "startYourTasks": "ابدأ مهامك",
-    "browseServices": "تصفح الخدمات",
-    "myRequests": "طلباتي",
-    "payments": "المدفوعات",
-    "help": "المساعدة",
-    "recentActivity": "النشاط الأخير",
-    "viewAll": "عرض الكل",
-    "daysAgo": "منذ {{count}} يوم",
-    "weekAgo": "منذ {{count}} أسبوع",
-    "weeksAgo": "منذ {{count}} أسابيع",
-    "review": "قيد المراجعة",
-    "support": "الدعم",
-    "needHelp": "تحتاج مساعدة؟ فريقنا متاح على مدار الساعة",
-    "contactSupport": "اتصل بالدعم",
-    "fastTrack": "المعالجة السريعة",
-    "expressProcessing": "معالجة سريعة متاحة"
+  "services": {
+    "title": "الخدمات",
+    "breadcrumbHome": "الرئيسية",
+    "breadcrumbServices": "الخدمات",
+    "service1": {
+      "title": "خدمات تراخيص المطورين العقاريين",
+      "description": "تشمل إصدار و تجديد تراخيص المطورين العقاريين إلكترونيا للحصول على الاعتماد الرسمي"
+    },
+    "service2": {
+      "title": "خدمات تراخيص شركات إدارة وصيانة منشآت التطوير العقاري",
+      "description": "تتيح إصدار و تجديد تراخيص الشركات المختصة بإدارة و صيانة منشآت التطوير العقاري"
+    },
+    "service3": {
+      "title": "خدمات تراخيص التطوير العقاري",
+      "description": "تمكن من إصدار و تجديد تراخيص المطورين العقاريين عبر المنصة بسهولة ويسر"
+    },
+    "service4": {
+      "title": "خدمات متابعة حسابات ضمان المطورين العقاريين",
+      "description": "تتيح متابعة حسابات الضمان الخاصة بالمطورين إلكترونيا لضمان الالتزام المالي بالمشاريع"
+    },
+    "service5": {
+      "title": "خدمات متابعة مشاريع التطوير العقاري",
+      "description": "تمكن من متابعة سير مشاريع التطوير العقاري و التأكد من الاتزام بالمعايير"
+    },
+    "service6": {
+      "title": "خدمات لجنة فض منازعات التطوير العقاري",
+      "description": "تتيح رفع و متابعة المنازعات الخاصة بمشاريع التطوير العقاري إلكترونيا"
+    },
+    "service7": {
+      "title": "خدمات لجان فض المنازعات الايجارية",
+      "description": "تتيح تقديم الطلبات و متابعة المنازعات الإيجارية إلكترونيا أمام اللجان المختصة"
+    },
+    "service8": {
+      "title": "خدمات تسجيل المثمنين العقاريين",
+      "description": "تمكن من تسجيل و اعتماد الموثقين العقاريين لمزاولة مهام التوثيق العقاري"
+    }
   },
   "catalog": {
     "title": "كتالوج الخدمات",
@@ -205,6 +296,11 @@
     "consumerProtection": "حماية المستهلك"
   },
   "serviceDetail": {
+    "executionDuration": "مدة التنفيذ",
+    "fees": "الرسوم",
+    "feesDescription": "رسوم تسجيل المطور العقاري تبلغ 1000 ريال قطري، و يتم دفع رسوم إضافية عند تجديد القيد السنوي",
+    "serviceDetails": "تفاصيل الخدمة",
+    "serviceDetailsDescription": "تتيح هذه الخدمة للمطورين التقديم إلكترونيا للحصول على قيد رسمي في سجل المطورين العقاريين المعتمدين، مما يتيح لهم تنفيذ مشاريع التطوير العقاري وفق المعايير النظامية. يشمل القيد فترة سريان محددة يمكن تجديدها بعد استيفاء المتطلبات اللازمة",
     "fee": "الرسوم",
     "processing": "المعالجة",
     "requiredDocuments": "المستندات المطلوبة",
@@ -239,6 +335,27 @@
       "companyRegistration": "شهادة تسجيل الشركة",
       "memorandumOfAssociation": "عقد تأسيس الشركة",
       "powerOfAttorney": "توكيل قانوني (إن وجد)"
+    },
+    "filters": {
+      "all": "الكل",
+      "newRequests": "خدمات طلبات جديدة",
+      "renewal": "خدمات تجديد",
+      "modification": "خدمات تعديل",
+      "termination": "خدمات إنهاء"
+    },
+    "request": {
+      "new": "طلب جديد",
+      "termination": "إنهاء"
+    },
+    "requests": {
+      "registration": "القيد بسجل المطورين العقاريين",
+      "renewal": "تجديد القيد بسجل المطورين العقاريين",
+      "modification": "تعديل القيد بسجل المطورين العقاريين",
+      "termination": "إنهاء القيد بسجل المطورين العقاريين"
+    },
+    "actions": {
+      "details": "تفاصيل",
+      "submit": "تقديم"
     }
   },
   "requestList": {
@@ -285,7 +402,30 @@
     "cancel": "إلغاء",
     "previous": "السابق",
     "next": "التالي",
-    "submit": "إرسال"
+    "submit": "إرسال",
+    "fieldRequired": "هذا الحقل مطلوب",
+    "invalidEmail": "يرجى إدخال عنوان بريد إلكتروني صحيح"
+  },
+  "serviceRequest": {
+    "applicationTitle": "طلب القيد بسجل المطورين العقاريين",
+    "submitApplication": "تقديم طلب",
+    "basicData": "البيانات الاساسية",
+    "companyName": "اسم الشركة",
+    "companyNamePlaceholder": "أدخل اسم الشركة",
+    "tradeName": "الاسم التجاري (ان وجد)",
+    "tradeNamePlaceholder": "أدخل الاسم التجاري",
+    "commercialNumber": "الرقم التجاري",
+    "commercialNumberPlaceholder": "أدخل الرقم التجاري",
+    "registrationDate": "تاريخ القيد بالسجل التجاري",
+    "mainOfficeAddress": "عنوان المقر الرئيسي",
+    "mainOfficeAddressPlaceholder": "أدخل عنوان المقر الرئيسي",
+    "email": "البريد الالكتروني",
+    "emailPlaceholder": "أدخل البريد الإلكتروني",
+    "submitRequest": "تقديم طلب",
+    "serviceName": "اسم الخدمة",
+    "successTitle": "تم تسليم الطلب بنجاح",
+    "successMessage": "تم تقديم طلب الخدمة الخاص بك [{{requestNumber}}] لخدمة {{serviceName}} بنجاح و هو الآن قيد المراجعة",
+    "goToServicesList": "الذهاب لقائمة الخدمات"
   },
   "payment": {
     "paymentSummary": "ملخص الدفع",
@@ -295,7 +435,7 @@
     "total": "الإجمالي",
     "securePayment": "معالجة دفع آمنة. معلومات الدفع الخاصة بك مشفرة وآمنة."
   },
-  "services": {
+  "serviceTypes": {
     "commercialLicenseApplication": "طلب ترخيص تجاري",
     "industrialLicense": "ترخيص صناعي",
     "tradeLicenseRenewal": "تجديد الترخيص التجاري",

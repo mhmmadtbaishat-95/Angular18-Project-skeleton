@@ -1,230 +1,66 @@
-<div class="service-detail-page">
-  <!-- Compact Header -->
-  <div class="catalog-header-compact">
-    <div class="header-container">
-      <div class="header-left">
-        <div class="breadcrumb-nav">
-          <a routerLink="/dashboard" class="breadcrumb-link">{{ 'pages.home' | t }}</a>
-          <span class="breadcrumb-separator">/</span>
-          <a routerLink="/service-requests/catalog" class="breadcrumb-link">{{ 'pages.services' | t }}</a>
-          <span class="breadcrumb-separator">/</span>
-          <span class="breadcrumb-current" *ngIf="service">{{ getServiceName(service) }}</span>
-          <span class="breadcrumb-current" *ngIf="!service">{{ 'pages.serviceDetails' | t }}</span>
-        </div>
-        <h1 class="header-title" *ngIf="service">{{ getServiceName(service) }}</h1>
-        <h1 class="header-title" *ngIf="!service">{{ 'pages.serviceDetails' | t }}</h1>
-        <p class="header-subtitle" *ngIf="service">{{ getServiceDescription(service) }}</p>
-        <p class="header-subtitle" *ngIf="!service">{{ 'pages.loadingServiceInfo' | t }}</p>
+<div class="service-detail-page" [dir]="isRTL() ? 'rtl' : 'ltr'">
+  <!-- Header Section -->
+  <div class="service-detail-header">
+    <div class="header-content">
+      <div class="title-section">
+        <button class="back-arrow-btn" type="button" aria-label="Back" (click)="router.navigate(['/service-requests/services'])">
+          <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M15 19l-7-7 7-7' : 'M9 19l7-7-7-7'"/>
+          </svg>
+        </button>
+        <h1 class="page-title" *ngIf="service">{{ getServiceName(service) }}</h1>
+        <h1 class="page-title" *ngIf="!service">{{ 'pages.serviceDetails' | t }}</h1>
       </div>
-      <div class="header-right" *ngIf="service">
-        <div class="header-stats-inline">
-          <div class="stat-inline">
-            <span class="stat-number">{{ formatCurrency(service.fee) }}</span>
-            <span class="stat-label">{{ 'serviceDetail.fee' | t }}</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-inline">
-            <span class="stat-number">{{ getProcessingTime(service) }}</span>
-            <span class="stat-label">{{ 'serviceDetail.processing' | t }}</span>
-          </div>
-        </div>
+      <div class="breadcrumb-nav">
+        <a routerLink="/" class="breadcrumb-link">{{ 'services.breadcrumbHome' | t }}</a>
+        <span class="breadcrumb-separator">{{ isRTL() ? '>' : '<' }}</span>
+        <a routerLink="/service-requests/services" class="breadcrumb-link">{{ 'services.breadcrumbServices' | t }}</a>
+        <span class="breadcrumb-separator">{{ isRTL() ? '>' : '<' }}</span>
+        <span class="breadcrumb-current" *ngIf="service">{{ getServiceName(service) }}</span>
+        <span class="breadcrumb-current" *ngIf="!service">{{ 'pages.serviceDetails' | t }}</span>
       </div>
+   
     </div>
   </div>
 
-  <!-- Main Container -->
-  <div class="main-container">
-    <app-skeleton-loader [isLoading]="isLoading" [count]="3" type="service"></app-skeleton-loader>
+  <!-- Filters/Tabs Section -->
+  <div class="filters-section">
+    <div class="filters-container">
+      <button
+        *ngFor="let filter of filters"
+        [class.active]="selectedFilter === filter.id"
+        (click)="filterRequests(filter.id)"
+        class="filter-pill"
+      >
+        {{ filter.labelKey | t }} ({{ filter.count }})
+      </button>
+    </div>
+  </div>
 
-    <div *ngIf="service && !isLoading" class="service-detail-container">
+  <!-- Requests List -->
+  <div class="requests-container">
+    <app-skeleton-loader [isLoading]="isLoading" [count]="4" type="service"></app-skeleton-loader>
 
-      <!-- Main Content -->
-      <div class="content-grid">
-        <!-- Left Column - Details -->
-        <div class="details-column">
-        <!-- Required Documents -->
-        <section class="info-section">
-          <div class="section-header">
-            <div class="section-icon">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-              </svg>
-            </div>
-            <h2 class="section-title">{{ 'serviceDetail.requiredDocuments' | t }}</h2>
+    <div *ngIf="!isLoading" class="requests-list">
+      <div
+        *ngFor="let request of getFilteredRequests()"
+        class="request-card"
+      >
+        <div class="request-content">
+          <div class="request-badge">
+            <span class="badge-text">{{ 'serviceDetail.request.new' | t }} - {{ request.actionKey | t }}</span>
           </div>
-          <div class="section-content">
-            <ul class="document-list">
-              <li *ngFor="let doc of getRequiredDocuments()" class="document-item">
-                <svg class="check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span>{{ doc | t }}</span>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-        <!-- Service Fee -->
-        <section class="info-section fee-section">
-          <div class="section-header">
-            <div class="section-icon">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
-            <h2 class="section-title">{{ 'serviceDetail.howMuchToPay' | t }}</h2>
-          </div>
-          <div class="section-content">
-            <div class="fee-display">
-              <div class="fee-amount">{{ formatCurrency(service.fee) }}</div>
-              <div class="fee-label">{{ 'serviceDetail.serviceFee' | t }}</div>
-              <div class="fee-note">{{ 'serviceDetail.paymentRequired' | t }}</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- How to Pay -->
-        <section class="info-section">
-          <div class="section-header">
-            <div class="section-icon">
-              <svg class="w-6 h-6 section-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
-              </svg>
-            </div>
-            <h2 class="section-title">{{ 'serviceDetail.howToPay' | t }}</h2>
-          </div>
-          <div class="section-content">
-            <ol class="steps-list">
-              <li class="step-item">
-                <div class="step-number">1</div>
-                <div class="step-content">
-                  <h4>{{ 'serviceDetail.completeApplicationForm' | t }}</h4>
-                  <p>{{ 'serviceDetail.completeApplicationDesc' | t }}</p>
-                </div>
-              </li>
-              <li class="step-item">
-                <div class="step-number">2</div>
-                <div class="step-content">
-                  <h4>{{ 'serviceDetail.reviewInformation' | t }}</h4>
-                  <p>{{ 'serviceDetail.reviewInformationDesc' | t }}</p>
-                </div>
-              </li>
-              <li class="step-item">
-                <div class="step-number">3</div>
-                <div class="step-content">
-                  <h4>{{ 'serviceDetail.makePayment' | t }}</h4>
-                  <p>{{ 'serviceDetail.makePaymentDesc' | t }}</p>
-                </div>
-              </li>
-              <li class="step-item">
-                <div class="step-number">4</div>
-                <div class="step-content">
-                  <h4>{{ 'serviceDetail.submitApplication' | t }}</h4>
-                  <p>{{ 'serviceDetail.submitApplicationDesc' | t }}</p>
-                </div>
-              </li>
-            </ol>
-          </div>
-        </section>
-
-        <!-- Where and How to Apply -->
-        <section class="info-section">
-          <div class="section-header">
-            <div class="section-icon">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-            </div>
-            <h2 class="section-title">{{ 'serviceDetail.whereAndHowToApply' | t }}</h2>
-          </div>
-          <div class="section-content">
-            <div class="apply-instructions">
-              <p class="instruction-text">
-                {{ 'serviceDetail.applyOnlineDesc' | t }}
-              </p>
-              <div class="instruction-steps">
-                <div class="instruction-step">
-                  <span class="step-badge">{{ 'serviceDetail.step' | t }} 1</span>
-                  <p>{{ 'serviceDetail.step1' | t }}</p>
-                </div>
-                <div class="instruction-step">
-                  <span class="step-badge">{{ 'serviceDetail.step' | t }} 2</span>
-                  <p>{{ 'serviceDetail.step2' | t }}</p>
-                </div>
-                <div class="instruction-step">
-                  <span class="step-badge">{{ 'serviceDetail.step' | t }} 3</span>
-                  <p>{{ 'serviceDetail.step3' | t }}</p>
-                </div>
-                <div class="instruction-step">
-                  <span class="step-badge">{{ 'serviceDetail.step' | t }} 4</span>
-                  <p>{{ 'serviceDetail.step4' | t }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Who Can Apply -->
-        <section class="info-section">
-          <div class="section-header">
-            <div class="section-icon">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-              </svg>
-            </div>
-            <h2 class="section-title">{{ 'serviceDetail.whoCanApply' | t }}</h2>
-          </div>
-          <div class="section-content">
-            <div class="eligibility-list">
-              <div *ngFor="let criteria of getEligibilityCriteria()" class="eligibility-item">
-                <svg class="eligibility-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span>{{ criteria }}</span>
-              </div>
-            </div>
-          </div>
-        </section>
+          <h3 class="request-title">{{ request.titleKey | t }}</h3>
         </div>
-
-        <!-- Right Column - Action Card -->
-        <div class="action-column">
-        <div class="action-card">
-          <div class="action-header">
-            <h3>{{ 'serviceDetail.readyToApply' | t }}</h3>
-            <p>{{ 'serviceDetail.startApplicationNow' | t }}</p>
-          </div>
-          
-          <div class="action-details">
-            <div class="detail-row">
-              <span class="detail-label">{{ 'serviceDetail.processingTime' | t }}</span>
-              <span class="detail-value">{{ getProcessingTime(service) }}</span>
-            </div>
-            <div class="detail-row">
-              <span class="detail-label">{{ 'serviceDetail.serviceFee' | t }}</span>
-              <span class="detail-value">{{ formatCurrency(service.fee) }}</span>
-            </div>
-          </div>
-
-          <button (click)="startRequest()" class="start-btn">
-            <span>{{ 'serviceDetail.startApplication' | t }}</span>
-            <svg class="w-5 h-5 ml-2 start-btn-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
+        <div class="request-actions">
+          <button (click)="viewDetails(request.id)" class="action-btn details-btn">
+            {{ 'serviceDetail.actions.details' | t }}
           </button>
-
-          <div class="action-footer">
-            <p class="help-text">
-              <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              {{ 'serviceDetail.needHelpContact' | t }} <a href="tel:+97444069999">+974 4406 9999</a>
-            </p>
-          </div>
+          <button (click)="submitRequest(request.id)" class="action-btn submit-btn">
+            {{ 'serviceDetail.actions.submit' | t }}
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
