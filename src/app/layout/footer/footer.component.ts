@@ -56,7 +56,8 @@ import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
     }
 
     .footer-copyright {
-      @apply text-gray-300 text-xs;
+      @apply text-gray-300;
+      font-size: 0.6rem;
       text-align: right;
     }
 

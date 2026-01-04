@@ -3,6 +3,7 @@ import { CommonModule, AsyncPipe } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { LoadingSpinnerComponent } from './shared/ui/loading-spinner/loading-spinner.component';
+import { ChatbotComponent } from './shared/ui/chatbot/chatbot.component';
 import { AppStateService } from './core/services/state/app-state.service';
 import { ThemeService } from './core/services/theme/theme.service';
 
@@ -12,11 +13,12 @@ import { ThemeService } from './core/services/theme/theme.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, AsyncPipe, RouterOutlet, LoadingSpinnerComponent],
+  imports: [CommonModule, AsyncPipe, RouterOutlet, LoadingSpinnerComponent, ChatbotComponent],
   template: `
     <div class="h-full w-full">
       <app-loading-spinner [isLoading]="(isLoading$ | async) ?? false"></app-loading-spinner>
       <router-outlet></router-outlet>
+      <app-chatbot></app-chatbot>
     </div>
   `,
   styles: []

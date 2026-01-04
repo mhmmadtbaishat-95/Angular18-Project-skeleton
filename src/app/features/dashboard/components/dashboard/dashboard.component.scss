@@ -1,10 +1,4 @@
-.real-estate-dashboard {
-  @apply w-full;
-  min-height: calc(100vh - 12rem);
-  padding: 2rem 3rem;
-  max-width: 1920px;
-  margin: 0 auto;
-}
+
 
 .dashboard-header {
   @apply mb-6;
@@ -37,7 +31,7 @@
 
 .page-title {
   @apply text-3xl md:text-4xl lg:text-5xl font-bold;
-  background: linear-gradient(135deg, #D4AF37, #FFD700);
+  background: #A19576;;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -55,7 +49,6 @@
 
 .filters-container {
   @apply flex flex-wrap items-center gap-3;
-  justify-content: flex-end;
 }
 
 .filter-group {
@@ -103,7 +96,7 @@
   }
 
   &.active {
-    background: linear-gradient(135deg, #D4AF37, #FFD700);
+    background: #A19576;;
     color: #1F2937;
     border-color: #D4AF37;
     font-weight: 600;
@@ -116,6 +109,10 @@
   max-width: 7xl;
   margin-left: auto;
   margin-right: auto;
+  backdrop-filter: blur(30px);
+    padding: 20px;
+    background: transparent;
+    border-radius: 1rem;
 }
 
 .dashboard-title-section {
@@ -129,7 +126,7 @@
 
 .content-grid {
   @apply grid gap-6;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: 350px 1fr;
 }
 
 /* Map Section */
@@ -138,27 +135,24 @@
 }
 
 .map-container {
-  background: rgba(31, 41, 55, 0.4);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(75, 85, 99, 0.3);
-  border-radius: 1rem;
   padding: 2rem;
-  min-height: 600px;
+  min-height: 300px;
   height: 100%;
 }
 
 .qatar-map {
   @apply relative w-full h-full;
-  min-height: 550px;
+  min-height: 300px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .map-image {
-  width: 100%;
+  width: auto;
   height: auto;
-  max-width: 350px;
+  max-width: 15rem;
+  max-height: 35rem;
   object-fit: contain;
 }
 
@@ -169,8 +163,8 @@
 
 .metrics-grid {
   @apply grid gap-4;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
 }
 
 .metric-card {
@@ -178,8 +172,8 @@
   backdrop-filter: blur(30px);
   border: 1px solid rgba(75, 85, 99, 0.3);
   border-radius: 1rem;
-  padding: 2rem;
-  min-height: 180px;
+  padding: 1.2rem;
+  min-height: 140px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -292,6 +286,10 @@
     text-align: right !important;
     direction: rtl !important;
   }
+
+  .qatar-map {
+    justify-content: flex-end;
+  }
 }
 
 @media (max-width: 1280px) {
@@ -311,6 +309,11 @@
 
   .metrics-section {
     order: 1;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
   }
 }
 

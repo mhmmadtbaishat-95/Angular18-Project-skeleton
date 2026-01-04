@@ -442,6 +442,12 @@
     "investmentLicense": "ترخيص استثماري",
     "trademarkRegistration": "تسجيل العلامة التجارية",
     "consumerComplaint": "شكوى المستهلك"
+  },
+  "chatbot": {
+    "title": "دعم المحادثة",
+    "subtitle": "نحن هنا لمساعدتك",
+    "welcome": "مرحباً! كيف يمكنني مساعدتك اليوم؟",
+    "placeholder": "اكتب رسالتك..."
   }
 }
 

@@ -26,11 +26,6 @@ interface ServiceItem {
       <!-- Header Section -->
       <div class="services-header">
         <div class="header-content">
-          <div class="breadcrumb-nav">
-            <a routerLink="/" class="breadcrumb-link">{{ 'services.breadcrumbHome' | t }}</a>
-            <span class="breadcrumb-separator">{{ isRTL() ? '>' : '<' }}</span>
-            <span class="breadcrumb-current">{{ 'services.breadcrumbServices' | t }}</span>
-          </div>
           <div class="title-section">
             <h1 class="page-title">{{ 'services.title' | t }}</h1>
             <button class="refresh-btn" type="button" aria-label="Refresh">
@@ -39,6 +34,12 @@ interface ServiceItem {
               </svg>
             </button>
           </div>
+          <div class="breadcrumb-nav">
+            <a routerLink="/" class="breadcrumb-link">{{ 'services.breadcrumbHome' | t }}</a>
+            <span class="breadcrumb-separator">{{ isRTL() ? '>' : '<' }}</span>
+            <span class="breadcrumb-current">{{ 'services.breadcrumbServices' | t }}</span>
+          </div>
+        
         </div>
       </div>
 
@@ -130,22 +131,21 @@ font-size: 10px;
 
     .service-title {
       @apply text-white font-semibold mb-2;
-      font-size: 0.875rem;
+      font-size: 1.2rem;
       line-height: 1.4;
       text-align: left;
     }
 
     .service-description {
       @apply text-gray-300 leading-relaxed;
-      font-size: 0.75rem;
+      font-size: 0.9rem;
       text-align: left;
     }
 
     .service-arrow {
       @apply absolute bottom-4 left-4;
-      @apply w-8 h-8 rounded-full bg-qatar-maroon flex items-center justify-center;
+      @apply w-8 h-8 flex items-center justify-center;
       @apply hover:bg-qatar-maroon-dark transition-all;
-      @apply shadow-lg;
       color: white;
       
       i {
@@ -208,10 +208,7 @@ font-size: 10px;
         direction: rtl !important;
       }
 
-      .service-arrow {
-        left: auto !important;
-        right: 1rem !important;
-      }
+
 
       .arrow-icon {
         transform: scaleX(-1);

@@ -58,8 +58,11 @@ import { I18nService } from '../../core/services/i18n/i18n.service';
 
     .sidebar-nav {
       @apply p-4 flex-1 flex items-center justify-center;
-      border-left: 1px solid #FFFFFF26;
     }
+.sidebar-nav {
+  border-right: 1px solid #FFFFFF26;
+  border-left: 1px solid #FFFFFF26;
+}
 
     .nav-list {
       @apply space-y-8 flex flex-col items-center;
