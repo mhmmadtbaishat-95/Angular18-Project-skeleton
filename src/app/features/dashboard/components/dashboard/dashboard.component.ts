@@ -17,7 +17,7 @@ import { Router, NavigationEnd } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink, TranslatePipe, FormsModule],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   private readonly translateService = inject(TranslateService);
@@ -36,14 +36,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(() => {
       this.updateRTLState();
     });
-    
+
     // Subscribe to route changes to update RTL state
-    this.routerSubscription = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.updateRTLState();
-    });
-    
+    this.routerSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.updateRTLState();
+      });
+
     // Set initial RTL state
     this.updateRTLState();
   }
