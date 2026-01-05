@@ -425,7 +425,93 @@
     "serviceName": "اسم الخدمة",
     "successTitle": "تم تسليم الطلب بنجاح",
     "successMessage": "تم تقديم طلب الخدمة الخاص بك [{{requestNumber}}] لخدمة {{serviceName}} بنجاح و هو الآن قيد المراجعة",
-    "goToServicesList": "الذهاب لقائمة الخدمات"
+    "goToServicesList": "الذهاب لقائمة الخدمات",
+    "requestInformation": "معلومات الطلب",
+    "requestInformationDesc": "يرجى مراجعة معلومات المطور أدناه",
+    "developerRegistrationNumber": "رقم تسجيل المطور",
+    "developerName": "اسم المطور",
+    "developerType": "نوع المطور",
+    "licenseStatus": "حالة الترخيص",
+    "licenseExpirationDate": "تاريخ انتهاء الترخيص",
+    "documents": "المستندات",
+    "documentsDesc": "قم بتحميل المستندات المطلوبة لطلبك",
+    "uploadDocuments": "تحميل المستندات",
+    "uploadHint": "انقر للتحميل أو اسحب وأفلت الملفات هنا (PDF, JPG, PNG, DOC, DOCX - الحد الأقصى 10 ميجابايت)",
+    "uploadedDocuments": "المستندات المرفوعة",
+    "review": "المراجعة",
+    "reviewDesc": "يرجى مراجعة معلوماتك قبل الإرسال",
+    "submissionSuccess": "تم تقديم الطلب بنجاح",
+    "referenceNumber": "رقم المرجع",
+    "submissionInfo": "تم تقديم طلبك بنجاح. سوف تتلقى بريد إلكتروني للتأكيد قريباً. يرجى الاحتفاظ برقم المرجع للرجوع إليه لاحقاً.",
+    "projectInformation": "معلومات المشروع",
+    "projectInformationDesc": "يرجى إكمال جميع نماذج معلومات المشروع",
+    "months": "أشهر",
+    "floors": "طوابق",
+    "steps": {
+      "requestInformation": {
+        "title": "معلومات الطلب",
+        "description": "أدخل تفاصيل طلبك"
+      },
+      "projectInformation": {
+        "title": "معلومات المشروع",
+        "description": "أكمل تفاصيل المشروع"
+      },
+      "documents": {
+        "title": "المستندات",
+        "description": "قم بتحميل المستندات المطلوبة"
+      },
+      "submission": {
+        "title": "تقديم الطلب",
+        "description": "تأكيد التقديم"
+      }
+    },
+    "formA": {
+      "title": "أ - طلب تراخيص المشروع",
+      "projectName": "اسم المشروع",
+      "projectNamePlaceholder": "أدخل اسم المشروع",
+      "projectType": "نوع المشروع",
+      "projectTypePlaceholder": "أدخل نوع المشروع",
+      "area": "المنطقة",
+      "areaPlaceholder": "أدخل المنطقة",
+      "plotNumber": "رقم القطعة",
+      "plotNumberPlaceholder": "أدخل رقم القطعة",
+      "landArea": "مساحة الأرض (م²)",
+      "landAreaPlaceholder": "أدخل مساحة الأرض بالمتر المربع",
+      "numberOfUnits": "عدد الوحدات (اختياري)",
+      "numberOfUnitsPlaceholder": "أدخل عدد الوحدات",
+      "executionPeriod": "فترة التنفيذ (أشهر)",
+      "executionPeriodPlaceholder": "أدخل فترة التنفيذ بالأشهر"
+    },
+    "formB": {
+      "title": "ب - عرض المخطط الرئيسي والتصميم الأولي",
+      "planType": "نوع المخطط",
+      "planTypePlaceholder": "أدخل نوع المخطط",
+      "designStage": "مرحلة التصميم",
+      "designStagePlaceholder": "أدخل مرحلة التصميم",
+      "numberOfBuildings": "عدد المباني",
+      "numberOfBuildingsPlaceholder": "أدخل عدد المباني",
+      "numberOfDevelopmentStages": "عدد مراحل التطوير",
+      "numberOfDevelopmentStagesPlaceholder": "أدخل عدد مراحل التطوير",
+      "approximateHeight": "الارتفاع التقريبي (عدد الطوابق)",
+      "approximateHeightPlaceholder": "أدخل الارتفاع التقريبي بعدد الطوابق"
+    },
+    "formC": {
+      "title": "ج - حساب الضمان",
+      "isOffPlan": "هل المشروع من نوع خارج المخطط؟",
+      "bankName": "اسم البنك",
+      "bankNamePlaceholder": "أدخل اسم البنك",
+      "estimatedProjectValue": "القيمة المقدرة للمشروع",
+      "estimatedProjectValuePlaceholder": "أدخل القيمة المقدرة للمشروع"
+    },
+    "formD": {
+      "title": "د - طلب الترخيص",
+      "numberOfUnitsForSale": "عدد الوحدات للبيع",
+      "numberOfUnitsForSalePlaceholder": "أدخل عدد الوحدات للبيع",
+      "startSaleDate": "تاريخ بدء البيع",
+      "expectedDeliveryDate": "تاريخ التسليم المتوقع",
+      "downPaymentPercentage": "نسبة الدفعة الأولى (%)",
+      "downPaymentPercentagePlaceholder": "أدخل نسبة الدفعة الأولى"
+    }
   },
   "payment": {
     "paymentSummary": "ملخص الدفع",

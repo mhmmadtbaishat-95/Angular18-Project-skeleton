@@ -1,8 +1,18 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of, delay } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { FormDefinition } from '../models/form-field.model';
 import { Service, ServiceRequest, RequestStatus, ServiceCategory } from '../models/service.model';
 import { HttpClientService } from '@data/http/services/http-client.service';
+import { ENDPOINTS, buildEndpoint } from '@data/http/endpoints';
+import { environment } from '../../../../environments/environment';
+import { 
+  IDeveloperInfo, 
+  IServiceRequestPayload, 
+  IServiceRequestResponse,
+  IDocumentUploadResponse 
+} from '../models/api-request.model';
 
 /**
  * Payment result interface
@@ -22,6 +32,11 @@ export interface PaymentResult {
 })
 export class ServiceRequestService {
   private readonly httpClient = inject(HttpClientService);
+  private readonly http = inject(HttpClient); // Direct HttpClient for file uploads
+  
+  // Environment flag to switch between mock and real API
+  // Set useMockApi to false in environment.ts when API is ready
+  private readonly useMockData = environment.useMockApi !== false;
 
   /**
    * Gets form definition by ID
@@ -47,16 +62,82 @@ export class ServiceRequestService {
   }
 
   /**
-   * Submits service request
+   * Gets current developer information
+   * This will be pre-populated in the form (read-only)
    */
-  submitServiceRequest(requestData: any): Observable<any> {
-    // In production, this would be: return this.httpClient.post('/api/service-requests', requestData);
-    // For demo purposes, simulate submission
-    return of({
-      id: `SR-${Date.now()}`,
-      status: 'submitted',
-      ...requestData
-    }).pipe(delay(1000));
+  getDeveloperInfo(): Observable<IDeveloperInfo> {
+    if (this.useMockData) {
+      // Mock data for development
+      const mockData: IDeveloperInfo = {
+        developerRegistrationNumber: 'DEV-2024-001234',
+        developerName: 'Qatar Real Estate Development Co.',
+        developerType: 'Legal' as 'Natural' | 'Legal',
+        licenseStatus: 'Active' as 'Active' | 'Expired' | 'Suspended' | 'Pending',
+        licenseExpirationDate: '2025-12-31'
+      };
+      return of(mockData).pipe(delay(500));
+    }
+    
+    // Real API call - just uncomment when API is ready
+    return this.httpClient.get<IDeveloperInfo>(ENDPOINTS.SERVICE_REQUEST.DEVELOPER_INFO);
+  }
+
+  /**
+   * Submits service request
+   * When API is ready, just set useMockData to false
+   */
+  submitServiceRequest(requestData: IServiceRequestPayload): Observable<IServiceRequestResponse> {
+    if (this.useMockData) {
+      // Mock response for development
+      return of({
+        id: `SR-${Date.now()}`,
+        requestNumber: `SR-${Date.now()}`,
+        status: 'submitted',
+        submittedAt: new Date().toISOString(),
+        message: 'Request submitted successfully'
+      }).pipe(delay(1000));
+    }
+    
+    // Real API call - just uncomment when API is ready
+    return this.httpClient.post<IServiceRequestResponse>(
+      ENDPOINTS.SERVICE_REQUEST.SUBMIT,
+      requestData
+    );
+  }
+
+  /**
+   * Uploads documents for a service request
+   * Handles file uploads with FormData
+   */
+  uploadDocuments(requestId: string, files: File[]): Observable<IDocumentUploadResponse[]> {
+    if (this.useMockData) {
+      // Mock response for development
+      const mockResponses: IDocumentUploadResponse[] = files.map((file, index) => ({
+        documentId: `DOC-${Date.now()}-${index}`,
+        fileName: file.name,
+        fileSize: file.size,
+        fileUrl: `https://api.example.com/documents/DOC-${Date.now()}-${index}`,
+        uploadedAt: new Date().toISOString()
+      }));
+      return of(mockResponses).pipe(delay(1500));
+    }
+    
+    // Real API call - FormData for file uploads
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append('files', file, file.name);
+    });
+    
+    const endpoint = buildEndpoint(ENDPOINTS.SERVICE_REQUEST.UPLOAD_DOCUMENTS, { id: requestId });
+    
+    // Use HttpClient directly for file uploads (FormData)
+    return this.http.post<{ data: IDocumentUploadResponse[] }>(
+      `${environment.apiUrl}${endpoint}`,
+      formData
+      // Don't set Content-Type header - browser will set it with boundary for multipart/form-data
+    ).pipe(
+      map((response: any) => response.data || response)
+    );
   }
 
   /**
@@ -89,10 +170,15 @@ export class ServiceRequestService {
    * Gets a specific service by ID
    */
   getService(serviceId: string): Observable<Service | null> {
-    // In production: return this.httpClient.get<Service>(`/api/services/${serviceId}`);
-    const services = this.getMockServices();
-    const service = services.find(s => s.id === serviceId) || null;
-    return of(service).pipe(delay(300));
+    if (this.useMockData) {
+      const services = this.getMockServices();
+      const service = services.find(s => s.id === serviceId) || null;
+      return of(service).pipe(delay(300));
+    }
+    
+    // Real API call
+    const endpoint = buildEndpoint(ENDPOINTS.SERVICE_REQUEST.SERVICE_BY_ID, { id: serviceId });
+    return this.httpClient.get<Service>(endpoint);
   }
 
   /**

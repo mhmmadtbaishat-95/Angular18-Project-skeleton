@@ -52,12 +52,27 @@ export const DASHBOARD_ENDPOINTS = {
 } as const;
 
 /**
+ * Service Request endpoints
+ */
+export const SERVICE_REQUEST_ENDPOINTS = {
+  BASE: '/service-requests',
+  SUBMIT: '/service-requests',
+  BY_ID: '/service-requests/:id',
+  LIST: '/service-requests',
+  DEVELOPER_INFO: '/developers/current',
+  UPLOAD_DOCUMENTS: '/service-requests/:id/documents',
+  SERVICES: '/services',
+  SERVICE_BY_ID: '/services/:id',
+} as const;
+
+/**
  * All API endpoints grouped by feature
  */
 export const ENDPOINTS = {
   AUTH: AUTH_ENDPOINTS,
   USERS: USER_ENDPOINTS,
   DASHBOARD: DASHBOARD_ENDPOINTS,
+  SERVICE_REQUEST: SERVICE_REQUEST_ENDPOINTS,
 } as const;
 
 /**

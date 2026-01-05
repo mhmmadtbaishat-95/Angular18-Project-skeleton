@@ -428,7 +428,93 @@
     "serviceName": "Service Name",
     "successTitle": "Request Submitted Successfully",
     "successMessage": "Your service request [{{requestNumber}}] for {{serviceName}} has been successfully submitted and is now under review.",
-    "goToServicesList": "Go to Services List"
+    "goToServicesList": "Go to Services List",
+    "requestInformation": "Request Information",
+    "requestInformationDesc": "Please review your developer information below",
+    "developerRegistrationNumber": "Developer Registration Number",
+    "developerName": "Developer Name",
+    "developerType": "Type of Developer",
+    "licenseStatus": "License Status",
+    "licenseExpirationDate": "License Expiration Date",
+    "documents": "Documents",
+    "documentsDesc": "Upload the required documents for your application",
+    "uploadDocuments": "Upload Documents",
+    "uploadHint": "Click to upload or drag and drop files here (PDF, JPG, PNG, DOC, DOCX - Max 10MB)",
+    "uploadedDocuments": "Uploaded Documents",
+    "review": "Review",
+    "reviewDesc": "Please review your information before submitting",
+    "submissionSuccess": "Request Submitted Successfully",
+    "referenceNumber": "Reference Number",
+    "submissionInfo": "Your request has been submitted successfully. You will receive a confirmation email shortly. Please keep your reference number for future reference.",
+    "projectInformation": "Project Information",
+    "projectInformationDesc": "Please complete all project information forms",
+    "months": "Months",
+    "floors": "Floors",
+    "steps": {
+      "requestInformation": {
+        "title": "Request Information",
+        "description": "Enter your request details"
+      },
+      "projectInformation": {
+        "title": "Project Information",
+        "description": "Complete project details"
+      },
+      "documents": {
+        "title": "Documents",
+        "description": "Upload required documents"
+      },
+      "submission": {
+        "title": "Request Submission",
+        "description": "Submission confirmation"
+      }
+    },
+    "formA": {
+      "title": "A - Project Licenses Request",
+      "projectName": "Project Name",
+      "projectNamePlaceholder": "Enter project name",
+      "projectType": "Project Type",
+      "projectTypePlaceholder": "Enter project type",
+      "area": "Area",
+      "areaPlaceholder": "Enter area",
+      "plotNumber": "Plot Number",
+      "plotNumberPlaceholder": "Enter plot number",
+      "landArea": "Land Area (m²)",
+      "landAreaPlaceholder": "Enter land area in square meters",
+      "numberOfUnits": "Number of Units (Optional)",
+      "numberOfUnitsPlaceholder": "Enter number of units",
+      "executionPeriod": "Execution Period (Months)",
+      "executionPeriodPlaceholder": "Enter execution period in months"
+    },
+    "formB": {
+      "title": "B - Master Plan & Preliminary Design",
+      "planType": "Plan Type",
+      "planTypePlaceholder": "Enter plan type",
+      "designStage": "Design Stage",
+      "designStagePlaceholder": "Enter design stage",
+      "numberOfBuildings": "Number of Buildings",
+      "numberOfBuildingsPlaceholder": "Enter number of buildings",
+      "numberOfDevelopmentStages": "Number of Development Stages",
+      "numberOfDevelopmentStagesPlaceholder": "Enter number of development stages",
+      "approximateHeight": "Approximate Height (Number of Floors)",
+      "approximateHeightPlaceholder": "Enter approximate height in number of floors"
+    },
+    "formC": {
+      "title": "C - Escrow Account",
+      "isOffPlan": "Is the project off-plan style?",
+      "bankName": "Bank Name",
+      "bankNamePlaceholder": "Enter bank name",
+      "estimatedProjectValue": "Estimated Value of the Project",
+      "estimatedProjectValuePlaceholder": "Enter estimated project value"
+    },
+    "formD": {
+      "title": "D - License Application",
+      "numberOfUnitsForSale": "Number of Units for Sale",
+      "numberOfUnitsForSalePlaceholder": "Enter number of units for sale",
+      "startSaleDate": "Start Sale Date",
+      "expectedDeliveryDate": "Expected Delivery Date",
+      "downPaymentPercentage": "Down Payment Percentage (%)",
+      "downPaymentPercentagePlaceholder": "Enter down payment percentage"
+    }
   },
   "payment": {
     "paymentSummary": "Payment Summary",

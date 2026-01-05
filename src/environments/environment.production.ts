@@ -8,6 +8,8 @@ export const environment = {
   production: true,
   apiUrl: 'https://api.example.com/api',
   apiVersion: 'v1',
+  // Set to false when API is ready to use real endpoints
+  useMockApi: false, // Change to false when API endpoints are ready
   cacheConfig: {
     ttl: 30 * 60 * 1000, // 30 minutes
     maxSize: 200,

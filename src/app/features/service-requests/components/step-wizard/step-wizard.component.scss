@@ -3,6 +3,8 @@
 
   .step-wizard-container {
     @apply relative;
+    backdrop-filter: blur(30px);
+    border-radius: 0px;
   }
 
   // Progress Bar
@@ -52,6 +54,7 @@
     // Step Icon
     .step-icon {
       @apply text-sm font-bold;
+      color:black;
     }
 
     .check-icon {
@@ -59,7 +62,7 @@
     }
 
     .active-icon {
-      color: #8B1538;
+      color:black;
     }
 
     // Connector Line
@@ -137,6 +140,22 @@
       .step-connector {
         @apply top-12 left-6 w-0.5 h-full;
         transform: translateX(-50%);
+      }
+    }
+  }
+
+  // RTL Support for connector lines
+  [dir="rtl"] &,
+  :host-context([dir="rtl"]) &,
+  :host-context(.rtl) & {
+    .step-item {
+      .step-connector {
+        left: auto;
+        right: calc(50% + 20px);
+
+        &.completed {
+          background: linear-gradient(-90deg, #8B1538 0%, #A01D45 100%);
+        }
       }
     }
   }
