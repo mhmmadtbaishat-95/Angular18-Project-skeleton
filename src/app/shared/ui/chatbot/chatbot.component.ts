@@ -25,7 +25,7 @@ import { I18nService } from '../../../core/services/i18n/i18n.service';
         <div class="chat-header">
           <div class="chat-header-content">
             <img 
-              src="https://i.ibb.co/xqjQQ9NW/logo-1.png" 
+               src="assets/logo.png" 
               alt="Entity Logo"
               class="chat-logo"
             />

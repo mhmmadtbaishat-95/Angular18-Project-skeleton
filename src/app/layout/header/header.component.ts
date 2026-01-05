@@ -25,7 +25,7 @@ import { ClickOutsideDirective } from '@shared/pipes-directives/click-outside.di
           <div class="header-brand">
             <div class="brand-logo-icon">
               <img 
-                src="https://i.ibb.co/xqjQQ9NW/logo-1.png" 
+                src="assets/logo.png" 
                 alt="Aqarat Logo"
                 class="logo-image"
               />
