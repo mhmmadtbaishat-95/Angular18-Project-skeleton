@@ -59,7 +59,7 @@ export const SERVICE_REQUEST_ENDPOINTS = {
   SUBMIT: '/service-requests',
   BY_ID: '/service-requests/:id',
   LIST: '/service-requests',
-  DEVELOPER_INFO: '/developers/current',
+  DEVELOPER_INFO: '/Request/GetDeveloperDetailsByGuid',
   UPLOAD_DOCUMENTS: '/service-requests/:id/documents',
   DOCUMENT_TYPES: '/service-requests/document-types',
   SERVICES: '/services',

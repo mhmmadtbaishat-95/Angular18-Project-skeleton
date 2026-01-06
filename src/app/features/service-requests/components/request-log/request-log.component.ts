@@ -49,7 +49,6 @@ export class RequestLogComponent implements OnInit {
     this.isLoading = true;
     this.serviceRequestService.getRequestLog().subscribe({
       next: (logs) => {
-        debugger;
         this.requestLogs = logs;
         this.filteredLogs = logs;
         this.isLoading = false;

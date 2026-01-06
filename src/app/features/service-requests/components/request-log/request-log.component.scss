@@ -139,13 +139,6 @@
   transition: background-color 0s ease-out;
 }
 
-.request-log-table tbody tr.table-row {
-  cursor: pointer;
-}
-
-.request-log-table tbody tr.table-row:hover {
-  background-color: rgba(75, 85, 99, 0);
-}
 
 .request-log-table tbody tr:last-child {
   border-bottom: none;

@@ -56,6 +56,8 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   serviceName: string = '';
   isRTL = signal(this.i18nService.isRTL());
   showSuccessModal = false;
+  showEligibilityModal = false;
+  isEligible = true; // Track eligibility status
   submittedRequestNumber: string = '';
   submissionResponse: IServiceRequestResponse | null = null;
 
@@ -75,14 +77,14 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   isLoadingDocumentTypes = false;
 
   constructor() {
-    // Pre-populated developer information (read-only)
+    // Pre-populated developer information (read-only, populated dynamically from API)
     this.requestForm = this.fb.group({
-      // Developer info (read-only)
-      developerRegistrationNumber: [{ value: 'DEV-2024-001234', disabled: true }],
-      developerName: [{ value: 'Qatar Real Estate Development Co.', disabled: true }],
-      developerType: [{ value: 'Legal', disabled: true }],
-      licenseStatus: [{ value: 'Active', disabled: true }],
-      licenseExpirationDate: [{ value: '2025-12-31', disabled: true }],
+      // Developer info (read-only, populated from API)
+      developerRegistrationNumber: [{ value: '', disabled: true }],
+      developerName: [{ value: '', disabled: true }],
+      developerType: [{ value: '', disabled: true }],
+      licenseStatus: [{ value: '', disabled: true }],
+      licenseExpirationDate: [{ value: '', disabled: true }],
 
       // Form A: Project Licenses Request
       projectName: ['', Validators.required],
@@ -233,21 +235,90 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   private loadDeveloperInfo(): void {
     this.serviceRequestService.getDeveloperInfo().subscribe({
       next: (developerInfo) => {
+        console.log('Developer info received from API:', developerInfo);
+        
+        // Check license status eligibility
+        const licenseStatus = developerInfo.licenseStatus || '';
+        this.isEligible = licenseStatus === 'Active';
+        
+        if (!this.isEligible) {
+          // Show eligibility modal
+          this.showEligibilityModal = true;
+          // Disable the entire form
+          this.requestForm.disable();
+          // Show error notification
+          this.notificationService.error(
+            this.translateService.instant('serviceRequest.notEligibleMessage') || 
+            'Your license is not active. You are not eligible to submit service requests.'
+          );
+        } else {
+          // Enable form if eligible
+          this.requestForm.enable();
+          // Re-disable the read-only fields
+          const readOnlyFields = [
+            'developerRegistrationNumber',
+            'developerName',
+            'developerType',
+            'licenseStatus',
+            'licenseExpirationDate'
+          ];
+          readOnlyFields.forEach(field => {
+            this.requestForm.get(field)?.disable({ emitEvent: false });
+          });
+        }
+        
         // Update form with developer info from API
-        this.requestForm.patchValue({
-          developerRegistrationNumber: developerInfo.developerRegistrationNumber,
-          developerName: developerInfo.developerName,
-          developerType: developerInfo.developerType,
-          licenseStatus: developerInfo.licenseStatus,
-          licenseExpirationDate: developerInfo.licenseExpirationDate,
+        // For disabled fields, we need to enable them temporarily, update, then disable again
+        const fieldsToUpdate = [
+          'developerRegistrationNumber',
+          'developerName',
+          'developerType',
+          'licenseStatus',
+          'licenseExpirationDate'
+        ];
+
+        // Enable fields temporarily to update values
+        fieldsToUpdate.forEach(field => {
+          this.requestForm.get(field)?.enable({ emitEvent: false });
         });
+
+        // Update values
+        this.requestForm.patchValue({
+          developerRegistrationNumber: developerInfo.developerRegistrationNumber || '',
+          developerName: developerInfo.developerName || '',
+          developerType: developerInfo.developerType || '',
+          licenseStatus: developerInfo.licenseStatus || '',
+          licenseExpirationDate: developerInfo.licenseExpirationDate || '',
+        }, { emitEvent: false });
+
+        // Disable fields again (only if eligible, otherwise form is already disabled)
+        if (this.isEligible) {
+          fieldsToUpdate.forEach(field => {
+            this.requestForm.get(field)?.disable({ emitEvent: false });
+          });
+        }
       },
       error: (error) => {
         console.error('Failed to load developer information:', error);
-        // Keep the default mock values if API fails
-        // In production, you might want to show an error message
+        // On error, show eligibility modal and disable form
+        this.isEligible = false;
+        this.showEligibilityModal = true;
+        this.requestForm.disable();
+        this.notificationService.error(
+          this.translateService.instant('serviceRequest.errorLoadingDeveloperInfo') ||
+          'Failed to load developer information. Please contact support.'
+        );
       },
     });
+  }
+
+  /**
+   * Closes the eligibility modal
+   */
+  closeEligibilityModal(): void {
+    this.showEligibilityModal = false;
+    // Navigate back to services page
+    this.router.navigate(['/service-requests/services']);
   }
 
   /**
