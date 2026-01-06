@@ -104,6 +104,7 @@ interface ServiceItem {
       .page-title {
         @apply text-2xl md:text-3xl lg:text-4xl font-bold text-white;
         margin: 0;
+        color: #a19576;
       }
 
       .refresh-btn {

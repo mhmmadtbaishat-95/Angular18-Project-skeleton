@@ -92,7 +92,7 @@ import { I18nService } from '../../../core/services/i18n/i18n.service';
         [class.chat-open]="isOpen()"
         [attr.aria-label]="isOpen() ? 'Close chat' : 'Open chat'"
       >
-        <i *ngIf="!isOpen()" class="fas fa-comments"></i>
+        <img src="assets/chat-icon.png" alt="chat-icon" *ngIf="!isOpen()" class="chat-logo" />
         <i *ngIf="isOpen()" class="fas fa-times"></i>
         <span *ngIf="unreadCount() > 0" class="chatbot-badge">{{ unreadCount() }}</span>
       </button>
@@ -120,11 +120,14 @@ import { I18nService } from '../../../core/services/i18n/i18n.service';
         @apply shadow-2xl flex items-center justify-center cursor-pointer;
         @apply transition-all duration-300 transform hover:scale-110;
         position: relative;
-        box-shadow: 0 8px 24px rgba(139, 21, 56, 0.4);
+        border: 2px solid rgba(218, 203, 161, 1);
+        box-shadow: 0px 0px 14.21px 0px rgba(218, 203, 161, 0.6);
+        background: rgba(161, 149, 118, 1);
+        background: linear-gradient(204.53deg, #dacba1 -17.94%, #625c4c 85.95%);
       }
 
       .chatbot-button:hover {
-        box-shadow: 0 12px 32px rgba(139, 21, 56, 0.5);
+        box-shadow: 0px 0px 20px rgba(218, 157, 0, 0.5);
         transform: scale(1.1);
       }
 
@@ -202,8 +205,10 @@ import { I18nService } from '../../../core/services/i18n/i18n.service';
       }
 
       .chat-logo {
-        height: 40px;
+        height: 50px;
         width: auto;
+        border-bottom-right-radius: 20px;
+        border-bottom-left-radius: 20px;
         object-fit: contain;
       }
 

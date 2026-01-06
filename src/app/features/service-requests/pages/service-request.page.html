@@ -5,11 +5,11 @@
       <!-- Breadcrumbs -->
       <div class="breadcrumb-nav">
         <a routerLink="/" class="breadcrumb-link">{{ 'services.breadcrumbHome' | t }}</a>
-        <span class="breadcrumb-separator">{{ isRTL() ? '<' : '>' }}</span>
+        <span class="breadcrumb-separator">></span>
         <a routerLink="/service-requests/services" class="breadcrumb-link">{{ 'services.breadcrumbServices' | t }}</a>
-        <span class="breadcrumb-separator">{{ isRTL() ? '<' : '>' }}</span>
+        <span class="breadcrumb-separator">></span>
         <a *ngIf="serviceId" [routerLink]="['/service-requests/service', serviceId]" class="breadcrumb-link">{{ serviceName || ('serviceRequest.serviceName' | t) }}</a>
-        <span *ngIf="serviceId" class="breadcrumb-separator">{{ isRTL() ? '<' : '>' }}</span>
+        <span *ngIf="serviceId" class="breadcrumb-separator">></span>
         <span class="breadcrumb-current">{{ 'serviceRequest.submitApplication' | t }}</span>
       </div>
 
@@ -561,7 +561,7 @@
               *ngIf="canProceedNext() && currentStepIndex !== 2"
               type="button"
               (click)="nextStep()"
-              class="btn btn-primary"
+              class="btn btn-primary next-btn"
             >
               <span>{{ 'form.next' | t }}</span>
               <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">

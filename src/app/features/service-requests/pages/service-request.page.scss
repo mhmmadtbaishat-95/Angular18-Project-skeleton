@@ -389,7 +389,7 @@
 }
 
 .form-actions {
-  flex-direction: row-reverse !important;
+  flex-direction: row !important;
 }
 
 .readonly-note {
@@ -397,6 +397,9 @@
   direction: rtl !important;
 }
 
+.next-btn {
+  margin-inline-start: auto;
+}
 
 /* Success Modal */
 .success-modal-overlay {
@@ -798,6 +801,7 @@
 
   .page-title {
     @apply text-xl md:text-2xl;
+    color: #A19576;
   }
 
   .title-section {
