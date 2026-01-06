@@ -36,7 +36,7 @@
 }
 
 .header-content {
-  @apply max-w-7xl mx-auto px-6 lg:px-8;
+  @apply max-w-7xl px-6 lg:px-8;
 }
 
 .header-left-section {
@@ -96,12 +96,11 @@
 
 /* Main Content */
 .request-log-main {
-  @apply max-w-7xl mx-auto px-6 lg:px-8 pb-8;
+  @apply max-w-7xl px-6 lg:px-8 pb-8;
 }
 
 /* Table Wrapper - Dark Grey Panel */
 .table-wrapper {
-  @apply bg-gray-800/90;
   border-radius: 0.75rem;
   padding: 1.5rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
