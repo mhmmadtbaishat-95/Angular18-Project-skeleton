@@ -475,12 +475,8 @@
               <span>{{ 'form.previous' | t }}</span>
             </button>
 
-            <button
-              *ngIf="canProceedNext() && currentStepIndex === 0"
-              type="button"
-              (click)="nextStep()"
-              class="btn btn-primary next-btn"
-            >
+            <button *ngIf="canProceedNext() && currentStepIndex === 0" type="button" (click)="nextStep()"
+              class="btn btn-primary next-btn">
               <span>{{ 'form.next' | t }}</span>
               <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -489,32 +485,22 @@
             </button>
 
             <!-- Submit Button on Stage 2 (Project Information) -->
-            <button
-              *ngIf="currentStepIndex === 1"
-              type="button"
-              (click)="nextStep()"
-              class="btn btn-primary submit-btn"
-              [disabled]="isLoading"
-            >
+            <button *ngIf="currentStepIndex === 1" type="button" (click)="nextStep()" class="btn btn-primary submit-btn"
+              [disabled]="isLoading">
               <span *ngIf="!isLoading">{{ 'common.submit' | t }}</span>
               <span *ngIf="isLoading">{{ 'common.loading' | t }}</span>
               <svg *ngIf="!isLoading" class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </button>
 
             <!-- Complete Button on Documents Step -->
-            <button
-              *ngIf="currentStepIndex === 2"
-              type="button"
-              (click)="nextStep()"
-              class="btn btn-primary complete-btn"
-              [disabled]="!areAllRequiredDocumentsUploaded()"
-              [title]="!areAllRequiredDocumentsUploaded() ? ('serviceRequest.uploadAllRequiredDocuments' | t) : ''"
-            >
+            <button *ngIf="currentStepIndex === 2" type="button" (click)="nextStep()"
+              class="btn btn-primary complete-btn" [disabled]="!areAllRequiredDocumentsUploaded()"
+              [title]="!areAllRequiredDocumentsUploaded() ? ('serviceRequest.uploadAllRequiredDocuments' | t) : ''">
               <span>{{ 'serviceRequest.completeSubmission' | t }}</span>
               <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </button>
           </div>
@@ -549,7 +535,7 @@
       </div>
 
       <!-- Additional API Response Information -->
-      <div *ngIf="submissionResponse" class="submission-details">
+      <!-- <div *ngIf="submissionResponse" class="submission-details">
         <div *ngIf="submissionResponse.status" class="detail-item">
           <span class="detail-label">{{ 'serviceRequest.status' | t }}:</span>
           <span class="detail-value">{{ 'serviceRequest.statusSubmitted' | t }}</span>
@@ -562,11 +548,11 @@
           <span class="detail-label">{{ 'serviceRequest.message' | t }}:</span>
           <span class="detail-value">{{ submissionResponse.message }}</span>
         </div>
-      </div>
+      </div> -->
 
-      <div class="submission-info">
+      <!-- <div class="submission-info">
         <p class="info-text">{{ 'serviceRequest.submissionInfo' | t }}</p>
-      </div>
+      </div> -->
 
       <button type="button" class="success-btn" (click)="goToServicesList()">
         {{ 'serviceRequest.goToServicesList' | t }}

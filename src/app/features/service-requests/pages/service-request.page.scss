@@ -405,8 +405,8 @@
   @apply fixed inset-0 z-50 flex items-center justify-center;
   background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(4px);
-  padding-top: 65px;
-  align-items: flex-start;
+  // padding-top: 65px;
+  // align-items: flex-start;
 }
 
 .success-modal {
