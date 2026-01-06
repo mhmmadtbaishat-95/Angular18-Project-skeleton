@@ -162,21 +162,17 @@ export class ServiceRequestService {
    * Gets request log entries (all requests with applicant information)
    * This is for administrative/log viewing purposes
    */
-getRequestLog(): Observable<RequestLogEntry[]> {
-  if (this.useMockData) {
-    return of(this.getMockRequestLogs()).pipe(delay(500));
-  }
+getRequestLog(): Observable<any> {
+  const params = new HttpParams()
+    .set('accountGuid', 'ff846f37-4fe2-4291-97b9-ef92b45bac9c');
 
-  const body = {
-    accountGuid: 'ff846f37-4fe2-4291-97b9-ef92b45bac9c'
-  };
-
-  return this.httpClient.post<RequestLogEntry[]>(
-    ENDPOINTS.SERVICE_REQUEST.SERVICE_LOG,
-    body
-  );
+  return this.httpClient.post<any>(
+    '/Request/GetAllRequestsByDeveloperGuid?accountGuid=ff846f37-4fe2-4291-97b9-ef92b45bac9c',
+    null
+  ) .pipe(
+      map(res => res) // adjust to res.result if needed
+    );
 }
-
   /**
    * Gets a specific service request by ID
    */
