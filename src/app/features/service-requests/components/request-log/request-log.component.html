@@ -3,18 +3,19 @@
   <div class="request-log-header">
     <div class="header-content">
       <div class="header-left-section">
-        <div class="breadcrumb-container">
-          <a routerLink="/dashboard" class="breadcrumb-link">{{ 'pages.home' | t }}</a>
-          <span class="breadcrumb-separator">></span>
-          <span class="breadcrumb-current">{{ 'navigation.requestLog' | t }}</span>
-        </div>
         <div class="title-container">
           <h1 class="page-title">{{ 'requestLog.title' | t }}</h1>
           <button class="refresh-button" title="Refresh">
             <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
           </button>
+        </div>
+        <div class="breadcrumb-container">
+          <a routerLink="/dashboard" class="breadcrumb-link">{{ 'pages.home' | t }}</a>
+          <span class="breadcrumb-separator">></span>
+          <span class="breadcrumb-current">{{ 'navigation.requestLog' | t }}</span>
         </div>
       </div>
     </div>
@@ -22,11 +23,18 @@
 
   <!-- Main Content Container -->
   <div class="request-log-main">
-    <app-skeleton-loader [isLoading]="isLoading" [count]="6" type="request"></app-skeleton-loader>
+    <!-- <app-skeleton-loader [isLoading]="isLoading" [count]="6" type="request"></app-skeleton-loader> -->
+
+
+    <app-table-skeleton-loader [isLoading]="isLoading" [rows]="8" [columns]="5" [showHeader]="true" [animate]="true"
+      [dense]="false" [dir]=" 'rtl'" [columnWidths]="['10rem', '1fr', '8rem', '8rem', '6rem']">
+    </app-table-skeleton-loader>
+
 
     <div *ngIf="!isLoading && filteredLogs.length === 0" class="empty-state">
       <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
       </svg>
       <h3 class="empty-title">{{ 'requestLog.noLogsFound' | t }}</h3>
       <p class="empty-text">{{ 'requestLog.noLogsYet' | t }}</p>
@@ -45,10 +53,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="let log of filteredLogs"
-            class="table-row"
-          >
+          <tr *ngFor="let log of filteredLogs" class="table-row">
             <td class="service-name-cell">
               <span class="service-name-text">{{ getServiceName(log) }}</span>
             </td>

@@ -7,6 +7,7 @@ import { ServiceRequestService } from '../../services/service-request.service';
 import { SkeletonLoaderComponent } from '@shared/ui/skeleton-loader/skeleton-loader.component';
 import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 import { TranslateService } from '@ngx-translate/core';
+import { TableSkeletonLoaderComponent } from '@shared/table-skeleton-loader/table-skeleton-loader.component';
 
 /**
  * Request log component
@@ -15,9 +16,15 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-request-log',
   standalone: true,
-  imports: [CommonModule, RouterLink, SkeletonLoaderComponent, TranslatePipe],
+  imports: [
+    CommonModule,
+    RouterLink,
+    SkeletonLoaderComponent,
+    TranslatePipe,
+    TableSkeletonLoaderComponent,
+  ],
   templateUrl: './request-log.component.html',
-  styleUrls: ['./request-log.component.scss']
+  styleUrls: ['./request-log.component.scss'],
 })
 export class RequestLogComponent implements OnInit {
   private readonly serviceRequestService = inject(ServiceRequestService);
@@ -35,7 +42,7 @@ export class RequestLogComponent implements OnInit {
     { value: RequestStatus.APPROVED, labelKey: 'requestLog.approved' },
     { value: RequestStatus.REJECTED, labelKey: 'requestLog.rejected' },
     { value: RequestStatus.COMPLETED, labelKey: 'requestLog.completed' },
-    { value: RequestStatus.CANCELLED, labelKey: 'requestLog.closed' }
+    { value: RequestStatus.CANCELLED, labelKey: 'requestLog.closed' },
   ];
 
   ngOnInit(): void {
@@ -56,7 +63,7 @@ export class RequestLogComponent implements OnInit {
       error: (error) => {
         console.error('Failed to load request logs:', error);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -68,7 +75,7 @@ export class RequestLogComponent implements OnInit {
     if (status === 'all') {
       this.filteredLogs = [...this.requestLogs];
     } else {
-      this.filteredLogs = this.requestLogs.filter(r => r.status === status);
+      this.filteredLogs = this.requestLogs.filter((r) => r.status === status);
     }
   }
 
@@ -84,7 +91,7 @@ export class RequestLogComponent implements OnInit {
       [RequestStatus.REJECTED]: 'status-rejected',
       [RequestStatus.IN_PROGRESS]: 'status-in-progress',
       [RequestStatus.COMPLETED]: 'status-completed',
-      [RequestStatus.CANCELLED]: 'status-closed'
+      [RequestStatus.CANCELLED]: 'status-closed',
     };
     return classes[status] || '';
   }
@@ -101,7 +108,7 @@ export class RequestLogComponent implements OnInit {
       [RequestStatus.REJECTED]: 'requestLog.rejected',
       [RequestStatus.IN_PROGRESS]: 'requestLog.inProgress',
       [RequestStatus.COMPLETED]: 'requestLog.completed',
-      [RequestStatus.CANCELLED]: 'requestLog.closed'
+      [RequestStatus.CANCELLED]: 'requestLog.closed',
     };
     const key = labelKeys[status];
     return key ? this.translateService.instant(key) : status;
@@ -152,6 +159,6 @@ export class RequestLogComponent implements OnInit {
    * Gets count for a status
    */
   getStatusCount(status: RequestStatus): number {
-    return this.requestLogs.filter(r => r.status === status).length;
+    return this.requestLogs.filter((r) => r.status === status).length;
   }
 }

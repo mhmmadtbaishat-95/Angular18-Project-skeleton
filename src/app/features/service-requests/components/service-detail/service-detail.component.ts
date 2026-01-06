@@ -8,6 +8,7 @@ import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 import { TranslateService } from '@ngx-translate/core';
 import { I18nService } from '@core/services/i18n/i18n.service';
 import { Subscription, filter } from 'rxjs';
+import { TableSkeletonLoaderComponent } from '@shared/table-skeleton-loader/table-skeleton-loader.component';
 
 /**
  * Service detail component
@@ -16,9 +17,15 @@ import { Subscription, filter } from 'rxjs';
 @Component({
   selector: 'app-service-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, SkeletonLoaderComponent, TranslatePipe],
+  imports: [
+    CommonModule,
+    RouterLink,
+    TableSkeletonLoaderComponent,
+    SkeletonLoaderComponent,
+    TranslatePipe,
+  ],
   templateUrl: './service-detail.component.html',
-  styleUrls: ['./service-detail.component.scss']
+  styleUrls: ['./service-detail.component.scss'],
 })
 export class ServiceDetailComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
@@ -41,7 +48,7 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
     { id: 'new', labelKey: 'serviceDetail.filters.newRequests', count: 0 },
     { id: 'renewal', labelKey: 'serviceDetail.filters.renewal', count: 0 },
     { id: 'modification', labelKey: 'serviceDetail.filters.modification', count: 0 },
-    { id: 'termination', labelKey: 'serviceDetail.filters.termination', count: 0 }
+    { id: 'termination', labelKey: 'serviceDetail.filters.termination', count: 0 },
   ];
 
   requests: any[] = [];
@@ -51,18 +58,18 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(() => {
       this.updateRTLState();
     });
-    
+
     // Subscribe to route changes to update RTL state
-    this.routerSubscription = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.updateRTLState();
-    });
-    
+    this.routerSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.updateRTLState();
+      });
+
     // Set initial RTL state
     this.updateRTLState();
 
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.serviceId = params['id'];
       this.loadService(this.serviceId);
     });
@@ -89,7 +96,7 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.serviceRequestService.getAvailableServices().subscribe({
       next: (services) => {
-        this.service = services.find(s => s.id === serviceId) || null;
+        this.service = services.find((s) => s.id === serviceId) || null;
         // If service not found, create a mock service based on ID
         if (!this.service && serviceId >= '1' && serviceId <= '8') {
           this.service = {
@@ -97,7 +104,9 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
             name: this.translateService.instant(`services.service${serviceId}.title`),
             nameAr: this.translateService.instant(`services.service${serviceId}.title`),
             description: this.translateService.instant(`services.service${serviceId}.description`),
-            descriptionAr: this.translateService.instant(`services.service${serviceId}.description`),
+            descriptionAr: this.translateService.instant(
+              `services.service${serviceId}.description`
+            ),
             code: `SRV-${serviceId}`,
             category: 'commercial' as any,
             fee: 100,
@@ -107,7 +116,7 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
             formId: 'default-form',
             requiredDocuments: [],
             eligibilityCriteria: [],
-            active: true
+            active: true,
           };
         }
         this.generateRequests();
@@ -122,8 +131,12 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
             id: this.serviceId,
             name: this.translateService.instant(`services.service${this.serviceId}.title`),
             nameAr: this.translateService.instant(`services.service${this.serviceId}.title`),
-            description: this.translateService.instant(`services.service${this.serviceId}.description`),
-            descriptionAr: this.translateService.instant(`services.service${this.serviceId}.description`),
+            description: this.translateService.instant(
+              `services.service${this.serviceId}.description`
+            ),
+            descriptionAr: this.translateService.instant(
+              `services.service${this.serviceId}.description`
+            ),
             code: `SRV-${this.serviceId}`,
             category: 'commercial' as any,
             fee: 100,
@@ -133,13 +146,13 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
             formId: 'default-form',
             requiredDocuments: [],
             eligibilityCriteria: [],
-            active: true
+            active: true,
           };
         }
         this.generateRequests();
         this.updateFilterCounts();
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -150,34 +163,34 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
     // Generate requests based on service ID
     // For service 1 (Real Estate Developer Licensing), show all 4 request types
     const baseRequests = [
-      { 
-        id: `${this.serviceId}-1`, 
-        type: 'new', 
-        action: 'termination', 
-        actionKey: 'serviceDetail.request.termination', 
-        titleKey: 'serviceDetail.requests.registration' 
+      {
+        id: `${this.serviceId}-1`,
+        type: 'new',
+        action: 'termination',
+        actionKey: 'serviceDetail.request.termination',
+        titleKey: 'serviceDetail.requests.registration',
       },
-      { 
-        id: `${this.serviceId}-2`, 
-        type: 'new', 
-        action: 'termination', 
-        actionKey: 'serviceDetail.request.termination', 
-        titleKey: 'serviceDetail.requests.renewal' 
+      {
+        id: `${this.serviceId}-2`,
+        type: 'new',
+        action: 'termination',
+        actionKey: 'serviceDetail.request.termination',
+        titleKey: 'serviceDetail.requests.renewal',
       },
-      { 
-        id: `${this.serviceId}-3`, 
-        type: 'new', 
-        action: 'termination', 
-        actionKey: 'serviceDetail.request.termination', 
-        titleKey: 'serviceDetail.requests.modification' 
+      {
+        id: `${this.serviceId}-3`,
+        type: 'new',
+        action: 'termination',
+        actionKey: 'serviceDetail.request.termination',
+        titleKey: 'serviceDetail.requests.modification',
       },
-      { 
-        id: `${this.serviceId}-4`, 
-        type: 'new', 
-        action: 'termination', 
-        actionKey: 'serviceDetail.request.termination', 
-        titleKey: 'serviceDetail.requests.termination' 
-      }
+      {
+        id: `${this.serviceId}-4`,
+        type: 'new',
+        action: 'termination',
+        actionKey: 'serviceDetail.request.termination',
+        titleKey: 'serviceDetail.requests.termination',
+      },
     ];
 
     // Add more requests based on service type
@@ -190,10 +203,10 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
    */
   private updateFilterCounts(): void {
     this.filters[0].count = this.requests.length; // All
-    this.filters[1].count = this.requests.filter(r => r.type === 'new').length; // New
-    this.filters[2].count = this.requests.filter(r => r.titleKey.includes('renewal')).length; // Renewal
-    this.filters[3].count = this.requests.filter(r => r.titleKey.includes('modification')).length; // Modification
-    this.filters[4].count = this.requests.filter(r => r.titleKey.includes('termination')).length; // Termination
+    this.filters[1].count = this.requests.filter((r) => r.type === 'new').length; // New
+    this.filters[2].count = this.requests.filter((r) => r.titleKey.includes('renewal')).length; // Renewal
+    this.filters[3].count = this.requests.filter((r) => r.titleKey.includes('modification')).length; // Modification
+    this.filters[4].count = this.requests.filter((r) => r.titleKey.includes('termination')).length; // Termination
   }
 
   /**
@@ -202,7 +215,7 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
   startRequest(): void {
     if (this.service) {
       this.router.navigate(['/service-requests/request', this.service.formId], {
-        queryParams: { serviceId: this.service.id }
+        queryParams: { serviceId: this.service.id },
       });
     }
   }
@@ -221,7 +234,9 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
     if (this.selectedFilter === 'all') {
       return this.requests;
     }
-    return this.requests.filter(r => r.type === this.selectedFilter || r.action === this.selectedFilter);
+    return this.requests.filter(
+      (r) => r.type === this.selectedFilter || r.action === this.selectedFilter
+    );
   }
 
   /**
@@ -230,7 +245,7 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
   viewDetails(requestId: string): void {
     // Navigate to request details page with service ID
     this.router.navigate(['/service-requests/view', requestId], {
-      queryParams: { serviceId: this.serviceId }
+      queryParams: { serviceId: this.serviceId },
     });
   }
 
@@ -242,18 +257,17 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
     this.router.navigate(['/service-requests/request', requestId]);
   }
 
-
   /**
    * Gets category icon
    */
   getCategoryIcon(category: any): string {
     const icons: Record<string, string> = {
-      'commercial': '🏢',
-      'industrial': '🏭',
-      'trade': '📦',
-      'investment': '💼',
-      'intellectual_property': '📄',
-      'consumer_protection': '🛡️'
+      commercial: '🏢',
+      industrial: '🏭',
+      trade: '📦',
+      investment: '💼',
+      intellectual_property: '📄',
+      consumer_protection: '🛡️',
     };
     return icons[category] || '📋';
   }
@@ -268,7 +282,7 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
       'Trade License (if applicable)': 'serviceDetail.documents.tradeLicense',
       'Company Registration Certificate': 'serviceDetail.documents.companyRegistration',
       'Memorandum of Association': 'serviceDetail.documents.memorandumOfAssociation',
-      'Power of Attorney (if applicable)': 'serviceDetail.documents.powerOfAttorney'
+      'Power of Attorney (if applicable)': 'serviceDetail.documents.powerOfAttorney',
     };
 
     const defaultDocs = [
@@ -276,28 +290,30 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
       'Trade License (if applicable)',
       'Company Registration Certificate',
       'Memorandum of Association',
-      'Power of Attorney (if applicable)'
+      'Power of Attorney (if applicable)',
     ];
 
     // If service has documents, return translation keys, otherwise return default keys
     if (this.service?.requiredDocuments?.length) {
-      return this.service.requiredDocuments.map(doc => documentMap[doc] || doc);
+      return this.service.requiredDocuments.map((doc) => documentMap[doc] || doc);
     }
 
-    return defaultDocs.map(doc => documentMap[doc] || doc);
+    return defaultDocs.map((doc) => documentMap[doc] || doc);
   }
 
   /**
    * Gets eligibility criteria
    */
   getEligibilityCriteria(): string[] {
-    return this.service?.eligibilityCriteria || [
-      'Qatari citizens',
-      'GCC nationals',
-      'Foreign investors with valid permits',
-      'Registered companies in Qatar',
-      'Legal entities authorized to conduct business'
-    ];
+    return (
+      this.service?.eligibilityCriteria || [
+        'Qatari citizens',
+        'GCC nationals',
+        'Foreign investors with valid permits',
+        'Registered companies in Qatar',
+        'Legal entities authorized to conduct business',
+      ]
+    );
   }
 
   /**
@@ -315,7 +331,9 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
   getServiceDescription(service: Service | null): string {
     if (!service) return '';
     const currentLang = this.translateService.currentLang || 'en';
-    return currentLang === 'ar' && service.descriptionAr ? service.descriptionAr : service.description;
+    return currentLang === 'ar' && service.descriptionAr
+      ? service.descriptionAr
+      : service.description;
   }
 
   /**
@@ -324,15 +342,19 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
   getProcessingTime(service: Service | null): string {
     if (!service) return '';
     const currentLang = this.translateService.currentLang || 'en';
-    let processingTime = currentLang === 'ar' && service.estimatedProcessingTimeAr 
-      ? service.estimatedProcessingTimeAr 
-      : service.estimatedProcessingTime;
-    
+    let processingTime =
+      currentLang === 'ar' && service.estimatedProcessingTimeAr
+        ? service.estimatedProcessingTimeAr
+        : service.estimatedProcessingTime;
+
     // Replace "business days" with translated version
     if (currentLang === 'ar') {
-      processingTime = processingTime.replace(/business days/gi, this.translateService.instant('common.businessDays'));
+      processingTime = processingTime.replace(
+        /business days/gi,
+        this.translateService.instant('common.businessDays')
+      );
     }
-    
+
     return processingTime;
   }
 
@@ -355,15 +377,14 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
     const formatted = new Intl.NumberFormat(currentLang === 'ar' ? 'ar-QA' : 'en-US', {
       style: 'currency',
       currency: 'QAR',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     }).format(amount);
-    
+
     // Replace QAR with translated version
     if (currentLang === 'ar') {
       return formatted.replace('QAR', this.translateService.instant('common.currency.qar'));
     }
-    
+
     return formatted;
   }
 }
-

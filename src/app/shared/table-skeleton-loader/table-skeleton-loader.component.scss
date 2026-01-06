@@ -1,0 +1,165 @@
+// === Design tokens aligned with Request Log Page ===
+$panel-gradient: linear-gradient(179.92deg, rgba(125, 125, 125, 0.35) 0.07%, rgba(54, 54, 54, 0.35) 99.93%);
+$panel-border: 1px solid rgba(75, 85, 99, 0.3); // matches .table-wrapper
+$panel-radius: 0.75rem; // 12px
+$panel-padding: 1.5rem; // matches .table-wrapper padding
+
+$thead-border: 2px solid rgba(156, 163, 175, 0.2); // matches request-log-table thead line
+$row-border: 1px solid rgba(156, 163, 175, 0.1); // matches tbody row separators
+
+$cell-px: 1.5rem; // px-6
+$cell-py: 1rem; // py-4
+
+// Skeleton block colors (subtle, dark theme)
+$skeleton-block-bg: rgba(255, 255, 255, 0.16);
+$skeleton-block-bg-dark: rgba(255, 255, 255, 0.22);
+
+// Header block slightly larger
+$header-block-height: 14px;
+$cell-block-height: 12px;
+
+// Responsive
+$min-width-desktop: 900px;
+$min-width-mobile: 700px;
+
+// Shimmer
+$shimmer-light: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
+$shimmer-dark: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 0.18) 50%, rgba(0, 0, 0, 0) 100%);
+
+:host {
+  display: block;
+}
+
+/* Panel wrapper that mirrors .table-wrapper */
+.skeleton-panel {
+  border-radius: $panel-radius;
+  padding: $panel-padding;
+  border: $panel-border;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  overflow-x: auto;
+  background: $panel-gradient;
+
+  &[dir='rtl'] {
+    direction: rtl;
+  }
+}
+
+/* Table grid that mirrors .request-log-table */
+.skeleton-table {
+  min-width: $min-width-desktop;
+
+  // Header & rows: use CSS grid to simulate columns
+  .skeleton-thead,
+  .skeleton-tr {
+    display: grid;
+    grid-template-columns: repeat(var(--cols, 4), 1fr);
+    gap: 0; // mimic table cells (no gaps)
+  }
+
+  // Header row spacing & divider (matches your thead)
+  .skeleton-thead {
+    border-bottom: $thead-border;
+    padding: $cell-py 0; // vertical rhythm similar to table header
+
+    .skeleton-th {
+      display: flex;
+      align-items: center;
+      padding-inline: $cell-px;
+
+      .header-block {
+        height: $header-block-height;
+        width: 70%;
+        border-radius: 4px;
+        background-color: $skeleton-block-bg;
+      }
+    }
+  }
+
+  // Body rows
+  .skeleton-tbody {
+    .skeleton-tr {
+      border-bottom: $row-border;
+
+      &:last-child {
+        border-bottom: none; // same as your table
+      }
+    }
+
+    .skeleton-td {
+      display: flex;
+      align-items: center;
+      padding: $cell-py $cell-px;
+
+      .skeleton-block {
+        height: $cell-block-height;
+        width: 80%;
+        border-radius: 4px;
+        background-color: $skeleton-block-bg;
+      }
+    }
+  }
+
+  &.dense {
+    .skeleton-thead {
+      padding: 0.75rem 0;
+    }
+
+    // slightly tighter header
+    .skeleton-td {
+      padding: 0.75rem 1rem;
+    }
+
+    .skeleton-td .skeleton-block {
+      height: 10px;
+    }
+  }
+
+  // Shimmer animation
+  &.animate {
+    .skeleton-block {
+      position: relative;
+      overflow: hidden;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        transform: translateX(-100%);
+        background: $shimmer-light;
+        animation: shimmer 1.2s infinite;
+        opacity: 0.7;
+      }
+    }
+  }
+}
+
+/* Dark theme boosters (if you toggle .dark or data-theme) */
+:root.dark .skeleton-table .skeleton-block,
+.dark .skeleton-table .skeleton-block,
+[data-theme='dark'] .skeleton-table .skeleton-block {
+  background-color: $skeleton-block-bg-dark;
+}
+
+:root.dark .skeleton-table.animate .skeleton-block::after,
+.dark .skeleton-table.animate .skeleton-block::after,
+[data-theme='dark'] .skeleton-table.animate .skeleton-block::after {
+  background: $shimmer-dark;
+  opacity: 0.5;
+}
+
+/* Responsive alignment with your table */
+@media (max-width: 768px) {
+  .skeleton-table {
+    min-width: $min-width-mobile;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}

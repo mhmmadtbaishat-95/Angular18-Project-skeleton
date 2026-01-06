@@ -8,6 +8,7 @@ import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 import { TranslateService } from '@ngx-translate/core';
 import { I18nService } from '@core/services/i18n/i18n.service';
 import { Subscription, filter } from 'rxjs';
+import { TableSkeletonLoaderComponent } from '@shared/table-skeleton-loader/table-skeleton-loader.component';
 
 /**
  * Request detail component
@@ -16,9 +17,15 @@ import { Subscription, filter } from 'rxjs';
 @Component({
   selector: 'app-request-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, SkeletonLoaderComponent, TranslatePipe],
+  imports: [
+    CommonModule,
+    RouterLink,
+    SkeletonLoaderComponent,
+    TableSkeletonLoaderComponent,
+    TranslatePipe,
+  ],
   templateUrl: './request-detail.component.html',
-  styleUrls: ['./request-detail.component.scss']
+  styleUrls: ['./request-detail.component.scss'],
 })
 export class RequestDetailComponent implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
@@ -42,20 +49,20 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(() => {
       this.updateRTLState();
     });
-    
+
     // Subscribe to route changes to update RTL state
-    this.routerSubscription = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.updateRTLState();
-    });
-    
+    this.routerSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.updateRTLState();
+      });
+
     // Set initial RTL state
     this.updateRTLState();
 
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       const requestId = params['id'];
-      this.route.queryParams.subscribe(queryParams => {
+      this.route.queryParams.subscribe((queryParams) => {
         if (queryParams['serviceId']) {
           this.isServiceDetailView = true;
           this.serviceId = queryParams['serviceId'];
@@ -95,7 +102,7 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
       error: (error) => {
         console.error('Failed to load request:', error);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -106,7 +113,7 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.serviceRequestService.getAvailableServices().subscribe({
       next: (services) => {
-        this.service = services.find(s => s.id === serviceId) || null;
+        this.service = services.find((s) => s.id === serviceId) || null;
         // If service not found, create a mock service based on ID
         if (!this.service && serviceId >= '1' && serviceId <= '8') {
           this.service = {
@@ -114,7 +121,9 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
             name: this.translateService.instant(`services.service${serviceId}.title`),
             nameAr: this.translateService.instant(`services.service${serviceId}.title`),
             description: this.translateService.instant(`services.service${serviceId}.description`),
-            descriptionAr: this.translateService.instant(`services.service${serviceId}.description`),
+            descriptionAr: this.translateService.instant(
+              `services.service${serviceId}.description`
+            ),
             code: `SRV-${serviceId}`,
             category: 'commercial' as any,
             fee: 1000,
@@ -124,7 +133,7 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
             formId: 'default-form',
             requiredDocuments: [],
             eligibilityCriteria: [],
-            active: true
+            active: true,
           };
         }
         this.isLoading = false;
@@ -137,8 +146,12 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
             id: this.serviceId,
             name: this.translateService.instant(`services.service${this.serviceId}.title`),
             nameAr: this.translateService.instant(`services.service${this.serviceId}.title`),
-            description: this.translateService.instant(`services.service${this.serviceId}.description`),
-            descriptionAr: this.translateService.instant(`services.service${this.serviceId}.description`),
+            description: this.translateService.instant(
+              `services.service${this.serviceId}.description`
+            ),
+            descriptionAr: this.translateService.instant(
+              `services.service${this.serviceId}.description`
+            ),
             code: `SRV-${this.serviceId}`,
             category: 'commercial' as any,
             fee: 1000,
@@ -148,11 +161,11 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
             formId: 'default-form',
             requiredDocuments: [],
             eligibilityCriteria: [],
-            active: true
+            active: true,
           };
         }
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -171,7 +184,9 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
   getServiceDescription(service: Service | null): string {
     if (!service) return '';
     const currentLang = this.translateService.currentLang || 'en';
-    return currentLang === 'ar' && service.descriptionAr ? service.descriptionAr : service.description;
+    return currentLang === 'ar' && service.descriptionAr
+      ? service.descriptionAr
+      : service.description;
   }
 
   /**
@@ -180,8 +195,8 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
   getProcessingTime(service: Service | null): string {
     if (!service) return '';
     const currentLang = this.translateService.currentLang || 'en';
-    return currentLang === 'ar' && service.estimatedProcessingTimeAr 
-      ? service.estimatedProcessingTimeAr 
+    return currentLang === 'ar' && service.estimatedProcessingTimeAr
+      ? service.estimatedProcessingTimeAr
       : service.estimatedProcessingTime;
   }
 
@@ -194,7 +209,7 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
       'Trade License (if applicable)': 'serviceDetail.documents.tradeLicense',
       'Company Registration Certificate': 'serviceDetail.documents.companyRegistration',
       'Memorandum of Association': 'serviceDetail.documents.memorandumOfAssociation',
-      'Power of Attorney (if applicable)': 'serviceDetail.documents.powerOfAttorney'
+      'Power of Attorney (if applicable)': 'serviceDetail.documents.powerOfAttorney',
     };
 
     const defaultDocs = [
@@ -202,14 +217,14 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
       'Trade License (if applicable)',
       'Company Registration Certificate',
       'Memorandum of Association',
-      'Power of Attorney (if applicable)'
+      'Power of Attorney (if applicable)',
     ];
 
     if (this.service?.requiredDocuments?.length) {
-      return this.service.requiredDocuments.map(doc => documentMap[doc] || doc);
+      return this.service.requiredDocuments.map((doc) => documentMap[doc] || doc);
     }
 
-    return defaultDocs.map(doc => documentMap[doc] || doc);
+    return defaultDocs.map((doc) => documentMap[doc] || doc);
   }
 
   /**
@@ -224,7 +239,7 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
       [RequestStatus.REJECTED]: 'status-rejected',
       [RequestStatus.IN_PROGRESS]: 'status-in-progress',
       [RequestStatus.COMPLETED]: 'status-completed',
-      [RequestStatus.CANCELLED]: 'status-cancelled'
+      [RequestStatus.CANCELLED]: 'status-cancelled',
     };
     return classes[status] || '';
   }
@@ -241,7 +256,7 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
       [RequestStatus.REJECTED]: 'requestList.rejected',
       [RequestStatus.IN_PROGRESS]: 'requestList.inProgress',
       [RequestStatus.COMPLETED]: 'requestList.completed',
-      [RequestStatus.CANCELLED]: 'requestList.cancelled'
+      [RequestStatus.CANCELLED]: 'requestList.cancelled',
     };
     const key = labelKeys[status];
     return key ? this.translateService.instant(key) : status;
@@ -256,7 +271,7 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   }
 
@@ -268,14 +283,14 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
     const formatted = new Intl.NumberFormat(currentLang === 'ar' ? 'ar-QA' : 'en-US', {
       style: 'currency',
       currency: 'QAR',
-      minimumFractionDigits: 0
+      minimumFractionDigits: 0,
     }).format(amount);
-    
+
     // Replace QAR with translated version
     if (currentLang === 'ar') {
       return formatted.replace('QAR', this.translateService.instant('common.currency.qar'));
     }
-    
+
     return formatted;
   }
 
@@ -284,20 +299,22 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
    */
   getFormDataItems(): Array<{ label: string; value: string }> {
     if (!this.request?.formData) return [];
-    
+
     const items: Array<{ label: string; value: string }> = [];
     const formData = this.request.formData;
-    
-    Object.keys(formData).forEach(key => {
+
+    Object.keys(formData).forEach((key) => {
       if (formData[key] !== null && formData[key] !== undefined && formData[key] !== '') {
-        const label = key.split(/(?=[A-Z])/).join(' ').replace(/^\w/, c => c.toUpperCase());
-        const value = typeof formData[key] === 'object' 
-          ? JSON.stringify(formData[key]) 
-          : String(formData[key]);
+        const label = key
+          .split(/(?=[A-Z])/)
+          .join(' ')
+          .replace(/^\w/, (c) => c.toUpperCase());
+        const value =
+          typeof formData[key] === 'object' ? JSON.stringify(formData[key]) : String(formData[key]);
         items.push({ label, value });
       }
     });
-    
+
     return items;
   }
 
@@ -306,7 +323,7 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
    */
   getServiceNameFromString(serviceName: string): string {
     const currentLang = this.translateService.currentLang || 'en';
-    
+
     // Map service names to translation keys
     const serviceNameMap: Record<string, string> = {
       'Commercial License Application': 'services.commercialLicenseApplication',
@@ -314,7 +331,7 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
       'Trade License Renewal': 'services.tradeLicenseRenewal',
       'Investment License': 'services.investmentLicense',
       'Trademark Registration': 'services.trademarkRegistration',
-      'Consumer Complaint': 'services.consumerComplaint'
+      'Consumer Complaint': 'services.consumerComplaint',
     };
 
     const translationKey = serviceNameMap[serviceName];
@@ -322,8 +339,7 @@ export class RequestDetailComponent implements OnInit, OnDestroy {
       const translated = this.translateService.instant(translationKey);
       return translated !== translationKey ? translated : serviceName;
     }
-    
+
     return serviceName;
   }
 }
-

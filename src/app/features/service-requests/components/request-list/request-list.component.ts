@@ -6,6 +6,7 @@ import { ServiceRequestService } from '../../services/service-request.service';
 import { SkeletonLoaderComponent } from '@shared/ui/skeleton-loader/skeleton-loader.component';
 import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 import { TranslateService } from '@ngx-translate/core';
+import { TableSkeletonLoaderComponent } from '@shared/table-skeleton-loader/table-skeleton-loader.component';
 
 /**
  * Request list component
@@ -14,9 +15,15 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-request-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, SkeletonLoaderComponent, TranslatePipe],
+  imports: [
+    CommonModule,
+    RouterLink,
+    SkeletonLoaderComponent,
+    TableSkeletonLoaderComponent,
+    TranslatePipe,
+  ],
   templateUrl: './request-list.component.html',
-  styleUrls: ['./request-list.component.scss']
+  styleUrls: ['./request-list.component.scss'],
 })
 export class RequestListComponent implements OnInit {
   private readonly serviceRequestService = inject(ServiceRequestService);
@@ -35,7 +42,7 @@ export class RequestListComponent implements OnInit {
     { value: RequestStatus.APPROVED, labelKey: 'requestList.approved' },
     { value: RequestStatus.IN_PROGRESS, labelKey: 'requestList.inProgress' },
     { value: RequestStatus.COMPLETED, labelKey: 'requestList.completed' },
-    { value: RequestStatus.REJECTED, labelKey: 'requestList.rejected' }
+    { value: RequestStatus.REJECTED, labelKey: 'requestList.rejected' },
   ];
 
   ngOnInit(): void {
@@ -56,7 +63,7 @@ export class RequestListComponent implements OnInit {
       error: (error) => {
         console.error('Failed to load requests:', error);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -68,7 +75,7 @@ export class RequestListComponent implements OnInit {
     if (status === 'all') {
       this.filteredRequests = [...this.requests];
     } else {
-      this.filteredRequests = this.requests.filter(r => r.status === status);
+      this.filteredRequests = this.requests.filter((r) => r.status === status);
     }
   }
 
@@ -84,7 +91,7 @@ export class RequestListComponent implements OnInit {
       [RequestStatus.REJECTED]: 'status-rejected',
       [RequestStatus.IN_PROGRESS]: 'status-in-progress',
       [RequestStatus.COMPLETED]: 'status-completed',
-      [RequestStatus.CANCELLED]: 'status-cancelled'
+      [RequestStatus.CANCELLED]: 'status-cancelled',
     };
     return classes[status] || '';
   }
@@ -101,7 +108,7 @@ export class RequestListComponent implements OnInit {
       [RequestStatus.REJECTED]: 'requestList.rejected',
       [RequestStatus.IN_PROGRESS]: 'requestList.inProgress',
       [RequestStatus.COMPLETED]: 'requestList.completed',
-      [RequestStatus.CANCELLED]: 'requestList.cancelled'
+      [RequestStatus.CANCELLED]: 'requestList.cancelled',
     };
     const key = labelKeys[status];
     return key ? this.translateService.instant(key) : status;
@@ -114,7 +121,7 @@ export class RequestListComponent implements OnInit {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   }
 
@@ -122,7 +129,7 @@ export class RequestListComponent implements OnInit {
    * Gets count for a status
    */
   getStatusCount(status: RequestStatus): number {
-    return this.requests.filter(r => r.status === status).length;
+    return this.requests.filter((r) => r.status === status).length;
   }
 
   /**
@@ -137,7 +144,7 @@ export class RequestListComponent implements OnInit {
    */
   getServiceName(serviceName: string): string {
     const currentLang = this.translateService.currentLang || 'en';
-    
+
     // Map service names to translation keys
     const serviceNameMap: Record<string, string> = {
       'Commercial License Application': 'services.commercialLicenseApplication',
@@ -145,7 +152,7 @@ export class RequestListComponent implements OnInit {
       'Trade License Renewal': 'services.tradeLicenseRenewal',
       'Investment License': 'services.investmentLicense',
       'Trademark Registration': 'services.trademarkRegistration',
-      'Consumer Complaint': 'services.consumerComplaint'
+      'Consumer Complaint': 'services.consumerComplaint',
     };
 
     const translationKey = serviceNameMap[serviceName];
@@ -153,8 +160,7 @@ export class RequestListComponent implements OnInit {
       const translated = this.translateService.instant(translationKey);
       return translated !== translationKey ? translated : serviceName;
     }
-    
+
     return serviceName;
   }
 }
-
