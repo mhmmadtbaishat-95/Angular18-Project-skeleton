@@ -1,66 +1,61 @@
 <div class="service-detail-page" [dir]="isRTL() ? 'rtl' : 'ltr'">
-  <!-- Header Section -->
-  <div class="service-detail-header">
-    <div class="header-content">
-      <div class="title-section">
-        <button class="back-arrow-btn" type="button" aria-label="Back" (click)="router.navigate(['/service-requests/services'])">
-          <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M15 19l-7-7 7-7' : 'M9 19l7-7-7-7'"/>
-          </svg>
-        </button>
-        <h1 class="page-title" *ngIf="service">{{ getServiceName(service) }}</h1>
-        <h1 class="page-title" *ngIf="!service">{{ 'pages.serviceDetails' | t }}</h1>
-      </div>
-      <div class="breadcrumb-nav">
-        <a routerLink="/" class="breadcrumb-link">{{ 'services.breadcrumbHome' | t }}</a>
-        <span class="breadcrumb-separator">{{ isRTL() ? '>' : '<' }}</span>
-        <a routerLink="/service-requests/services" class="breadcrumb-link">{{ 'services.breadcrumbServices' | t }}</a>
-        <span class="breadcrumb-separator">{{ isRTL() ? '>' : '<' }}</span>
-        <span class="breadcrumb-current" *ngIf="service">{{ getServiceName(service) }}</span>
-        <span class="breadcrumb-current" *ngIf="!service">{{ 'pages.serviceDetails' | t }}</span>
-      </div>
-   
-    </div>
-  </div>
+	<!-- Header Section -->
+	<div class="service-detail-header">
+		<div class="header-content">
+			<div class="title-section">
+				<button class="back-arrow-btn" [ngClass]="{ 'rtl-order': isRTL() }" type="button" aria-label="Back"
+					(click)="router.navigate(['/service-requests/services'])">
+					<svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+							[attr.d]="isRTL() ? 'M15 19l-7-7 7-7' : 'M9 19l7-7-7-7'" />
+					</svg>
+				</button>
+				<h1 class="page-title" *ngIf="service">{{ getServiceName(service) }}</h1>
+				<h1 class="page-title" *ngIf="!service">{{ 'pages.serviceDetails' | t }}</h1>
+			</div>
+			<div class="breadcrumb-nav">
+				<a routerLink="/" class="breadcrumb-link">{{ 'services.breadcrumbHome' | t }}</a>
+				<span class="breadcrumb-separator">></span> <a routerLink="/service-requests/services"
+					class="breadcrumb-link">{{ 'services.breadcrumbServices' | t }}</a>
+				<span class="breadcrumb-separator">></span> <span class="breadcrumb-current" *ngIf="service">{{
+					getServiceName(service) }}</span>
+				<span class="breadcrumb-current" *ngIf="!service">{{ 'pages.serviceDetails' | t }}</span>
+			</div>
 
-  <!-- Filters/Tabs Section -->
-  <div class="filters-section">
-    <div class="filters-container">
-      <button
-        *ngFor="let filter of filters"
-        [class.active]="selectedFilter === filter.id"
-        (click)="filterRequests(filter.id)"
-        class="filter-pill"
-      >
-        {{ filter.labelKey | t }} ({{ filter.count }})
-      </button>
-    </div>
-  </div>
+		</div>
+	</div>
 
-  <!-- Requests List -->
-  <div class="requests-container">
-    <app-skeleton-loader [isLoading]="isLoading" [count]="4" type="service"></app-skeleton-loader>
+	<!-- Filters/Tabs Section -->
+	<div class="filters-section">
+		<div class="filters-container">
+			<button *ngFor="let filter of filters" [class.active]="selectedFilter === filter.id"
+				(click)="filterRequests(filter.id)" class="filter-pill">
+				{{ filter.labelKey | t }} ({{ filter.count }})
+			</button>
+		</div>
+	</div>
 
-    <div *ngIf="!isLoading" class="requests-list">
-      <div
-        *ngFor="let request of getFilteredRequests()"
-        class="request-card"
-      >
-        <div class="request-content">
-          <div class="request-badge">
-            <span class="badge-text">{{ 'serviceDetail.request.new' | t }} - {{ request.actionKey | t }}</span>
-          </div>
-          <h3 class="request-title">{{ request.titleKey | t }}</h3>
-        </div>
-        <div class="request-actions">
-          <button (click)="viewDetails(request.id)" class="action-btn details-btn">
-            {{ 'serviceDetail.actions.details' | t }}
-          </button>
-          <button (click)="submitRequest(request.id)" class="action-btn submit-btn">
-            {{ 'serviceDetail.actions.submit' | t }}
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+	<!-- Requests List -->
+	<div class="requests-container">
+		<app-skeleton-loader [isLoading]="isLoading" [count]="4" type="service"></app-skeleton-loader>
+
+		<div *ngIf="!isLoading" class="requests-list">
+			<div *ngFor="let request of getFilteredRequests()" class="request-card">
+				<div class="request-content">
+					<div class="request-badge">
+						<span class="badge-text">{{ 'serviceDetail.request.new' | t }} - {{ request.actionKey | t }}</span>
+					</div>
+					<h3 class="request-title">{{ request.titleKey | t }}</h3>
+				</div>
+				<div class="request-actions">
+					<button (click)="viewDetails(request.id)" class="action-btn details-btn">
+						{{ 'serviceDetail.actions.details' | t }}
+					</button>
+					<button (click)="submitRequest(request.id)" class="action-btn submit-btn">
+						{{ 'serviceDetail.actions.submit' | t }}
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

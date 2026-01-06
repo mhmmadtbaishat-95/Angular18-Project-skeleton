@@ -51,7 +51,7 @@
 
 .header-right {
   @apply flex items-center gap-3 flex-shrink-0;
-  
+
   @media (max-width: 640px) {
     @apply w-full mt-3 justify-end;
   }
@@ -90,13 +90,11 @@
 
 /* Info Sections - Glassmorphism Style */
 .info-section {
-  @apply  backdrop-blur-xl rounded-2xl ;
+  @apply backdrop-blur-xl rounded-2xl;
   @apply transition-all duration-200 ease-out;
 }
 
-.info-section:hover {
- 
-}
+
 
 .section-header {
   @apply flex items-center gap-3 mb-5 pb-4 border-b border-gray-100 dark:border-gray-800;
@@ -137,7 +135,7 @@
 /* Status Badge */
 .status-badge {
   @apply px-2.5 py-1 rounded-md text-[11px] font-semibold inline-block;
-  
+
   &.status-submitted {
     @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200;
   }
@@ -191,15 +189,15 @@
 /* Payment Status */
 .payment-status {
   @apply px-2 py-0.5 rounded-md text-[11px] font-semibold;
-  
+
   &.payment-paid {
     @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
   }
-  
+
   &.payment-pending {
     @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
   }
-  
+
   &.payment-failed {
     @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
   }
@@ -301,7 +299,7 @@
 
 .page-title {
   @apply text-2xl md:text-3xl lg:text-4xl font-bold;
-  background: #A19576;;
+  background: #A19576;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -345,8 +343,7 @@
   line-height: 1.8;
 }
 
-.info-sections {
-}
+.info-sections {}
 
 .info-section {
   @apply mb-2;
@@ -382,80 +379,80 @@
 }
 
 /* RTL Support for Service Detail */
-.service-detail-page[dir="rtl"],
-[dir="rtl"] .service-detail-page,
-:host-context([dir="rtl"]) .service-detail-page,
-:host-context(.rtl) .service-detail-page {
-  direction: rtl !important;
-  text-align: right !important;
+// .service-detail-page[dir="rtl"],
+// [dir="rtl"] .service-detail-page,
+// :host-context([dir="rtl"]) .service-detail-page,
+// :host-context(.rtl) .service-detail-page {
+//   direction: rtl !important;
+//   text-align: right !important;
 
-  .title-section {
-    flex-direction: row-reverse !important;
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .title-section {
+//     flex-direction: row-reverse !important;
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .breadcrumb-nav {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .breadcrumb-nav {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .breadcrumb-link,
-  .breadcrumb-current {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .breadcrumb-link,
+//   .breadcrumb-current {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .document-item {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .document-item {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .back-arrow-btn {
-    order: 2;
-  }
+//   .back-arrow-btn {
+//     order: 2;
+//   }
 
-  .page-title {
-    order: 1;
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .page-title {
+//     order: 1;
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .description-text {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .description-text {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .section-title {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .section-title {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .section-content {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .section-content {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .service-info-panel {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .service-info-panel {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .info-section {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .info-section {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .service-description-section {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .service-description-section {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .documents-list {
-    text-align: right !important;
-    direction: rtl !important;
-  }
-}
+//   .documents-list {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
+// }
 
 @media (max-width: 768px) {
   .service-info-panel {
@@ -470,4 +467,3 @@
     @apply flex-col items-start;
   }
 }
-

@@ -1,7 +1,13 @@
 import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink, NavigationEnd } from '@angular/router';
-import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  FormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ServiceRequestService } from '../services/service-request.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -26,10 +32,10 @@ import { IServiceRequestResponse } from '../models/api-request.model';
     FormsModule,
     RouterLink,
     TranslatePipe,
-    StepWizardComponent
+    StepWizardComponent,
   ],
   templateUrl: './service-request.page.html',
-  styleUrls: ['./service-request.page.scss']
+  styleUrls: ['./service-request.page.scss'],
 })
 export class ServiceRequestPage implements OnInit, OnDestroy {
   private readonly route = inject(ActivatedRoute);
@@ -52,15 +58,15 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   showSuccessModal = false;
   submittedRequestNumber: string = '';
   submissionResponse: IServiceRequestResponse | null = null;
-  
+
   // Step wizard properties
   currentStepIndex = 0;
   steps: StepConfig[] = [];
-  
+
   // Sub-form navigation within step 2
   currentSubFormIndex = 0;
   subForms: Array<{ id: string; title: string }> = [];
-  
+
   // Document upload properties
   documentTypes: IDocumentType[] = [];
   selectedDocumentType: IDocumentType | null = null;
@@ -77,7 +83,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       developerType: [{ value: 'Legal', disabled: true }],
       licenseStatus: [{ value: 'Active', disabled: true }],
       licenseExpirationDate: [{ value: '2025-12-31', disabled: true }],
-      
+
       // Form A: Project Licenses Request
       projectName: ['', Validators.required],
       projectType: ['', Validators.required],
@@ -86,24 +92,24 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       landArea: ['', Validators.required],
       numberOfUnits: [''],
       executionPeriod: ['', Validators.required],
-      
+
       // Form B: Master Plan & Preliminary Design
       planType: ['', Validators.required],
       designStage: ['', Validators.required],
       numberOfBuildings: ['', Validators.required],
       numberOfDevelopmentStages: ['', Validators.required],
       approximateHeight: ['', Validators.required],
-      
+
       // Form C: Escrow Account
       isOffPlan: [false],
       bankName: ['', Validators.required],
       estimatedProjectValue: ['', Validators.required],
-      
+
       // Form D: License Application
       numberOfUnitsForSale: ['', Validators.required],
       startSaleDate: ['', Validators.required],
       expectedDeliveryDate: ['', Validators.required],
-      downPaymentPercentage: ['', Validators.required]
+      downPaymentPercentage: ['', Validators.required],
     });
   }
 
@@ -111,30 +117,30 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
     // Initialize steps and sub-forms with translations
     this.initializeSteps();
     this.initializeSubForms();
-    
+
     // Subscribe to language changes to update RTL state and translations
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(() => {
       this.updateRTLState();
       this.initializeSteps();
       this.initializeSubForms();
     });
-    
+
     // Subscribe to route changes to update RTL state
-    this.routerSubscription = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.updateRTLState();
-    });
-    
+    this.routerSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.updateRTLState();
+      });
+
     // Set initial RTL state
     this.updateRTLState();
 
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.requestId = params['id'] || null;
       this.loadServiceData();
     });
 
-    this.route.queryParams.subscribe(queryParams => {
+    this.route.queryParams.subscribe((queryParams) => {
       this.serviceId = queryParams['serviceId'] || null;
       if (this.serviceId) {
         this.loadServiceName();
@@ -150,18 +156,22 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       {
         id: 'request-info',
         title: this.translateService.instant('serviceRequest.steps.requestInformation.title'),
-        description: this.translateService.instant('serviceRequest.steps.requestInformation.description'),
+        description: this.translateService.instant(
+          'serviceRequest.steps.requestInformation.description'
+        ),
         completed: false,
         active: this.currentStepIndex === 0,
-        disabled: false
+        disabled: false,
       },
       {
         id: 'project-forms',
         title: this.translateService.instant('serviceRequest.steps.projectInformation.title'),
-        description: this.translateService.instant('serviceRequest.steps.projectInformation.description'),
+        description: this.translateService.instant(
+          'serviceRequest.steps.projectInformation.description'
+        ),
         completed: false,
         active: this.currentStepIndex === 1,
-        disabled: this.currentStepIndex < 1
+        disabled: this.currentStepIndex < 1,
       },
       {
         id: 'documents',
@@ -169,8 +179,8 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
         description: this.translateService.instant('serviceRequest.steps.documents.description'),
         completed: false,
         active: this.currentStepIndex === 2,
-        disabled: this.currentStepIndex < 2
-      }
+        disabled: this.currentStepIndex < 2,
+      },
     ];
   }
 
@@ -179,10 +189,16 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    */
   private initializeSubForms(): void {
     this.subForms = [
-      { id: 'project-licenses', title: this.translateService.instant('serviceRequest.formA.title') },
+      {
+        id: 'project-licenses',
+        title: this.translateService.instant('serviceRequest.formA.title'),
+      },
       { id: 'master-plan', title: this.translateService.instant('serviceRequest.formB.title') },
       { id: 'escrow-account', title: this.translateService.instant('serviceRequest.formC.title') },
-      { id: 'license-application', title: this.translateService.instant('serviceRequest.formD.title') }
+      {
+        id: 'license-application',
+        title: this.translateService.instant('serviceRequest.formD.title'),
+      },
     ];
   }
 
@@ -223,14 +239,14 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
           developerName: developerInfo.developerName,
           developerType: developerInfo.developerType,
           licenseStatus: developerInfo.licenseStatus,
-          licenseExpirationDate: developerInfo.licenseExpirationDate
+          licenseExpirationDate: developerInfo.licenseExpirationDate,
         });
       },
       error: (error) => {
         console.error('Failed to load developer information:', error);
         // Keep the default mock values if API fails
         // In production, you might want to show an error message
-      }
+      },
     });
   }
 
@@ -242,14 +258,14 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       this.serviceRequestService.getService(this.serviceId).subscribe({
         next: (service) => {
           if (service) {
-            this.serviceName = this.i18nService.isRTL() 
-              ? (service.nameAr || service.name || '') 
-              : (service.name || service.nameAr || '');
+            this.serviceName = this.i18nService.isRTL()
+              ? service.nameAr || service.name || ''
+              : service.name || service.nameAr || '';
           }
         },
         error: (error) => {
           console.error('Failed to load service:', error);
-        }
+        },
       });
     }
   }
@@ -261,65 +277,75 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
     // Validate form
     if (!this.requestForm.valid) {
       // Mark all fields as touched to show validation errors
-      Object.keys(this.requestForm.controls).forEach(key => {
+      Object.keys(this.requestForm.controls).forEach((key) => {
         this.requestForm.get(key)?.markAsTouched();
       });
-      this.notificationService.warning(this.translateService.instant('form.pleaseCompleteAllRequiredFields'));
+      this.notificationService.warning(
+        this.translateService.instant('form.pleaseCompleteAllRequiredFields')
+      );
       return;
     }
 
     // Validate all required documents are uploaded
     if (!this.areAllRequiredDocumentsUploaded()) {
       const missingDocuments = this.getMissingRequiredDocuments();
-      const missingNames = missingDocuments.map(dt => this.getDocumentTypeName(dt)).join(', ');
+      const missingNames = missingDocuments.map((dt) => this.getDocumentTypeName(dt)).join(', ');
       this.notificationService.warning(
-        this.translateService.instant('serviceRequest.uploadAllRequiredDocuments') + 
-        ': ' + missingNames
+        this.translateService.instant('serviceRequest.uploadAllRequiredDocuments') +
+          ': ' +
+          missingNames
       );
       return;
     }
 
     // Validate at least one document is uploaded (if document types are loaded)
     if (this.documentTypes.length > 0 && this.uploadedDocuments.size === 0) {
-      this.notificationService.warning(this.translateService.instant('serviceRequest.uploadAtLeastOneDocument'));
+      this.notificationService.warning(
+        this.translateService.instant('serviceRequest.uploadAtLeastOneDocument')
+      );
       return;
     }
 
-      this.isLoading = true;
-      
+    this.isLoading = true;
+
     // Use getRawValue() to include disabled fields (read-only developer info)
-      const formData = {
+    const formData = {
       ...this.requestForm.getRawValue(),
       documents: Array.from(this.uploadedDocuments.values()).map((doc, index) => ({
         documentTypeId: doc.documentTypeId,
         name: doc.file.name,
         size: doc.file.size,
         type: doc.file.type,
-        index: index
+        index: index,
       })),
-        requestId: this.requestId,
-        serviceId: this.serviceId,
-        submittedAt: new Date().toISOString()
-      };
+      requestId: this.requestId,
+      serviceId: this.serviceId,
+      submittedAt: new Date().toISOString(),
+    };
 
-      this.serviceRequestService.submitServiceRequest(formData).subscribe({
-        next: (response: IServiceRequestResponse) => {
-          this.isLoading = false;
-          // Store full API response
-          this.submissionResponse = response;
-          // Use API response fields - requestNumber is the reference number from API
-          this.submittedRequestNumber = response.requestNumber || response.id || `SR-${Date.now()}`;
-          // Show success modal
-          this.showSuccessModal = true;
-          this.notificationService.success(this.translateService.instant('serviceRequest.submissionSuccess'));
-        },
-        error: (error) => {
-          this.isLoading = false;
-          const errorMessage = error?.error?.message || error?.message || 'Failed to submit service request. Please try again.';
-          this.notificationService.error(errorMessage);
-          console.error('Submission error:', error);
-        }
-      });
+    this.serviceRequestService.submitServiceRequest(formData).subscribe({
+      next: (response: IServiceRequestResponse) => {
+        this.isLoading = false;
+        // Store full API response
+        this.submissionResponse = response;
+        // Use API response fields - requestNumber is the reference number from API
+        this.submittedRequestNumber = response.requestNumber || response.id || `SR-${Date.now()}`;
+        // Show success modal
+        this.showSuccessModal = true;
+        this.notificationService.success(
+          this.translateService.instant('serviceRequest.submissionSuccess')
+        );
+      },
+      error: (error) => {
+        this.isLoading = false;
+        const errorMessage =
+          error?.error?.message ||
+          error?.message ||
+          'Failed to submit service request. Please try again.';
+        this.notificationService.error(errorMessage);
+        console.error('Submission error:', error);
+      },
+    });
   }
 
   /**
@@ -334,38 +360,55 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
     } else if (this.currentStepIndex === 1) {
       // Project forms step - validate all forms before proceeding
       const projectFormFields = [
-        'projectName', 'projectType', 'area', 'plotNumber', 'landArea', 'executionPeriod',
-        'planType', 'designStage', 'numberOfBuildings', 'numberOfDevelopmentStages', 'approximateHeight',
-        'bankName', 'estimatedProjectValue',
-        'numberOfUnitsForSale', 'startSaleDate', 'expectedDeliveryDate', 'downPaymentPercentage'
+        'projectName',
+        'projectType',
+        'area',
+        'plotNumber',
+        'landArea',
+        'executionPeriod',
+        'planType',
+        'designStage',
+        'numberOfBuildings',
+        'numberOfDevelopmentStages',
+        'approximateHeight',
+        'bankName',
+        'estimatedProjectValue',
+        'numberOfUnitsForSale',
+        'startSaleDate',
+        'expectedDeliveryDate',
+        'downPaymentPercentage',
       ];
-      
+
       // Mark all project form fields as touched
-      projectFormFields.forEach(field => {
+      projectFormFields.forEach((field) => {
         const control = this.requestForm.get(field);
         if (control) {
           control.markAsTouched();
         }
       });
-      
+
       // Check if all required fields are valid
-      const invalidFields = projectFormFields.filter(field => {
+      const invalidFields = projectFormFields.filter((field) => {
         const control = this.requestForm.get(field);
         return control && control.invalid && control.hasError('required');
       });
-      
+
       if (invalidFields.length === 0) {
         this.markStepCompleted(1);
         this.goToStep(2);
       } else {
-        this.notificationService.warning(this.translateService.instant('form.pleaseCompleteAllRequiredFields'));
+        this.notificationService.warning(
+          this.translateService.instant('form.pleaseCompleteAllRequiredFields')
+        );
       }
     } else if (this.currentStepIndex === 2) {
       // Documents step - validate all required documents are uploaded before submitting
       if (this.areAllRequiredDocumentsUploaded()) {
         this.onSubmit();
       } else {
-        this.notificationService.warning(this.translateService.instant('serviceRequest.uploadAllRequiredDocuments'));
+        this.notificationService.warning(
+          this.translateService.instant('serviceRequest.uploadAllRequiredDocuments')
+        );
       }
     }
   }
@@ -390,12 +433,12 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       this.currentStepIndex = index;
       this.initializeSteps(); // Re-initialize to update active state
       this.steps[this.currentStepIndex].disabled = false;
-      
+
       // Load document types when entering documents step
       if (index === 2 && this.documentTypes.length === 0) {
         this.loadDocumentTypes();
       }
-      
+
       this.scrollToTop();
     }
   }
@@ -475,13 +518,32 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   getCurrentSubFormFields(): string[] {
     switch (this.currentSubFormIndex) {
       case 0: // Form A: Project Licenses Request
-        return ['projectName', 'projectType', 'area', 'plotNumber', 'landArea', 'numberOfUnits', 'executionPeriod'];
+        return [
+          'projectName',
+          'projectType',
+          'area',
+          'plotNumber',
+          'landArea',
+          'numberOfUnits',
+          'executionPeriod',
+        ];
       case 1: // Form B: Master Plan & Preliminary Design
-        return ['planType', 'designStage', 'numberOfBuildings', 'numberOfDevelopmentStages', 'approximateHeight'];
+        return [
+          'planType',
+          'designStage',
+          'numberOfBuildings',
+          'numberOfDevelopmentStages',
+          'approximateHeight',
+        ];
       case 2: // Form C: Escrow Account
         return ['bankName', 'estimatedProjectValue'];
       case 3: // Form D: License Application
-        return ['numberOfUnitsForSale', 'startSaleDate', 'expectedDeliveryDate', 'downPaymentPercentage'];
+        return [
+          'numberOfUnitsForSale',
+          'startSaleDate',
+          'expectedDeliveryDate',
+          'downPaymentPercentage',
+        ];
       default:
         return [];
     }
@@ -492,7 +554,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    */
   isCurrentSubFormValid(): boolean {
     const fields = this.getCurrentSubFormFields();
-    return fields.every(field => {
+    return fields.every((field) => {
       const control = this.requestForm.get(field);
       // Optional fields don't need validation
       if (field === 'numberOfUnits') {
@@ -507,7 +569,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    */
   markCurrentSubFormFieldsAsTouched(): void {
     const fields = this.getCurrentSubFormFields();
-    fields.forEach(field => {
+    fields.forEach((field) => {
       const control = this.requestForm.get(field);
       if (control && field !== 'numberOfUnits') {
         control.markAsTouched();
@@ -551,7 +613,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
         console.error('Error loading document types:', error);
         this.isLoadingDocumentTypes = false;
         this.notificationService.error('Failed to load document types. Please try again.');
-      }
+      },
     });
   }
 
@@ -559,7 +621,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    * Handles document type selection
    */
   onDocumentTypeSelect(documentTypeId: string): void {
-    const documentType = this.documentTypes.find(dt => dt.id === documentTypeId);
+    const documentType = this.documentTypes.find((dt) => dt.id === documentTypeId);
     if (documentType) {
       this.selectedDocumentType = documentType;
       this.documentErrors = [];
@@ -571,7 +633,9 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    */
   onFileSelected(event: Event): void {
     if (!this.selectedDocumentType) {
-      this.notificationService.warning(this.translateService.instant('serviceRequest.selectDocumentTypeFirst'));
+      this.notificationService.warning(
+        this.translateService.instant('serviceRequest.selectDocumentTypeFirst')
+      );
       return;
     }
 
@@ -579,7 +643,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
     if (input.files && input.files.length > 0) {
       const file = input.files[0]; // Only take first file
       this.documentErrors = [];
-      
+
       // Validate file size
       const maxSize = this.selectedDocumentType.maxSize || 2 * 1024 * 1024; // Default 2MB
       if (file.size > maxSize) {
@@ -590,39 +654,41 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
         input.value = ''; // Reset input
         return;
       }
-      
+
       // Validate file type
       const fileExtension = file.name.split('.').pop()?.toLowerCase() || '';
       const allowedFormats = this.selectedDocumentType.allowedFormats || ['pdf', 'jpg', 'png'];
       if (!allowedFormats.includes(fileExtension)) {
         this.documentErrors.push(
-          this.translateService.instant('serviceRequest.invalidFileType', { 
-            formats: allowedFormats.join(', ').toUpperCase() 
+          this.translateService.instant('serviceRequest.invalidFileType', {
+            formats: allowedFormats.join(', ').toUpperCase(),
           })
         );
         input.value = ''; // Reset input
         return;
       }
-      
+
       // Create uploaded document entry
       const uploadedDoc: IUploadedDocument = {
         id: `doc-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         documentTypeId: this.selectedDocumentType.id,
-        documentTypeName: this.isRTL() 
-          ? this.selectedDocumentType.nameAr 
+        documentTypeName: this.isRTL()
+          ? this.selectedDocumentType.nameAr
           : this.selectedDocumentType.name,
         file: file,
-        uploadedAt: new Date()
+        uploadedAt: new Date(),
       };
-      
+
       // Store by document type ID (only one file per type)
       this.uploadedDocuments.set(this.selectedDocumentType.id, uploadedDoc);
-      
+
       // Reset selection
       this.selectedDocumentType = null;
       input.value = ''; // Reset input
-      
-      this.notificationService.success(this.translateService.instant('serviceRequest.documentUploadedSuccessfully'));
+
+      this.notificationService.success(
+        this.translateService.instant('serviceRequest.documentUploadedSuccessfully')
+      );
     }
   }
 
@@ -631,7 +697,9 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    */
   removeDocument(documentTypeId: string): void {
     this.uploadedDocuments.delete(documentTypeId);
-    this.notificationService.success(this.translateService.instant('serviceRequest.documentRemoved'));
+    this.notificationService.success(
+      this.translateService.instant('serviceRequest.documentRemoved')
+    );
   }
 
   /**
@@ -649,20 +717,20 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       // If document types haven't loaded yet, return false to prevent submission
       return false;
     }
-    const requiredTypes = this.documentTypes.filter(dt => dt.required);
+    const requiredTypes = this.documentTypes.filter((dt) => dt.required);
     if (requiredTypes.length === 0) {
       // If no required documents, at least one document should be uploaded
       return this.uploadedDocuments.size > 0;
     }
-    return requiredTypes.every(dt => this.uploadedDocuments.has(dt.id));
+    return requiredTypes.every((dt) => this.uploadedDocuments.has(dt.id));
   }
 
   /**
    * Gets list of missing required documents
    */
   getMissingRequiredDocuments(): IDocumentType[] {
-    const requiredTypes = this.documentTypes.filter(dt => dt.required);
-    return requiredTypes.filter(dt => !this.uploadedDocuments.has(dt.id));
+    const requiredTypes = this.documentTypes.filter((dt) => dt.required);
+    return requiredTypes.filter((dt) => !this.uploadedDocuments.has(dt.id));
   }
 
   /**
@@ -677,7 +745,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    */
   getAcceptedFormats(documentType: IDocumentType): string {
     const formats = documentType.allowedFormats || ['pdf', 'jpg', 'png'];
-    return formats.map(f => `.${f}`).join(',');
+    return formats.map((f) => `.${f}`).join(',');
   }
 
   /**
@@ -688,7 +756,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
     const formats = (documentType.allowedFormats || ['pdf', 'jpg', 'png']).join(', ').toUpperCase();
     return this.translateService.instant('serviceRequest.uploadHintWithDetails', {
       maxSize: maxSizeMB,
-      formats: formats
+      formats: formats,
     });
   }
 
@@ -735,7 +803,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       name: this.requestForm.get('developerName')?.value || '',
       type: this.requestForm.get('developerType')?.value || '',
       licenseStatus: this.requestForm.get('licenseStatus')?.value || '',
-      expirationDate: this.requestForm.get('licenseExpirationDate')?.value || ''
+      expirationDate: this.requestForm.get('licenseExpirationDate')?.value || '',
     };
   }
 
@@ -755,7 +823,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   getSuccessMessage(): string {
     return this.translateService.instant('serviceRequest.successMessage', {
       requestNumber: this.submittedRequestNumber,
-      serviceName: this.serviceName || this.translateService.instant('serviceRequest.serviceName')
+      serviceName: this.serviceName || this.translateService.instant('serviceRequest.serviceName'),
     });
   }
 
@@ -767,7 +835,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   }
 
   /**
@@ -777,10 +845,10 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
     if (!dateString) return '-';
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return dateString; // Return original if invalid date
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   }
 
@@ -791,4 +859,3 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
     return String.fromCharCode(65 + index);
   }
 }
-

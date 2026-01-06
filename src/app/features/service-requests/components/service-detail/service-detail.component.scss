@@ -43,7 +43,7 @@
 
 .page-title {
   @apply text-2xl md:text-3xl lg:text-4xl font-bold;
-  background:#A19576;;
+  background: #A19576;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -91,16 +91,17 @@
   min-height: 80px;
   border-radius: 0;
   background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .request-card:last-child {
   border-bottom: none;
 }
 
-.request-content {
-  @apply flex-1;
-  text-align: left;
-}
+// .request-content {
+//   @apply flex-1;
+//   text-align: left;
+// }
 
 .request-badge {
   @apply mb-2;
@@ -137,84 +138,90 @@
 }
 
 /* RTL Support */
-.service-detail-page[dir="rtl"],
-[dir="rtl"] .service-detail-page,
-:host-context([dir="rtl"]) .service-detail-page,
-:host-context(.rtl) .service-detail-page {
-  direction: rtl !important;
-  text-align: right !important;
+// .service-detail-page[dir="rtl"],
+// [dir="rtl"] .service-detail-page,
+// :host-context([dir="rtl"]) .service-detail-page,
+// :host-context(.rtl) .service-detail-page {
+//   direction: rtl !important;
+//   text-align: right !important;
 
-  .breadcrumb-nav {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .breadcrumb-nav {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .breadcrumb-link,
-  .breadcrumb-current {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .breadcrumb-link,
+//   .breadcrumb-current {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .title-section {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .title-section {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .filters-container {
+//   .filters-container {
 
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .filter-pill {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .filter-pill {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .request-card {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .request-card {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .request-content {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .request-content {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .request-title {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .request-title {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .request-badge {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .request-badge {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .badge-text {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+//   .badge-text {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
 
-  .request-actions {
-    flex-direction: row-reverse !important;
-  }
+//   .request-actions {
+//     flex-direction: row-reverse !important;
+//   }
 
-  .back-arrow-btn {
-    order: 2;
-  }
+//   .back-arrow-btn {
+//     order: 2;
+//   }
 
-  .page-title {
-    order: 1;
-    text-align: right !important;
-    direction: rtl !important;
-  }
 
-  .header-content {
-    text-align: right !important;
-    direction: rtl !important;
-  }
-}
+//   .rtl-order {
+//     order: 1;
+//     /* for RTL */
+//   }
+
+//   .page-title {
+//     order: 1;
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
+
+//   .header-content {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
+// }
 
 @media (max-width: 768px) {
   .page-title {
