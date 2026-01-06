@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of, delay } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormDefinition } from '../models/form-field.model';
@@ -118,7 +118,7 @@ export class ServiceRequestService {
         documentId: `DOC-${Date.now()}-${index}`,
         fileName: file.name,
         fileSize: file.size,
-        fileUrl: `https://api.example.com/documents/DOC-${Date.now()}-${index}`,
+        fileUrl: `https://aqaratintegrations.azurewebsites.net/API/documents/DOC-${Date.now()}-${index}`,
         uploadedAt: new Date().toISOString()
       }));
       return of(mockResponses).pipe(delay(1500));
@@ -162,16 +162,20 @@ export class ServiceRequestService {
    * Gets request log entries (all requests with applicant information)
    * This is for administrative/log viewing purposes
    */
-  getRequestLog(): Observable<RequestLogEntry[]> {
-    if (this.useMockData) {
-      // Mock data for development
-      return of(this.getMockRequestLogs()).pipe(delay(500));
-    }
-    
-    // Real API call - when API is ready
-    // return this.httpClient.get<RequestLogEntry[]>(ENDPOINTS.SERVICE_REQUEST.LIST + '/log');
+getRequestLog(): Observable<RequestLogEntry[]> {
+  if (this.useMockData) {
     return of(this.getMockRequestLogs()).pipe(delay(500));
   }
+
+  const body = {
+    accountGuid: 'ff846f37-4fe2-4291-97b9-ef92b45bac9c'
+  };
+
+  return this.httpClient.post<RequestLogEntry[]>(
+    ENDPOINTS.SERVICE_REQUEST.SERVICE_LOG,
+    body
+  );
+}
 
   /**
    * Gets a specific service request by ID

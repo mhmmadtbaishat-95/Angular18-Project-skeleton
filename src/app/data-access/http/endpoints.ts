@@ -64,6 +64,7 @@ export const SERVICE_REQUEST_ENDPOINTS = {
   DOCUMENT_TYPES: '/service-requests/document-types',
   SERVICES: '/services',
   SERVICE_BY_ID: '/services/:id',
+  SERVICE_LOG : '/GetAllRequestsByDeveloperGuid'
 } as const;
 
 /**

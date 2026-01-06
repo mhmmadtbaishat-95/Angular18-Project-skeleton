@@ -1,5 +1,5 @@
 {
-  "apiBaseUrl": "https://api.example.com",
-  "apiUrl": "https://api.example.com/v1"
+  "apiBaseUrl": "https://aqaratintegrations.azurewebsites.net/API",
+  "apiUrl": "https://aqaratintegrations.azurewebsites.net/API"
 }
 

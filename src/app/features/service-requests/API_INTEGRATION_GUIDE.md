@@ -121,7 +121,7 @@ All request/response interfaces are defined in `src/app/features/service-request
       "documentId": "DOC-123",
       "fileName": "document.pdf",
       "fileSize": 1024000,
-      "fileUrl": "https://api.example.com/documents/DOC-123",
+      "fileUrl": "https://aqaratintegrations.azurewebsites.net/API/documents/DOC-123",
       "uploadedAt": "2024-01-15T10:30:00Z"
     }
   ]
