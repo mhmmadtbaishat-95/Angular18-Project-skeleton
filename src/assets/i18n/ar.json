@@ -90,7 +90,8 @@
     "profile": "الملف الشخصي",
     "serviceRequests": "طلبات الخدمات",
     "serviceCatalog": "كتالوج الخدمات",
-    "myRequests": "طلباتي"
+    "myRequests": "طلباتي",
+    "requestLog": "سجل الخدمات"
   },
   "header": {
     "toggleSidebar": "تبديل الشريط الجانبي",
@@ -396,6 +397,28 @@
     "backToRequests": "العودة إلى الطلبات",
     "needHelpContact": "تحتاج مساعدة؟ اتصل بنا على"
   },
+  "requestLog": {
+    "title": "سجل الخدمات",
+    "subtitle": "عرض جميع طلبات الخدمات",
+    "total": "الإجمالي",
+    "showing": "عرض",
+    "all": "الكل",
+    "serviceName": "اسم الخدمة",
+    "requestNumber": "رقم الطلب",
+    "submissionDate": "تاريخ تقديم الخدمة",
+    "applicantName": "اسم مقدم الطلب",
+    "status": "حالة الطلب",
+    "inReview": "قيد المراجعة",
+    "approved": "تمت الموافقة",
+    "rejected": "مرفوضة",
+    "completed": "مكتملة",
+    "closed": "مغلقة",
+    "submitted": "تم الإرسال",
+    "inProgress": "قيد التنفيذ",
+    "draft": "مسودة",
+    "noLogsFound": "لم يتم العثور على سجل طلبات",
+    "noLogsYet": "لا توجد سجلات طلبات خدمات متاحة بعد"
+  },
   "form": {
     "ministryTitle": "وزارة التجارة والصناعة",
     "stateOfQatar": "دولة قطر",
@@ -404,7 +427,8 @@
     "next": "التالي",
     "submit": "إرسال",
     "fieldRequired": "هذا الحقل مطلوب",
-    "invalidEmail": "يرجى إدخال عنوان بريد إلكتروني صحيح"
+    "invalidEmail": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+    "pleaseCompleteAllRequiredFields": "يرجى إكمال جميع الحقول المطلوبة قبل المتابعة"
   },
   "serviceRequest": {
     "applicationTitle": "طلب القيد بسجل المطورين العقاريين",
@@ -433,11 +457,27 @@
     "developerType": "نوع المطور",
     "licenseStatus": "حالة الترخيص",
     "licenseExpirationDate": "تاريخ انتهاء الترخيص",
+    "readonlyNote": "يتم عرض بيانات مقدم الطلب تلقائياً من ملفه الشخصي ولا يمكن تعديلها ضمن هذا النموذج.",
     "documents": "المستندات",
     "documentsDesc": "قم بتحميل المستندات المطلوبة لطلبك",
     "uploadDocuments": "تحميل المستندات",
     "uploadHint": "انقر للتحميل أو اسحب وأفلت الملفات هنا (PDF, JPG, PNG, DOC, DOCX - الحد الأقصى 10 ميجابايت)",
+    "uploadHintWithDetails": "الحد الأقصى لحجم الملف المسموح به هو {{maxSize}} ميجابايت، وتشمل الصيغ المدعومة {{formats}}.",
+    "selectDocumentType": "اختر نوع المستند",
+    "selectDocument": "اختر المستند",
+    "browseFiles": "تصفح الملفات",
+    "documentUploadedSuccessfully": "تم رفع المستند بنجاح",
+    "documentRemoved": "تم حذف المستند بنجاح",
+    "selectDocumentTypeFirst": "يرجى اختيار نوع المستند أولاً",
+    "fileSizeExceeded": "حجم الملف يتجاوز الحد الأقصى المسموح به وهو {{maxSize}} ميجابايت",
+    "invalidFileType": "نوع ملف غير صحيح. الصيغ المدعومة: {{formats}}",
+    "uploadAllRequiredDocuments": "يرجى رفع جميع المستندات المطلوبة قبل الإرسال",
+    "uploadAtLeastOneDocument": "يرجى رفع مستند واحد على الأقل قبل الإرسال",
+    "missingRequiredDocuments": "المستندات المطلوبة المفقودة",
     "uploadedDocuments": "المستندات المرفوعة",
+    "status": "الحالة",
+    "submittedAt": "تاريخ الإرسال",
+    "message": "الرسالة",
     "review": "المراجعة",
     "reviewDesc": "يرجى مراجعة معلوماتك قبل الإرسال",
     "submissionSuccess": "تم تقديم الطلب بنجاح",
@@ -449,20 +489,16 @@
     "floors": "طوابق",
     "steps": {
       "requestInformation": {
-        "title": "معلومات الطلب",
-        "description": "أدخل تفاصيل طلبك"
+        "title": "معلومات مقدم الطلب",
+        "description": "مراجعة بيانات مقدم الطلب"
       },
       "projectInformation": {
         "title": "معلومات المشروع",
-        "description": "أكمل تفاصيل المشروع"
+        "description": "إدخال تفاصيل المشروع"
       },
       "documents": {
         "title": "المستندات",
-        "description": "قم بتحميل المستندات المطلوبة"
-      },
-      "submission": {
-        "title": "تقديم الطلب",
-        "description": "تأكيد التقديم"
+        "description": "رفع المستندات المطلوبة"
       }
     },
     "formA": {

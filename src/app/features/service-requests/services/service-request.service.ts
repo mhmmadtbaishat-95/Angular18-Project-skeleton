@@ -4,6 +4,7 @@ import { Observable, of, delay } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormDefinition } from '../models/form-field.model';
 import { Service, ServiceRequest, RequestStatus, ServiceCategory } from '../models/service.model';
+import { RequestLogEntry } from '../models/request-log.model';
 import { HttpClientService } from '@data/http/services/http-client.service';
 import { ENDPOINTS, buildEndpoint } from '@data/http/endpoints';
 import { environment } from '../../../../environments/environment';
@@ -13,6 +14,7 @@ import {
   IServiceRequestResponse,
   IDocumentUploadResponse 
 } from '../models/api-request.model';
+import { IDocumentType, IDocumentTypesResponse } from '../models/document.model';
 
 /**
  * Payment result interface
@@ -157,6 +159,21 @@ export class ServiceRequestService {
   }
 
   /**
+   * Gets request log entries (all requests with applicant information)
+   * This is for administrative/log viewing purposes
+   */
+  getRequestLog(): Observable<RequestLogEntry[]> {
+    if (this.useMockData) {
+      // Mock data for development
+      return of(this.getMockRequestLogs()).pipe(delay(500));
+    }
+    
+    // Real API call - when API is ready
+    // return this.httpClient.get<RequestLogEntry[]>(ENDPOINTS.SERVICE_REQUEST.LIST + '/log');
+    return of(this.getMockRequestLogs()).pipe(delay(500));
+  }
+
+  /**
    * Gets a specific service request by ID
    */
   getRequestById(requestId: string): Observable<ServiceRequest | null> {
@@ -179,6 +196,56 @@ export class ServiceRequestService {
     // Real API call
     const endpoint = buildEndpoint(ENDPOINTS.SERVICE_REQUEST.SERVICE_BY_ID, { id: serviceId });
     return this.httpClient.get<Service>(endpoint);
+  }
+
+  /**
+   * Gets required document types for service request
+   */
+  getDocumentTypes(serviceId?: string): Observable<IDocumentType[]> {
+    if (this.useMockData) {
+      // Mock document types
+      const mockDocumentTypes: IDocumentType[] = [
+        {
+          id: '1',
+          name: 'Land Plan',
+          nameAr: 'مخطط الارض',
+          required: true,
+          description: 'Land plan document',
+          descriptionAr: 'مخطط الأرض',
+          allowedFormats: ['pdf', 'jpg', 'png'],
+          maxSize: 2 * 1024 * 1024 // 2 MB
+        },
+        {
+          id: '2',
+          name: 'Building Permit',
+          nameAr: 'رخصة البناء',
+          required: true,
+          description: 'Building permit document',
+          descriptionAr: 'رخصة البناء',
+          allowedFormats: ['pdf', 'jpg', 'png'],
+          maxSize: 2 * 1024 * 1024
+        },
+        {
+          id: '3',
+          name: 'Commercial License',
+          nameAr: 'الترخيص التجاري',
+          required: false,
+          description: 'Commercial license document',
+          descriptionAr: 'الترخيص التجاري',
+          allowedFormats: ['pdf', 'jpg', 'png'],
+          maxSize: 2 * 1024 * 1024
+        }
+      ];
+      return of(mockDocumentTypes).pipe(delay(500));
+    }
+    
+    // Real API call
+    const endpoint = serviceId 
+      ? `${ENDPOINTS.SERVICE_REQUEST.DOCUMENT_TYPES}?serviceId=${serviceId}`
+      : ENDPOINTS.SERVICE_REQUEST.DOCUMENT_TYPES;
+    return this.httpClient.get<IDocumentTypesResponse>(endpoint).pipe(
+      map(response => response.documentTypes || [])
+    );
   }
 
   /**
@@ -349,6 +416,95 @@ export class ServiceRequestService {
         completedAt: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000).toISOString(),
         formData: {},
         priority: 'low'
+      }
+    ];
+  }
+
+  /**
+   * Gets mock request log entries for demo
+   * Includes applicant information for log viewing
+   */
+  private getMockRequestLogs(): RequestLogEntry[] {
+    const now = new Date();
+    const submissionDate = new Date(2024, 9, 18); // October 18, 2024
+    
+    return [
+      {
+        id: '1',
+        requestNumber: '487234',
+        serviceId: '1',
+        serviceName: 'Registration in the Real Estate Developers Register',
+        serviceNameAr: 'القيد بسجل المطورين العقاريين',
+        status: RequestStatus.IN_REVIEW,
+        submittedAt: submissionDate.toISOString(),
+        updatedAt: submissionDate.toISOString(),
+        formData: {},
+        paymentStatus: 'paid',
+        priority: 'high',
+        applicantName: 'Ahmed Abdullah',
+        applicantNameAr: 'أحمد عبدالله'
+      },
+      {
+        id: '2',
+        requestNumber: '487234',
+        serviceId: '1',
+        serviceName: 'Registration in the Real Estate Developers Register',
+        serviceNameAr: 'القيد بسجل المطورين العقاريين',
+        status: RequestStatus.IN_REVIEW,
+        submittedAt: submissionDate.toISOString(),
+        updatedAt: submissionDate.toISOString(),
+        formData: {},
+        paymentStatus: 'paid',
+        priority: 'high',
+        applicantName: 'Ahmed Abdullah',
+        applicantNameAr: 'أحمد عبدالله'
+      },
+      {
+        id: '3',
+        requestNumber: '487234',
+        serviceId: '1',
+        serviceName: 'Termination of Registration in the Real Estate Developers Register',
+        serviceNameAr: 'إنهاء القيد بسجل المطورين العقاريين',
+        status: RequestStatus.CANCELLED,
+        submittedAt: submissionDate.toISOString(),
+        updatedAt: submissionDate.toISOString(),
+        completedAt: submissionDate.toISOString(),
+        formData: {},
+        paymentStatus: 'paid',
+        priority: 'medium',
+        applicantName: 'Saad Al-Yahya',
+        applicantNameAr: 'سعد اليحيى'
+      },
+      {
+        id: '4',
+        requestNumber: '487234',
+        serviceId: '1',
+        serviceName: 'Registration in the Real Estate Developers Register',
+        serviceNameAr: 'القيد بسجل المطورين العقاريين',
+        status: RequestStatus.APPROVED,
+        submittedAt: submissionDate.toISOString(),
+        updatedAt: submissionDate.toISOString(),
+        completedAt: submissionDate.toISOString(),
+        formData: {},
+        paymentStatus: 'paid',
+        priority: 'medium',
+        applicantName: 'Ahmed Abdullah',
+        applicantNameAr: 'أحمد عبدلله'
+      },
+      {
+        id: '5',
+        requestNumber: '487234',
+        serviceId: '1',
+        serviceName: 'Termination of Registration in the Real Estate Developers Register',
+        serviceNameAr: 'إنهاء القيد بسجل المطورين العقاريين',
+        status: RequestStatus.REJECTED,
+        submittedAt: submissionDate.toISOString(),
+        updatedAt: submissionDate.toISOString(),
+        formData: {},
+        paymentStatus: 'paid',
+        priority: 'low',
+        applicantName: 'Saad Al-Yahya',
+        applicantNameAr: 'سعد اليحيى'
       }
     ];
   }

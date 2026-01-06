@@ -35,6 +35,13 @@ export const RAW_NAV_ITEMS: INavItem[] = [
         route: '/service-requests/my-requests',
         exact: true,
       },
+      {
+        id: 'request-log',
+        labelKey: 'navigation.requestLog',
+        icon: 'history',
+        route: '/service-requests/request-log',
+        exact: true,
+      },
     ],
   },
 ];

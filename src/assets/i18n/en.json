@@ -90,7 +90,8 @@
     "profile": "Profile",
     "serviceRequests": "Service Requests",
     "serviceCatalog": "Service Catalog",
-    "myRequests": "My Requests"
+    "myRequests": "My Requests",
+    "requestLog": "Request Log"
   },
   "header": {
     "toggleSidebar": "Toggle Sidebar",
@@ -399,6 +400,28 @@
     "backToRequests": "Back to Requests",
     "needHelpContact": "Need help? Contact us at"
   },
+  "requestLog": {
+    "title": "Service Log",
+    "subtitle": "View all service requests",
+    "total": "Total",
+    "showing": "Showing",
+    "all": "All",
+    "serviceName": "Service Name",
+    "requestNumber": "Request Number",
+    "submissionDate": "Service Submission Date",
+    "applicantName": "Applicant Name",
+    "status": "Request Status",
+    "inReview": "Under Review",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "completed": "Completed",
+    "closed": "Closed",
+    "submitted": "Submitted",
+    "inProgress": "In Progress",
+    "draft": "Draft",
+    "noLogsFound": "No request logs found",
+    "noLogsYet": "No service request logs available yet"
+  },
   "form": {
     "ministryTitle": "Ministry of Commerce and Industry",
     "stateOfQatar": "State of Qatar",
@@ -407,7 +430,8 @@
     "next": "Next",
     "submit": "Submit",
     "fieldRequired": "This field is required",
-    "invalidEmail": "Please enter a valid email address"
+    "invalidEmail": "Please enter a valid email address",
+    "pleaseCompleteAllRequiredFields": "Please complete all required fields before proceeding"
   },
   "serviceRequest": {
     "applicationTitle": "Application for Registration in the Real Estate Developers Register",
@@ -436,11 +460,27 @@
     "developerType": "Type of Developer",
     "licenseStatus": "License Status",
     "licenseExpirationDate": "License Expiration Date",
+    "readonlyNote": "Applicant data is displayed automatically from their personal file and cannot be modified within this form.",
     "documents": "Documents",
     "documentsDesc": "Upload the required documents for your application",
     "uploadDocuments": "Upload Documents",
     "uploadHint": "Click to upload or drag and drop files here (PDF, JPG, PNG, DOC, DOCX - Max 10MB)",
+    "uploadHintWithDetails": "The maximum allowed file size is {{maxSize}} MB, and supported formats include {{formats}}.",
+    "selectDocumentType": "Select Document Type",
+    "selectDocument": "Select Document",
+    "browseFiles": "Browse Files",
+    "documentUploadedSuccessfully": "Document uploaded successfully",
+    "documentRemoved": "Document removed successfully",
+    "selectDocumentTypeFirst": "Please select a document type first",
+    "fileSizeExceeded": "File size exceeds maximum allowed size of {{maxSize}} MB",
+    "invalidFileType": "Invalid file type. Allowed formats: {{formats}}",
+    "uploadAllRequiredDocuments": "Please upload all required documents before submitting",
+    "uploadAtLeastOneDocument": "Please upload at least one document before submitting",
+    "missingRequiredDocuments": "Missing Required Documents",
     "uploadedDocuments": "Uploaded Documents",
+    "status": "Status",
+    "submittedAt": "Submitted At",
+    "message": "Message",
     "review": "Review",
     "reviewDesc": "Please review your information before submitting",
     "submissionSuccess": "Request Submitted Successfully",
@@ -452,20 +492,16 @@
     "floors": "Floors",
     "steps": {
       "requestInformation": {
-        "title": "Request Information",
-        "description": "Enter your request details"
+        "title": "Applicant Information",
+        "description": "Review Applicant Data"
       },
       "projectInformation": {
         "title": "Project Information",
-        "description": "Complete project details"
+        "description": "Enter Project Details"
       },
       "documents": {
         "title": "Documents",
-        "description": "Upload required documents"
-      },
-      "submission": {
-        "title": "Request Submission",
-        "description": "Submission confirmation"
+        "description": "Upload Required Documents"
       }
     },
     "formA": {
