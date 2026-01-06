@@ -10,6 +10,8 @@ export const environment = {
   apiVersion: 'v1',
   // Set to false when API is ready to use real endpoints
   useMockApi: false, // Change to false when API endpoints are ready
+  // Set to true to enable license eligibility check (set to false during development while data is being finalized)
+  enableLicenseEligibilityCheck: false, // Set to true when license status validation is ready for production
   cacheConfig: {
     ttl: 5 * 60 * 1000, // 5 minutes
     maxSize: 100,

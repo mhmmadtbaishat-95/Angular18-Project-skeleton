@@ -87,3 +87,81 @@ export interface IDocumentUploadResponse {
   uploadedAt: string;
 }
 
+
+/**
+ * Create and Submit Request API Payload
+ * Request structure for /Request/CreateAndSubmitRequest endpoint
+ */
+export interface ICreateAndSubmitRequestPayload {
+  RequestGuid: string; // "00000000-0000-0000-0000-000000000000" for new requests
+  ProjectName: string;
+  ProjectType: number;
+  Area: string;
+  PlotNumber: string;
+  LandArea: string;
+  NumberOfUnits: string;
+  ExecutionPeriod: string;
+  PlanType: number;
+  DesignStage: number;
+  NumberOfBuildings: string;
+  NumberOfDevelopmentStages: string;
+  ApproximateHeight: string;
+  CouponNumber?: string;
+  LandRegistryNumber?: string;
+  PropertyType?: number;
+  IsTheProjectOffPlanSale: number; // 0 or 1
+  BankName: string;
+  EstimatedValueOfProject: string;
+  NumberOfUnitsForSale: string;
+  StartSaleDate: string; // ISO date string
+  ExpectedDeliveryDate: string; // ISO date string
+  DownPaymentPercentage: string;
+  DeveloperComments?: string;
+  AqaratComments?: string;
+}
+
+/**
+ * Request Document from API Response
+ */
+export interface IRequestDocument {
+  DocumentName: string;
+  DocumentGuid: string;
+  DocumentDescription: string;
+  Attachment: string | null;
+  pageIndex: number;
+  entityName: string | null;
+}
+
+/**
+ * Create and Submit Request API Response
+ * Response structure from /Request/CreateAndSubmitRequest endpoint
+ */
+export interface ICreateAndSubmitRequestResponse {
+  RequestNumber: string;
+  RequestGuid: string;
+  RequestDocuments: IRequestDocument[];
+}
+
+/**
+ * Attachment structure for document upload
+ */
+export interface IAttachment {
+  AttachmentGuid: string; // "00000000-0000-0000-0000-000000000000" for new attachments
+  MimeType: string;
+  FileName: string;
+  Size: number;
+  AttachmentBody: string; // Base64 encoded file content
+}
+
+/**
+ * Create Document API Payload
+ * Request structure for /Document/CreateDocument endpoint
+ */
+export interface ICreateDocumentPayload {
+  DocumentName: string;
+  DocumentGuid: string; // From RequestDocuments in submit response
+  DocumentDescription: string;
+  Attachment: IAttachment;
+  pageIndex: number;
+  entityName: string;
+}

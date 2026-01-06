@@ -12,7 +12,10 @@ import {
   IDeveloperInfo, 
   IServiceRequestPayload, 
   IServiceRequestResponse,
-  IDocumentUploadResponse 
+  IDocumentUploadResponse,
+  ICreateAndSubmitRequestPayload,
+  ICreateAndSubmitRequestResponse,
+  ICreateDocumentPayload
 } from '../models/api-request.model';
 import { IDocumentType, IDocumentTypesResponse } from '../models/document.model';
 
@@ -140,6 +143,61 @@ export class ServiceRequestService {
     return this.httpClient.post<IServiceRequestResponse>(
       ENDPOINTS.SERVICE_REQUEST.SUBMIT,
       requestData
+    );
+  }
+
+  /**
+   * Creates and submits a service request using the new API endpoint
+   * Maps form data to API format and handles response with RequestDocuments
+   */
+  createAndSubmitRequest(payload: ICreateAndSubmitRequestPayload): Observable<ICreateAndSubmitRequestResponse> {
+    // Use raw HttpClient to handle response structure
+    return this.http.post<any>(
+      `${environment.apiUrl}${ENDPOINTS.SERVICE_REQUEST.CREATE_AND_SUBMIT}`,
+      payload
+    ).pipe(
+      map((response) => {
+        console.log('📥 Create and Submit Request API response:', response);
+        
+        // API returns: { IsSuccess: boolean, Data: {...}, StatusCode: number, Message: string, Errors: null }
+        if (!response || !response.Data) {
+          console.warn('⚠️ Unexpected create and submit response structure:', response);
+          throw new Error('Invalid response structure from API');
+        }
+
+        const data = response.Data;
+        
+        // Map API response to interface
+        return {
+          RequestNumber: data.RequestNumber || '',
+          RequestGuid: data.RequestGuid || '',
+          RequestDocuments: data.RequestDocuments || []
+        } as ICreateAndSubmitRequestResponse;
+      })
+    );
+  }
+
+  /**
+   * Creates a document by uploading a single file
+   * Uses the document details from RequestDocuments in submit response
+   */
+  createDocument(payload: ICreateDocumentPayload): Observable<any> {
+    // Use raw HttpClient to handle response structure
+    return this.http.post<any>(
+      `${environment.apiUrl}${ENDPOINTS.SERVICE_REQUEST.CREATE_DOCUMENT}`,
+      payload
+    ).pipe(
+      map((response) => {
+        console.log('📥 Create Document API response:', response);
+        
+        // API returns: { IsSuccess: boolean, Data: {...}, StatusCode: number, Message: string, Errors: null }
+        if (!response || !response.IsSuccess) {
+          console.warn('⚠️ Document upload failed:', response);
+          throw new Error(response?.Message || 'Failed to upload document');
+        }
+
+        return response.Data || response;
+      })
     );
   }
 

@@ -17,7 +17,8 @@ import { DOCUMENT } from '@angular/common';
 import { Subscription, filter } from 'rxjs';
 import { StepWizardComponent, StepConfig } from '../components/step-wizard/step-wizard.component';
 import { IDocumentType, IUploadedDocument } from '../models/document.model';
-import { IServiceRequestResponse } from '../models/api-request.model';
+import { IServiceRequestResponse, ICreateAndSubmitRequestPayload, ICreateAndSubmitRequestResponse, IRequestDocument, ICreateDocumentPayload, IAttachment } from '../models/api-request.model';
+import { environment } from '../../../../environments/environment';
 
 /**
  * Service request page component
@@ -75,6 +76,10 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   uploadedDocuments: Map<string, IUploadedDocument> = new Map(); // Key: documentTypeId
   documentErrors: string[] = [];
   isLoadingDocumentTypes = false;
+  
+  // API response data
+  requestDocuments: IRequestDocument[] = []; // Documents from API response for stage 3
+  requestGuid: string = ''; // Request GUID from API response
 
   constructor() {
     // Pre-populated developer information (read-only, populated dynamically from API)
@@ -237,22 +242,40 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       next: (developerInfo) => {
         console.log('Developer info received from API:', developerInfo);
         
-        // Check license status eligibility
-        const licenseStatus = developerInfo.licenseStatus || '';
-        this.isEligible = licenseStatus === 'Active';
-        
-        if (!this.isEligible) {
-          // Show eligibility modal
-          this.showEligibilityModal = true;
-          // Disable the entire form
-          this.requestForm.disable();
-          // Show error notification
-          this.notificationService.error(
-            this.translateService.instant('serviceRequest.notEligibleMessage') || 
-            'Your license is not active. You are not eligible to submit service requests.'
-          );
+        // Check license status eligibility (only if enabled in configuration)
+        if (environment.enableLicenseEligibilityCheck) {
+          const licenseStatus = developerInfo.licenseStatus || '';
+          this.isEligible = licenseStatus === 'Active';
+          
+          if (!this.isEligible) {
+            // Show eligibility modal
+            this.showEligibilityModal = true;
+            // Disable the entire form
+            this.requestForm.disable();
+            // Show error notification
+            this.notificationService.error(
+              this.translateService.instant('serviceRequest.notEligibleMessage') || 
+              'Your license is not active. You are not eligible to submit service requests.'
+            );
+          } else {
+            // Enable form if eligible
+            this.requestForm.enable();
+            // Re-disable the read-only fields
+            const readOnlyFields = [
+              'developerRegistrationNumber',
+              'developerName',
+              'developerType',
+              'licenseStatus',
+              'licenseExpirationDate'
+            ];
+            readOnlyFields.forEach(field => {
+              this.requestForm.get(field)?.disable({ emitEvent: false });
+            });
+          }
         } else {
-          // Enable form if eligible
+          // Eligibility check is disabled - allow form submission
+          console.log('⚠️ License eligibility check is disabled (enableLicenseEligibilityCheck: false)');
+          this.isEligible = true;
           this.requestForm.enable();
           // Re-disable the read-only fields
           const readOnlyFields = [
@@ -300,14 +323,21 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Failed to load developer information:', error);
-        // On error, show eligibility modal and disable form
-        this.isEligible = false;
-        this.showEligibilityModal = true;
-        this.requestForm.disable();
-        this.notificationService.error(
-          this.translateService.instant('serviceRequest.errorLoadingDeveloperInfo') ||
-          'Failed to load developer information. Please contact support.'
-        );
+        // On error, only show eligibility modal if check is enabled
+        if (environment.enableLicenseEligibilityCheck) {
+          this.isEligible = false;
+          this.showEligibilityModal = true;
+          this.requestForm.disable();
+          this.notificationService.error(
+            this.translateService.instant('serviceRequest.errorLoadingDeveloperInfo') ||
+            'Failed to load developer information. Please contact support.'
+          );
+        } else {
+          // Eligibility check is disabled - allow form to continue
+          console.warn('⚠️ Failed to load developer info, but eligibility check is disabled. Form will remain enabled.');
+          this.isEligible = true;
+          this.requestForm.enable();
+        }
       },
     });
   }
@@ -343,6 +373,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
 
   /**
    * Handles form submission
+   * Called from stage 2 (Project Information) - documents will be uploaded separately in stage 3
    */
   onSubmit(): void {
     // Validate form
@@ -357,66 +388,106 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       return;
     }
 
-    // Validate all required documents are uploaded
-    if (!this.areAllRequiredDocumentsUploaded()) {
-      const missingDocuments = this.getMissingRequiredDocuments();
-      const missingNames = missingDocuments.map((dt) => this.getDocumentTypeName(dt)).join(', ');
-      this.notificationService.warning(
-        this.translateService.instant('serviceRequest.uploadAllRequiredDocuments') +
-          ': ' +
-          missingNames
-      );
-      return;
-    }
-
-    // Validate at least one document is uploaded (if document types are loaded)
-    if (this.documentTypes.length > 0 && this.uploadedDocuments.size === 0) {
-      this.notificationService.warning(
-        this.translateService.instant('serviceRequest.uploadAtLeastOneDocument')
-      );
-      return;
-    }
+    // Note: Document validation removed since we're submitting from stage 2
+    // Documents will be handled separately in stage 3 using RequestDocuments from API response
 
     this.isLoading = true;
 
-    // Use getRawValue() to include disabled fields (read-only developer info)
-    const formData = {
-      ...this.requestForm.getRawValue(),
-      documents: Array.from(this.uploadedDocuments.values()).map((doc, index) => ({
-        documentTypeId: doc.documentTypeId,
-        name: doc.file.name,
-        size: doc.file.size,
-        type: doc.file.type,
-        index: index,
-      })),
-      requestId: this.requestId,
-      serviceId: this.serviceId,
-      submittedAt: new Date().toISOString(),
+    // Map form data to API payload format
+    const formValues = this.requestForm.getRawValue();
+    const apiPayload: ICreateAndSubmitRequestPayload = {
+      RequestGuid: '00000000-0000-0000-0000-000000000000', // Empty GUID for new requests
+      ProjectName: formValues.projectName || '',
+      ProjectType: this.parseToNumber(formValues.projectType) || 0,
+      Area: formValues.area || '',
+      PlotNumber: formValues.plotNumber || '',
+      LandArea: formValues.landArea || '',
+      NumberOfUnits: String(formValues.numberOfUnits || ''),
+      ExecutionPeriod: String(formValues.executionPeriod || ''),
+      PlanType: this.parseToNumber(formValues.planType) || 0,
+      DesignStage: this.parseToNumber(formValues.designStage) || 0,
+      NumberOfBuildings: String(formValues.numberOfBuildings || ''),
+      NumberOfDevelopmentStages: String(formValues.numberOfDevelopmentStages || ''),
+      ApproximateHeight: String(formValues.approximateHeight || ''),
+      IsTheProjectOffPlanSale: formValues.isOffPlan ? 1 : 0,
+      BankName: formValues.bankName || '',
+      EstimatedValueOfProject: String(formValues.estimatedProjectValue || ''),
+      NumberOfUnitsForSale: String(formValues.numberOfUnitsForSale || ''),
+      StartSaleDate: formValues.startSaleDate || new Date().toISOString(),
+      ExpectedDeliveryDate: formValues.expectedDeliveryDate || new Date().toISOString(),
+      DownPaymentPercentage: String(formValues.downPaymentPercentage || ''),
+      DeveloperComments: formValues.developerComments || '',
+      AqaratComments: formValues.aqaratComments || ''
     };
 
-    this.serviceRequestService.submitServiceRequest(formData).subscribe({
-      next: (response: IServiceRequestResponse) => {
+    console.log('📤 Submitting request with payload:', apiPayload);
+
+    this.serviceRequestService.createAndSubmitRequest(apiPayload).subscribe({
+      next: (response: ICreateAndSubmitRequestResponse) => {
         this.isLoading = false;
-        // Store full API response
-        this.submissionResponse = response;
-        // Use API response fields - requestNumber is the reference number from API
-        this.submittedRequestNumber = response.requestNumber || response.id || `SR-${Date.now()}`;
-        // Show success modal
-        this.showSuccessModal = true;
+        console.log('✅ Request submitted successfully:', response);
+        
+        // Store request number and GUID
+        this.submittedRequestNumber = response.RequestNumber || '';
+        this.requestGuid = response.RequestGuid || '';
+        
+        // Store request documents for stage 3
+        this.requestDocuments = response.RequestDocuments || [];
+        
+        // Convert RequestDocuments to IDocumentType format
+        this.documentTypes = this.convertRequestDocumentsToDocumentTypes(response.RequestDocuments || []);
+        
+        // Mark step 1 as completed
+        this.markStepCompleted(1);
+        
+        // Navigate to document upload step (step 2)
+        this.goToStep(2);
+        
+        // Show success notification
         this.notificationService.success(
-          this.translateService.instant('serviceRequest.submissionSuccess')
+          this.translateService.instant('serviceRequest.submissionSuccess') + 
+          ' ' + 
+          this.translateService.instant('serviceRequest.pleaseUploadDocuments')
         );
       },
       error: (error) => {
         this.isLoading = false;
         const errorMessage =
+          error?.error?.Message ||
           error?.error?.message ||
           error?.message ||
           'Failed to submit service request. Please try again.';
         this.notificationService.error(errorMessage);
-        console.error('Submission error:', error);
+        console.error('❌ Submission error:', error);
       },
     });
+  }
+
+  /**
+   * Helper method to parse string to number safely
+   */
+  private parseToNumber(value: any): number {
+    if (value === null || value === undefined || value === '') {
+      return 0;
+    }
+    const parsed = Number(value);
+    return isNaN(parsed) ? 0 : parsed;
+  }
+
+  /**
+   * Converts RequestDocuments from API response to IDocumentType format
+   */
+  private convertRequestDocumentsToDocumentTypes(requestDocuments: IRequestDocument[]): IDocumentType[] {
+    return requestDocuments.map((doc, index) => ({
+      id: doc.DocumentGuid,
+      name: doc.DocumentName || `Document ${index + 1}`,
+      nameAr: doc.DocumentName || `مستند ${index + 1}`, // Default Arabic name
+      required: true, // All documents from API are required
+      description: doc.DocumentDescription || '',
+      descriptionAr: doc.DocumentDescription || '',
+      allowedFormats: ['pdf', 'jpg', 'png', 'doc', 'docx'], // Default formats
+      maxSize: 10 * 1024 * 1024 // 10MB default
+    }));
   }
 
   /**
@@ -429,7 +500,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       this.markStepCompleted(0);
       this.goToStep(1);
     } else if (this.currentStepIndex === 1) {
-      // Project forms step - validate all forms before proceeding
+      // Project forms step - validate all forms before submitting
       const projectFormFields = [
         'projectName',
         'projectType',
@@ -465,17 +536,18 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       });
 
       if (invalidFields.length === 0) {
+        // All fields valid - submit the form
         this.markStepCompleted(1);
-        this.goToStep(2);
+        this.onSubmit();
       } else {
         this.notificationService.warning(
           this.translateService.instant('form.pleaseCompleteAllRequiredFields')
         );
       }
     } else if (this.currentStepIndex === 2) {
-      // Documents step - validate all required documents are uploaded before submitting
+      // Documents step - validate all required documents are uploaded before showing success modal
       if (this.areAllRequiredDocumentsUploaded()) {
-        this.onSubmit();
+        this.showSubmissionSuccessModal();
       } else {
         this.notificationService.warning(
           this.translateService.instant('serviceRequest.uploadAllRequiredDocuments')
@@ -505,9 +577,15 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       this.initializeSteps(); // Re-initialize to update active state
       this.steps[this.currentStepIndex].disabled = false;
 
-      // Load document types when entering documents step
+      // Load document types when entering documents step (only if not already loaded from API response)
       if (index === 2 && this.documentTypes.length === 0) {
-        this.loadDocumentTypes();
+        // If we have requestDocuments from API, use those instead
+        if (this.requestDocuments.length > 0) {
+          this.documentTypes = this.convertRequestDocumentsToDocumentTypes(this.requestDocuments);
+        } else {
+          // Otherwise, load from API
+          this.loadDocumentTypes();
+        }
       }
 
       this.scrollToTop();
@@ -701,6 +779,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
 
   /**
    * Handles file selection for document upload (single file per document type)
+   * Uploads document immediately one by one using the API
    */
   onFileSelected(event: Event): void {
     if (!this.selectedDocumentType) {
@@ -716,7 +795,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       this.documentErrors = [];
 
       // Validate file size
-      const maxSize = this.selectedDocumentType.maxSize || 2 * 1024 * 1024; // Default 2MB
+      const maxSize = this.selectedDocumentType.maxSize || 10 * 1024 * 1024; // Default 10MB
       if (file.size > maxSize) {
         const maxSizeMB = Math.round(maxSize / (1024 * 1024));
         this.documentErrors.push(
@@ -728,7 +807,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
 
       // Validate file type
       const fileExtension = file.name.split('.').pop()?.toLowerCase() || '';
-      const allowedFormats = this.selectedDocumentType.allowedFormats || ['pdf', 'jpg', 'png'];
+      const allowedFormats = this.selectedDocumentType.allowedFormats || ['pdf', 'jpg', 'png', 'doc', 'docx'];
       if (!allowedFormats.includes(fileExtension)) {
         this.documentErrors.push(
           this.translateService.instant('serviceRequest.invalidFileType', {
@@ -739,7 +818,15 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
         return;
       }
 
-      // Create uploaded document entry
+      // Find the corresponding RequestDocument from API response
+      const requestDocument = this.requestDocuments.find(rd => rd.DocumentGuid === this.selectedDocumentType!.id);
+      if (!requestDocument) {
+        this.notificationService.error('Document type not found in request. Please try again.');
+        input.value = '';
+        return;
+      }
+
+      // Create uploaded document entry (for UI tracking)
       const uploadedDoc: IUploadedDocument = {
         id: `doc-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         documentTypeId: this.selectedDocumentType.id,
@@ -748,19 +835,81 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
           : this.selectedDocumentType.name,
         file: file,
         uploadedAt: new Date(),
+        uploadProgress: 0
       };
 
-      // Store by document type ID (only one file per type)
+      // Store by document type ID (for UI)
       this.uploadedDocuments.set(this.selectedDocumentType.id, uploadedDoc);
+
+      // Upload document immediately
+      this.uploadSingleDocument(file, requestDocument, uploadedDoc);
 
       // Reset selection
       this.selectedDocumentType = null;
       input.value = ''; // Reset input
-
-      this.notificationService.success(
-        this.translateService.instant('serviceRequest.documentUploadedSuccessfully')
-      );
     }
+  }
+
+  /**
+   * Uploads a single document to the API
+   */
+  private uploadSingleDocument(file: File, requestDocument: IRequestDocument, uploadedDoc: IUploadedDocument): void {
+    // Convert file to base64
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64String = (reader.result as string).split(',')[1]; // Remove data:type;base64, prefix
+      const mimeType = file.type || 'application/octet-stream';
+
+      // Create attachment payload
+      const attachment: IAttachment = {
+        AttachmentGuid: '00000000-0000-0000-0000-000000000000', // Empty GUID for new attachment
+        MimeType: mimeType,
+        FileName: file.name,
+        Size: file.size,
+        AttachmentBody: base64String
+      };
+
+      // Create document payload
+      const payload: ICreateDocumentPayload = {
+        DocumentName: requestDocument.DocumentName,
+        DocumentGuid: requestDocument.DocumentGuid,
+        DocumentDescription: requestDocument.DocumentDescription || '',
+        Attachment: attachment,
+        pageIndex: requestDocument.pageIndex || 0,
+        entityName: requestDocument.entityName || ''
+      };
+
+      // Update upload progress
+      uploadedDoc.uploadProgress = 50;
+
+      // Call API to upload document
+      this.serviceRequestService.createDocument(payload).subscribe({
+        next: (response) => {
+          uploadedDoc.uploadProgress = 100;
+          uploadedDoc.uploadError = undefined;
+          this.notificationService.success(
+            this.translateService.instant('serviceRequest.documentUploadedSuccessfully')
+          );
+          console.log('✅ Document uploaded successfully:', response);
+        },
+        error: (error) => {
+          uploadedDoc.uploadProgress = 0;
+          const errorMessage = error?.error?.Message || error?.message || 'Failed to upload document';
+          uploadedDoc.uploadError = errorMessage;
+          this.notificationService.error(errorMessage);
+          console.error('❌ Document upload error:', error);
+          // Remove from uploaded documents on error
+          this.uploadedDocuments.delete(uploadedDoc.documentTypeId);
+        }
+      });
+    };
+
+    reader.onerror = () => {
+      this.notificationService.error('Failed to read file. Please try again.');
+      this.uploadedDocuments.delete(uploadedDoc.documentTypeId);
+    };
+
+    reader.readAsDataURL(file);
   }
 
   /**
@@ -781,19 +930,25 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Checks if all required documents are uploaded
+   * Checks if all required documents are uploaded successfully
    */
   areAllRequiredDocumentsUploaded(): boolean {
     if (this.documentTypes.length === 0) {
-      // If document types haven't loaded yet, return false to prevent submission
+      // If document types haven't loaded yet, return false
       return false;
     }
     const requiredTypes = this.documentTypes.filter((dt) => dt.required);
     if (requiredTypes.length === 0) {
-      // If no required documents, at least one document should be uploaded
-      return this.uploadedDocuments.size > 0;
+      // If no required documents, check if at least one document is uploaded successfully
+      return Array.from(this.uploadedDocuments.values()).some(
+        doc => doc.uploadProgress === 100 && !doc.uploadError
+      );
     }
-    return requiredTypes.every((dt) => this.uploadedDocuments.has(dt.id));
+    // Check that all required documents are uploaded and successfully completed (progress 100%, no errors)
+    return requiredTypes.every((dt) => {
+      const uploadedDoc = this.uploadedDocuments.get(dt.id);
+      return uploadedDoc && uploadedDoc.uploadProgress === 100 && !uploadedDoc.uploadError;
+    });
   }
 
   /**
@@ -876,6 +1031,30 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       licenseStatus: this.requestForm.get('licenseStatus')?.value || '',
       expirationDate: this.requestForm.get('licenseExpirationDate')?.value || '',
     };
+  }
+
+  /**
+   * Shows the submission success modal
+   * Called when user clicks the complete/submit button after uploading all documents
+   */
+  private showSubmissionSuccessModal(): void {
+    // Ensure we have the submission response data
+    if (!this.submissionResponse) {
+      this.submissionResponse = {
+        id: this.requestGuid,
+        requestNumber: this.submittedRequestNumber,
+        status: this.translateService.instant('serviceRequest.statusSubmitted'), // Localized status
+        submittedAt: new Date().toISOString(),
+        message: this.translateService.instant('serviceRequest.submissionSuccess')
+      };
+    } else {
+      // Update status to be localized
+      this.submissionResponse.status = this.translateService.instant('serviceRequest.statusSubmitted');
+    }
+    this.showSuccessModal = true;
+    this.notificationService.success(
+      this.translateService.instant('serviceRequest.submissionSuccess')
+    );
   }
 
   /**

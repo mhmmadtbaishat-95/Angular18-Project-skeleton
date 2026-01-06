@@ -57,10 +57,12 @@ export const DASHBOARD_ENDPOINTS = {
 export const SERVICE_REQUEST_ENDPOINTS = {
   BASE: '/service-requests',
   SUBMIT: '/service-requests',
+  CREATE_AND_SUBMIT: '/Request/CreateAndSubmitRequest',
   BY_ID: '/service-requests/:id',
   LIST: '/service-requests',
   DEVELOPER_INFO: '/Request/GetDeveloperDetailsByGuid',
   UPLOAD_DOCUMENTS: '/service-requests/:id/documents',
+  CREATE_DOCUMENT: '/Document/CreateDocument',
   DOCUMENT_TYPES: '/service-requests/document-types',
   SERVICES: '/services',
   SERVICE_BY_ID: '/services/:id',
