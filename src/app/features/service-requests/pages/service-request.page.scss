@@ -50,7 +50,7 @@
 
 .page-title {
   @apply text-2xl md:text-3xl lg:text-4xl font-bold;
-  background: #A19576;;
+  background: #A19576;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -75,7 +75,8 @@
 /* Left Column: Form */
 .form-column-wrapper {
   flex: 1;
-  min-width: 0; /* Prevents flex item from overflowing */
+  min-width: 0;
+  /* Prevents flex item from overflowing */
 }
 
 .form-container {
@@ -130,7 +131,7 @@
 /* Sub-form Content - All forms displayed together */
 .sub-form-content {
   @apply mb-8;
-  
+
   &:not(:last-child) {
     border-bottom: 1px solid rgba(75, 85, 99, 0.3);
     padding-bottom: 2rem;
@@ -234,7 +235,7 @@
   @apply mt-4 p-4 rounded-lg;
   background: rgba(139, 21, 56, 0.1);
   border: 1px solid rgba(139, 21, 56, 0.3);
-  
+
   p {
     @apply text-sm text-gray-300;
     margin: 0;
@@ -315,76 +316,88 @@
 }
 
 /* RTL Support */
-.service-request-page[dir="rtl"],
-[dir="rtl"] .service-request-page,
-:host-context([dir="rtl"]) .service-request-page,
-:host-context(.rtl) .service-request-page {
-  direction: rtl !important;
+// .service-request-page[dir="rtl"],
+// [dir="rtl"] .service-request-page,
+// :host-context([dir="rtl"]) .service-request-page,
+// :host-context(.rtl) .service-request-page {
+//   direction: rtl !important;
+//   text-align: right !important;
+
+//   // .breadcrumb-nav {
+//   //   flex-direction: row-reverse !important;
+//   //   text-align: right !important;
+//   //   direction: rtl !important;
+//   // }
+
+//   .breadcrumb-nav {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
+
+//   .breadcrumb-link,
+//   .breadcrumb-current {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
+
+//   .title-section {
+//     flex-direction: row-reverse !important;
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
+
+//   .page-title {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
+
+//   .form-grid {
+//     direction: rtl !important;
+//   }
+
+//   .form-column {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
+
+//   .form-label {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
+
+//   .form-input {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
+
+//   .section-title {
+//     text-align: right !important;
+//     direction: rtl !important;
+//   }
+
+//   .back-arrow-btn {
+//     order: 2;
+//   }
+
+//   .page-title {
+//     order: 1;
+//   }
+// }
+.page-title {
+  order: 1;
+}
+
+.form-actions {
+  flex-direction: row !important;
+}
+
+.readonly-note {
   text-align: right !important;
+  direction: rtl !important;
+}
 
-  .breadcrumb-nav {
-    flex-direction: row-reverse !important;
-    text-align: right !important;
-    direction: rtl !important;
-  }
-
-  .breadcrumb-link,
-  .breadcrumb-current {
-    text-align: right !important;
-    direction: rtl !important;
-  }
-
-  .title-section {
-    flex-direction: row-reverse !important;
-    text-align: right !important;
-    direction: rtl !important;
-  }
-
-  .page-title {
-    text-align: right !important;
-    direction: rtl !important;
-  }
-
-  .form-grid {
-    direction: rtl !important;
-  }
-
-  .form-column {
-    text-align: right !important;
-    direction: rtl !important;
-  }
-
-  .form-label {
-    text-align: right !important;
-    direction: rtl !important;
-  }
-
-  .form-input {
-    text-align: right !important;
-    direction: rtl !important;
-  }
-
-  .section-title {
-    text-align: right !important;
-    direction: rtl !important;
-  }
-
-  .back-arrow-btn {
-    order: 2;
-  }
-
-  .page-title {
-    order: 1;
-  }
-
-  .form-actions {
-    flex-direction: row-reverse !important;
-  }
-
-  .readonly-note {
-    text-align: right !important;
-    direction: rtl !important;
-  }
+.next-btn {
+  margin-inline-start: auto;
 }
 
 /* Success Modal */
@@ -576,7 +589,7 @@
   width: 24px;
   height: 24px;
   color: #FBBF24;
-  
+
   svg {
     width: 100%;
     height: 100%;
@@ -596,7 +609,7 @@
   @apply list-disc list-inside;
   margin: 0;
   padding: 0;
-  
+
   li {
     @apply text-gray-300 text-sm;
     margin-bottom: 0.25rem;
@@ -621,7 +634,7 @@
 
 .detail-item {
   @apply flex justify-between items-center mb-2;
-  
+
   &:last-child {
     margin-bottom: 0;
   }
@@ -787,6 +800,7 @@
 
   .page-title {
     @apply text-xl md:text-2xl;
+    color: #A19576;
   }
 
   .title-section {

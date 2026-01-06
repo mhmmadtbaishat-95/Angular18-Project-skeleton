@@ -23,7 +23,7 @@
   pointer-events: none;
 }
 
-.request-log-page > * {
+.request-log-page>* {
   position: relative;
   z-index: 1;
 }
@@ -68,13 +68,14 @@
 .page-title {
   font-size: 2.5rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 100%);
+  background: #A19576;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.02em;
   line-height: 1.2;
   margin: 0;
+  color: #A19576;
 }
 
 .refresh-button {
@@ -106,6 +107,7 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(75, 85, 99, 0.3);
   overflow-x: auto;
+  background: transparent;
 }
 
 /* Request Log Table */
@@ -119,12 +121,13 @@
 }
 
 .request-log-table th {
-  @apply px-6 py-4 text-left;
+  @apply px-6 py-4;
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.875rem;
   font-weight: 600;
   text-transform: none;
   letter-spacing: 0.025em;
+  text-align: start;
 }
 
 [dir="rtl"] .request-log-table th {
@@ -133,7 +136,7 @@
 
 .request-log-table tbody tr {
   border-bottom: 1px solid rgba(156, 163, 175, 0.1);
-  transition: background-color 0.2s ease-out;
+  transition: background-color 0s ease-out;
 }
 
 .request-log-table tbody tr.table-row {
@@ -141,7 +144,7 @@
 }
 
 .request-log-table tbody tr.table-row:hover {
-  background-color: rgba(75, 85, 99, 0.2);
+  background-color: rgba(75, 85, 99, 0);
 }
 
 .request-log-table tbody tr:last-child {
@@ -198,58 +201,59 @@
 
 /* Status Badges */
 .status-badge {
-  @apply inline-flex items-center px-3 py-1.5 rounded-md;
+  @apply inline-flex items-center rounded-md;
   font-size: 0.8125rem;
   font-weight: 600;
   transition: all 0.2s ease-out;
+  padding: 0;
 }
 
 .status-badge.status-in-review {
-  background-color: rgba(251, 146, 60, 0.2);
+  background-color: rgba(251, 146, 60, 0);
   color: #fb923c;
-  border: 1px solid rgba(251, 146, 60, 0.3);
+  border: 1px solid rgba(251, 146, 60, 0);
 }
 
 .status-badge.status-approved {
-  background-color: rgba(34, 197, 94, 0.2);
+  background-color: rgba(34, 197, 94, 0);
   color: #22c55e;
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  border: 1px solid rgba(34, 197, 94, 0);
 }
 
 .status-badge.status-rejected {
-  background-color: rgba(239, 68, 68, 0.2);
+  background-color: rgba(239, 68, 68, 0);
   color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  border: 1px solid rgba(239, 68, 68, 0);
 }
 
 .status-badge.status-completed {
-  background-color: rgba(16, 185, 129, 0.2);
+  background-color: rgba(16, 185, 129, 0);
   color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  border: 1px solid rgba(16, 185, 129, 0);
 }
 
 .status-badge.status-closed {
-  background-color: rgba(156, 163, 175, 0.2);
+  background-color: rgba(156, 163, 175, 0);
   color: #9ca3af;
-  border: 1px solid rgba(156, 163, 175, 0.3);
+  border: 1px solid rgba(156, 163, 175, 0);
 }
 
 .status-badge.status-submitted {
-  background-color: rgba(59, 130, 246, 0.2);
+  background-color: rgba(59, 130, 246, 0);
   color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.3);
+  border: 1px solid rgba(59, 130, 246, 0);
 }
 
 .status-badge.status-in-progress {
-  background-color: rgba(168, 85, 247, 0.2);
+  background-color: rgba(168, 85, 247, 0);
   color: #a855f7;
-  border: 1px solid rgba(168, 85, 247, 0.3);
+  border: 1px solid rgba(168, 85, 247, 0);
 }
 
 .status-badge.status-draft {
-  background-color: rgba(156, 163, 175, 0.2);
+  background-color: rgba(156, 163, 175, 0);
   color: #9ca3af;
-  border: 1px solid rgba(156, 163, 175, 0.3);
+  border: 1px solid rgba(156, 163, 175, 0);
 }
 
 /* Empty State */

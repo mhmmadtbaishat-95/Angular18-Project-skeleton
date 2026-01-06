@@ -316,6 +316,15 @@
 }
 
 @media (max-width: 768px) {
+  .metric-value {
+    font-size: 1rem;
+  }
+
+  .map-image {
+    max-width: 100%;
+
+  }
+
   .page-title {
     @apply text-2xl md:text-3xl;
   }
