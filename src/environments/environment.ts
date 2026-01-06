@@ -6,10 +6,10 @@ import { LogLevel } from '../app/core/services/logger/logger.config';
  */
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api',
+  apiUrl: 'https://aqaratintegrations.azurewebsites.net/API',
   apiVersion: 'v1',
   // Set to false when API is ready to use real endpoints
-  useMockApi: true, // Change to false when API endpoints are ready
+  useMockApi: false, // Change to false when API endpoints are ready
   cacheConfig: {
     ttl: 5 * 60 * 1000, // 5 minutes
     maxSize: 100,

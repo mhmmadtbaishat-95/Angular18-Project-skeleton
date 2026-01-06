@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of, delay } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { FormDefinition } from '../models/form-field.model';
@@ -69,6 +69,7 @@ export class ServiceRequestService {
    */
   getDeveloperInfo(): Observable<IDeveloperInfo> {
     if (this.useMockData) {
+      console.log('⚠️ Using MOCK data for developer info (useMockApi is true)');
       // Mock data for development
       const mockData: IDeveloperInfo = {
         developerRegistrationNumber: 'DEV-2024-001234',
@@ -80,8 +81,43 @@ export class ServiceRequestService {
       return of(mockData).pipe(delay(500));
     }
     
-    // Real API call - just uncomment when API is ready
-    return this.httpClient.get<IDeveloperInfo>(ENDPOINTS.SERVICE_REQUEST.DEVELOPER_INFO);
+    // Real API call - use raw HttpClient to handle response structure
+    const accountGuid = 'ff846f37-4fe2-4291-97b9-ef92b45bac9c'; // TODO: Get from auth context
+    const url = `${environment.apiUrl}${ENDPOINTS.SERVICE_REQUEST.DEVELOPER_INFO}?accountGuid=${accountGuid}`;
+    console.log('📡 Calling developer info API:', url);
+    return this.http.post<any>(url, null).pipe(
+      map((response) => {
+        console.log('📥 Raw API response:', response);
+        // API returns: { IsSuccess: boolean, Data: {...}, StatusCode: number, Message: string, Errors: null }
+        // Extract developer info from response.Data
+        if (!response || !response.Data) {
+          console.warn('⚠️ Unexpected developer info response structure:', response);
+          // Return empty values if response structure is unexpected
+          return {
+            developerRegistrationNumber: '',
+            developerName: '',
+            developerType: '' as 'Natural' | 'Legal',
+            licenseStatus: '' as 'Active' | 'Expired' | 'Suspended' | 'Pending',
+            licenseExpirationDate: ''
+          } as IDeveloperInfo;
+        }
+
+        const developerData = response.Data;
+        console.log('📋 Developer data extracted:', developerData);
+
+        // Map PascalCase API response to camelCase IDeveloperInfo interface
+        // Handle null values by providing empty strings (no defaults)
+        const mappedData: IDeveloperInfo = {
+          developerRegistrationNumber: developerData.DeveloperRegistrationNumber ?? '',
+          developerName: developerData.DeveloperName ?? '',
+          developerType: (developerData.TypeOfDeveloper ?? '') as 'Natural' | 'Legal',
+          licenseStatus: (developerData.LicenseStatus ?? '') as 'Active' | 'Expired' | 'Suspended' | 'Pending',
+          licenseExpirationDate: developerData.LicenseExpirationDate ?? ''
+        };
+        console.log('✅ Mapped developer info:', mappedData);
+        return mappedData;
+      })
+    );
   }
 
   /**
@@ -118,7 +154,7 @@ export class ServiceRequestService {
         documentId: `DOC-${Date.now()}-${index}`,
         fileName: file.name,
         fileSize: file.size,
-        fileUrl: `https://api.example.com/documents/DOC-${Date.now()}-${index}`,
+        fileUrl: `https://aqaratintegrations.azurewebsites.net/API/documents/DOC-${Date.now()}-${index}`,
         uploadedAt: new Date().toISOString()
       }));
       return of(mockResponses).pipe(delay(1500));
@@ -162,17 +198,71 @@ export class ServiceRequestService {
    * Gets request log entries (all requests with applicant information)
    * This is for administrative/log viewing purposes
    */
-  getRequestLog(): Observable<RequestLogEntry[]> {
-    if (this.useMockData) {
-      // Mock data for development
-      return of(this.getMockRequestLogs()).pipe(delay(500));
-    }
-    
-    // Real API call - when API is ready
-    // return this.httpClient.get<RequestLogEntry[]>(ENDPOINTS.SERVICE_REQUEST.LIST + '/log');
-    return of(this.getMockRequestLogs()).pipe(delay(500));
-  }
+getRequestLog(): Observable<RequestLogEntry[]> {
+  const params = new HttpParams()
+    .set('accountGuid', 'ff846f37-4fe2-4291-97b9-ef92b45bac9c');
 
+  // Use raw HttpClient to get full response structure
+  // since HttpClientService automatically extracts response.data
+  return this.http.post<any>(
+    `${environment.apiUrl}/Request/GetAllRequestsByDeveloperGuid?accountGuid=ff846f37-4fe2-4291-97b9-ef92b45bac9c`,
+    null
+  ).pipe(
+    map((response) => {
+      // API returns: { IsSuccess: boolean, Data: { Requests: [...] }, StatusCode: number, Message: string, Errors: null }
+      // Extract the Requests array from response.Data.Requests
+      let requests: any[] = [];
+      
+      if (response && response.Data && response.Data.Requests) {
+        requests = Array.isArray(response.Data.Requests) ? response.Data.Requests : [];
+      } else if (response && response.Data && Array.isArray(response.Data)) {
+        requests = response.Data;
+      } else if (Array.isArray(response)) {
+        requests = response;
+      } else {
+        console.warn('Unexpected response structure:', response);
+        return [];
+      }
+
+      // Map API response (PascalCase) to RequestLogEntry model (camelCase)
+      return requests.map((item: any) => {
+        // Map ExternalStatus to RequestStatus enum
+        const mapStatus = (externalStatus: string): RequestStatus => {
+          const statusMap: Record<string, RequestStatus> = {
+            'Draft': RequestStatus.DRAFT,
+            'Submitted': RequestStatus.SUBMITTED,
+            'InReview': RequestStatus.IN_REVIEW,
+            'Approved': RequestStatus.APPROVED,
+            'Rejected': RequestStatus.REJECTED,
+            'InProgress': RequestStatus.IN_PROGRESS,
+            'Completed': RequestStatus.COMPLETED,
+            'Cancelled': RequestStatus.CANCELLED,
+            'Closed': RequestStatus.CANCELLED
+          };
+          return statusMap[externalStatus] || RequestStatus.DRAFT;
+        };
+
+        const now = new Date().toISOString();
+        return {
+          id: item.Id || item.id || '',
+          requestNumber: item.RequestNumber || item.requestNumber || '',
+          serviceId: item.ServiceId || item.serviceId || '',
+          serviceName: item.ServiceName || item.serviceName || 'Unknown Service',
+          serviceNameAr: item.ServiceNameAr || item.serviceNameAr,
+          status: mapStatus(item.ExternalStatus || item.externalStatus || item.Status || item.status || 'Draft'),
+          submittedAt: item.SubmittedAt || item.submittedAt || now,
+          updatedAt: item.UpdatedAt || item.updatedAt || now,
+          completedAt: item.CompletedAt || item.completedAt,
+          formData: item.FormData || item.formData || {},
+          paymentStatus: item.PaymentStatus || item.paymentStatus,
+          comments: item.DeveloperComments || item.AqaratComments || item.Comments || item.comments,
+          applicantName: item.ApplicantName || item.applicantName || 'Unknown Applicant',
+          applicantNameAr: item.ApplicantNameAr || item.applicantNameAr
+        } as RequestLogEntry;
+      });
+    })
+  );
+}
   /**
    * Gets a specific service request by ID
    */

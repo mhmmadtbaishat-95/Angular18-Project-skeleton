@@ -48,7 +48,6 @@
           <tr
             *ngFor="let log of filteredLogs"
             class="table-row"
-            (click)="viewRequest(log)"
           >
             <td class="service-name-cell">
               <span class="service-name-text">{{ getServiceName(log) }}</span>

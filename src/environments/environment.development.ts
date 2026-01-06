@@ -2,15 +2,17 @@ import { ICacheConfig } from '../app/core/services/cache/cache.interface';
 import { LogLevel } from '../app/core/services/logger/logger.config';
 
 /**
- * Development environment configuration
+ * Environment configuration
  */
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000/api',
+  apiUrl: 'https://aqaratintegrations.azurewebsites.net/API',
   apiVersion: 'v1',
+  // Set to false when API is ready to use real endpoints
+  useMockApi: false, // Change to false when API endpoints are ready
   cacheConfig: {
-    ttl: 1 * 60 * 1000, // 1 minute (shorter for dev)
-    maxSize: 50,
+    ttl: 5 * 60 * 1000, // 5 minutes
+    maxSize: 100,
     strategy: 'LRU' as const,
     enabled: true
   } as ICacheConfig,

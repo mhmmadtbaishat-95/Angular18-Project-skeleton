@@ -477,6 +477,107 @@
   }
 }
 
+/* Eligibility Modal */
+.eligibility-modal-overlay {
+  @apply fixed inset-0 z-50 flex items-center justify-center;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+}
+
+.eligibility-modal {
+  @apply flex flex-col items-center justify-center;
+  backdrop-filter: blur(30px);
+  background: rgba(31, 41, 55, 0.95);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 1.5rem;
+  padding: 3rem 2.5rem;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+}
+
+.eligibility-icon {
+  @apply w-20 h-20 rounded-full flex items-center justify-center mb-6;
+  background: #EF4444;
+  margin-bottom: 1.5rem;
+}
+
+.warning-icon {
+  @apply w-12 h-12 text-white;
+  stroke-width: 2;
+}
+
+.eligibility-title {
+  @apply text-white font-bold mb-4;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: #EF4444;
+}
+
+.eligibility-message {
+  @apply text-white mb-6;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.eligibility-info {
+  @apply mt-4 mb-6;
+}
+
+.eligibility-info .info-text {
+  @apply text-gray-400 text-sm;
+  max-width: 500px;
+}
+
+.eligibility-btn {
+  @apply px-8 py-3 rounded-lg font-semibold text-white transition-all;
+  background: #8B1538;
+  border: 1px solid #6B0F2A;
+  font-size: 1rem;
+  min-width: 200px;
+  cursor: pointer;
+
+  &:hover {
+    background: #6B0F2A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 21, 56, 0.4);
+  }
+}
+
+/* RTL Support for Eligibility Modal */
+.service-request-page[dir="rtl"] .eligibility-modal,
+[dir="rtl"] .service-request-page .eligibility-modal,
+:host-context([dir="rtl"]) .service-request-page .eligibility-modal,
+:host-context(.rtl) .service-request-page .eligibility-modal {
+  direction: rtl !important;
+  text-align: center !important;
+
+  .eligibility-title {
+    text-align: center !important;
+    direction: rtl !important;
+  }
+
+  .eligibility-message {
+    text-align: center !important;
+    direction: rtl !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .eligibility-modal {
+    padding: 2rem 1.5rem;
+  }
+
+  .eligibility-title {
+    font-size: 1.25rem;
+  }
+
+  .eligibility-message {
+    font-size: 0.75rem;
+  }
+}
+
 /* Document Upload Section */
 .document-upload-section {
   @apply w-full;
