@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterLink, NavigationEnd } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ServiceRequestService } from '../services/service-request.service';
 import { NotificationService } from '@core/services/notification/notification.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,6 +10,8 @@ import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 import { DOCUMENT } from '@angular/common';
 import { Subscription, filter } from 'rxjs';
 import { StepWizardComponent, StepConfig } from '../components/step-wizard/step-wizard.component';
+import { IDocumentType, IUploadedDocument } from '../models/document.model';
+import { IServiceRequestResponse } from '../models/api-request.model';
 
 /**
  * Service request page component
@@ -21,6 +23,7 @@ import { StepWizardComponent, StepConfig } from '../components/step-wizard/step-
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     RouterLink,
     TranslatePipe,
     StepWizardComponent
@@ -48,6 +51,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   isRTL = signal(this.i18nService.isRTL());
   showSuccessModal = false;
   submittedRequestNumber: string = '';
+  submissionResponse: IServiceRequestResponse | null = null;
   
   // Step wizard properties
   currentStepIndex = 0;
@@ -58,8 +62,11 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   subForms: Array<{ id: string; title: string }> = [];
   
   // Document upload properties
-  uploadedDocuments: File[] = [];
+  documentTypes: IDocumentType[] = [];
+  selectedDocumentType: IDocumentType | null = null;
+  uploadedDocuments: Map<string, IUploadedDocument> = new Map(); // Key: documentTypeId
   documentErrors: string[] = [];
+  isLoadingDocumentTypes = false;
 
   constructor() {
     // Pre-populated developer information (read-only)
@@ -163,14 +170,6 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
         completed: false,
         active: this.currentStepIndex === 2,
         disabled: this.currentStepIndex < 2
-      },
-      {
-        id: 'submission',
-        title: this.translateService.instant('serviceRequest.steps.submission.title'),
-        description: this.translateService.instant('serviceRequest.steps.submission.description'),
-        completed: false,
-        active: this.currentStepIndex === 3,
-        disabled: this.currentStepIndex < 3
       }
     ];
   }
@@ -259,42 +258,68 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    * Handles form submission
    */
   onSubmit(): void {
-    if (this.requestForm.valid) {
+    // Validate form
+    if (!this.requestForm.valid) {
+      // Mark all fields as touched to show validation errors
+      Object.keys(this.requestForm.controls).forEach(key => {
+        this.requestForm.get(key)?.markAsTouched();
+      });
+      this.notificationService.warning(this.translateService.instant('form.pleaseCompleteAllRequiredFields'));
+      return;
+    }
+
+    // Validate all required documents are uploaded
+    if (!this.areAllRequiredDocumentsUploaded()) {
+      const missingDocuments = this.getMissingRequiredDocuments();
+      const missingNames = missingDocuments.map(dt => this.getDocumentTypeName(dt)).join(', ');
+      this.notificationService.warning(
+        this.translateService.instant('serviceRequest.uploadAllRequiredDocuments') + 
+        ': ' + missingNames
+      );
+      return;
+    }
+
+    // Validate at least one document is uploaded (if document types are loaded)
+    if (this.documentTypes.length > 0 && this.uploadedDocuments.size === 0) {
+      this.notificationService.warning(this.translateService.instant('serviceRequest.uploadAtLeastOneDocument'));
+      return;
+    }
+
       this.isLoading = true;
       
-      // Use getRawValue() to include disabled fields (read-only developer info)
+    // Use getRawValue() to include disabled fields (read-only developer info)
       const formData = {
-        ...this.requestForm.getRawValue(),
-        documents: this.uploadedDocuments.map((file, index) => ({
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          index: index
-        })),
+      ...this.requestForm.getRawValue(),
+      documents: Array.from(this.uploadedDocuments.values()).map((doc, index) => ({
+        documentTypeId: doc.documentTypeId,
+        name: doc.file.name,
+        size: doc.file.size,
+        type: doc.file.type,
+        index: index
+      })),
         requestId: this.requestId,
         serviceId: this.serviceId,
         submittedAt: new Date().toISOString()
       };
 
       this.serviceRequestService.submitServiceRequest(formData).subscribe({
-        next: (response) => {
+        next: (response: IServiceRequestResponse) => {
           this.isLoading = false;
-          this.submittedRequestNumber = response.id || `SR-${Date.now()}`;
-          // Move to submission step (step 3)
-          this.goToStep(3);
+          // Store full API response
+          this.submissionResponse = response;
+          // Use API response fields - requestNumber is the reference number from API
+          this.submittedRequestNumber = response.requestNumber || response.id || `SR-${Date.now()}`;
+          // Show success modal
+          this.showSuccessModal = true;
+          this.notificationService.success(this.translateService.instant('serviceRequest.submissionSuccess'));
         },
         error: (error) => {
           this.isLoading = false;
-          this.notificationService.error('Failed to submit service request. Please try again.');
+          const errorMessage = error?.error?.message || error?.message || 'Failed to submit service request. Please try again.';
+          this.notificationService.error(errorMessage);
           console.error('Submission error:', error);
         }
       });
-    } else {
-      // Mark all fields as touched to show validation errors
-      Object.keys(this.requestForm.controls).forEach(key => {
-        this.requestForm.get(key)?.markAsTouched();
-      });
-    }
   }
 
   /**
@@ -307,26 +332,41 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       this.markStepCompleted(0);
       this.goToStep(1);
     } else if (this.currentStepIndex === 1) {
-      // Project forms step - navigate between sub-forms
-      if (this.currentSubFormIndex < this.subForms.length - 1) {
-        // Validate current sub-form before moving to next
-        if (this.isCurrentSubFormValid()) {
-          this.currentSubFormIndex++;
-        } else {
-          this.markCurrentSubFormFieldsAsTouched();
+      // Project forms step - validate all forms before proceeding
+      const projectFormFields = [
+        'projectName', 'projectType', 'area', 'plotNumber', 'landArea', 'executionPeriod',
+        'planType', 'designStage', 'numberOfBuildings', 'numberOfDevelopmentStages', 'approximateHeight',
+        'bankName', 'estimatedProjectValue',
+        'numberOfUnitsForSale', 'startSaleDate', 'expectedDeliveryDate', 'downPaymentPercentage'
+      ];
+      
+      // Mark all project form fields as touched
+      projectFormFields.forEach(field => {
+        const control = this.requestForm.get(field);
+        if (control) {
+          control.markAsTouched();
         }
+      });
+      
+      // Check if all required fields are valid
+      const invalidFields = projectFormFields.filter(field => {
+        const control = this.requestForm.get(field);
+        return control && control.invalid && control.hasError('required');
+      });
+      
+      if (invalidFields.length === 0) {
+        this.markStepCompleted(1);
+        this.goToStep(2);
       } else {
-        // All sub-forms completed, move to next step
-        if (this.isCurrentSubFormValid()) {
-          this.markStepCompleted(1);
-          this.goToStep(2);
-        } else {
-          this.markCurrentSubFormFieldsAsTouched();
-        }
+        this.notificationService.warning(this.translateService.instant('form.pleaseCompleteAllRequiredFields'));
       }
     } else if (this.currentStepIndex === 2) {
-      // Documents step - submit the form
-      this.onSubmit();
+      // Documents step - validate all required documents are uploaded before submitting
+      if (this.areAllRequiredDocumentsUploaded()) {
+        this.onSubmit();
+      } else {
+        this.notificationService.warning(this.translateService.instant('serviceRequest.uploadAllRequiredDocuments'));
+      }
     }
   }
 
@@ -334,19 +374,9 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    * Navigates to previous step
    */
   previousStep(): void {
-    if (this.currentStepIndex === 1 && this.currentSubFormIndex > 0) {
-      // Navigate to previous sub-form within step 2
-      this.currentSubFormIndex--;
-      this.scrollToTop();
-    } else if (this.currentStepIndex > 0) {
+    if (this.currentStepIndex > 0) {
       // Navigate to previous main step
       this.currentStepIndex--;
-      
-      // Reset sub-form index if going back to step 2
-      if (this.currentStepIndex === 1) {
-        this.currentSubFormIndex = 0;
-      }
-      
       this.initializeSteps(); // Re-initialize to update active state
       this.scrollToTop();
     }
@@ -360,6 +390,12 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       this.currentStepIndex = index;
       this.initializeSteps(); // Re-initialize to update active state
       this.steps[this.currentStepIndex].disabled = false;
+      
+      // Load document types when entering documents step
+      if (index === 2 && this.documentTypes.length === 0) {
+        this.loadDocumentTypes();
+      }
+      
       this.scrollToTop();
     }
   }
@@ -495,49 +531,165 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Checks if is submission step
+   * Checks if is submission step (now always false as submission happens on documents step)
    */
   isSubmissionStep(): boolean {
-    return this.currentStepIndex === 3;
+    return false;
   }
 
   /**
-   * Handles file selection for document upload
+   * Loads document types from API
+   */
+  private loadDocumentTypes(): void {
+    this.isLoadingDocumentTypes = true;
+    this.serviceRequestService.getDocumentTypes(this.serviceId || undefined).subscribe({
+      next: (documentTypes) => {
+        this.documentTypes = documentTypes;
+        this.isLoadingDocumentTypes = false;
+      },
+      error: (error) => {
+        console.error('Error loading document types:', error);
+        this.isLoadingDocumentTypes = false;
+        this.notificationService.error('Failed to load document types. Please try again.');
+      }
+    });
+  }
+
+  /**
+   * Handles document type selection
+   */
+  onDocumentTypeSelect(documentTypeId: string): void {
+    const documentType = this.documentTypes.find(dt => dt.id === documentTypeId);
+    if (documentType) {
+      this.selectedDocumentType = documentType;
+      this.documentErrors = [];
+    }
+  }
+
+  /**
+   * Handles file selection for document upload (single file per document type)
    */
   onFileSelected(event: Event): void {
+    if (!this.selectedDocumentType) {
+      this.notificationService.warning(this.translateService.instant('serviceRequest.selectDocumentTypeFirst'));
+      return;
+    }
+
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
+      const file = input.files[0]; // Only take first file
       this.documentErrors = [];
-      const files = Array.from(input.files);
       
-      files.forEach(file => {
-        // Validate file size (max 10MB)
-        if (file.size > 10 * 1024 * 1024) {
-          this.documentErrors.push(`${file.name} exceeds maximum file size of 10MB`);
-          return;
-        }
-        
-        // Validate file type
-        const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-        if (!allowedTypes.includes(file.type)) {
-          this.documentErrors.push(`${file.name} has an invalid file type. Allowed types: PDF, JPG, PNG, DOC, DOCX`);
-          return;
-        }
-        
-        this.uploadedDocuments.push(file);
-      });
-      
-      if (this.documentErrors.length === 0) {
-        this.notificationService.success(`Successfully added ${files.length} document(s)`);
+      // Validate file size
+      const maxSize = this.selectedDocumentType.maxSize || 2 * 1024 * 1024; // Default 2MB
+      if (file.size > maxSize) {
+        const maxSizeMB = Math.round(maxSize / (1024 * 1024));
+        this.documentErrors.push(
+          this.translateService.instant('serviceRequest.fileSizeExceeded', { maxSize: maxSizeMB })
+        );
+        input.value = ''; // Reset input
+        return;
       }
+      
+      // Validate file type
+      const fileExtension = file.name.split('.').pop()?.toLowerCase() || '';
+      const allowedFormats = this.selectedDocumentType.allowedFormats || ['pdf', 'jpg', 'png'];
+      if (!allowedFormats.includes(fileExtension)) {
+        this.documentErrors.push(
+          this.translateService.instant('serviceRequest.invalidFileType', { 
+            formats: allowedFormats.join(', ').toUpperCase() 
+          })
+        );
+        input.value = ''; // Reset input
+        return;
+      }
+      
+      // Create uploaded document entry
+      const uploadedDoc: IUploadedDocument = {
+        id: `doc-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        documentTypeId: this.selectedDocumentType.id,
+        documentTypeName: this.isRTL() 
+          ? this.selectedDocumentType.nameAr 
+          : this.selectedDocumentType.name,
+        file: file,
+        uploadedAt: new Date()
+      };
+      
+      // Store by document type ID (only one file per type)
+      this.uploadedDocuments.set(this.selectedDocumentType.id, uploadedDoc);
+      
+      // Reset selection
+      this.selectedDocumentType = null;
+      input.value = ''; // Reset input
+      
+      this.notificationService.success(this.translateService.instant('serviceRequest.documentUploadedSuccessfully'));
     }
   }
 
   /**
    * Removes a document from the upload list
    */
-  removeDocument(index: number): void {
-    this.uploadedDocuments.splice(index, 1);
+  removeDocument(documentTypeId: string): void {
+    this.uploadedDocuments.delete(documentTypeId);
+    this.notificationService.success(this.translateService.instant('serviceRequest.documentRemoved'));
+  }
+
+  /**
+   * Gets uploaded document for a specific document type
+   */
+  getUploadedDocument(documentTypeId: string): IUploadedDocument | undefined {
+    return this.uploadedDocuments.get(documentTypeId);
+  }
+
+  /**
+   * Checks if all required documents are uploaded
+   */
+  areAllRequiredDocumentsUploaded(): boolean {
+    if (this.documentTypes.length === 0) {
+      // If document types haven't loaded yet, return false to prevent submission
+      return false;
+    }
+    const requiredTypes = this.documentTypes.filter(dt => dt.required);
+    if (requiredTypes.length === 0) {
+      // If no required documents, at least one document should be uploaded
+      return this.uploadedDocuments.size > 0;
+    }
+    return requiredTypes.every(dt => this.uploadedDocuments.has(dt.id));
+  }
+
+  /**
+   * Gets list of missing required documents
+   */
+  getMissingRequiredDocuments(): IDocumentType[] {
+    const requiredTypes = this.documentTypes.filter(dt => dt.required);
+    return requiredTypes.filter(dt => !this.uploadedDocuments.has(dt.id));
+  }
+
+  /**
+   * Gets document type name (localized)
+   */
+  getDocumentTypeName(documentType: IDocumentType): string {
+    return this.isRTL() ? documentType.nameAr : documentType.name;
+  }
+
+  /**
+   * Gets accepted file formats string for input accept attribute
+   */
+  getAcceptedFormats(documentType: IDocumentType): string {
+    const formats = documentType.allowedFormats || ['pdf', 'jpg', 'png'];
+    return formats.map(f => `.${f}`).join(',');
+  }
+
+  /**
+   * Gets upload hint text based on document type
+   */
+  getUploadHint(documentType: IDocumentType): string {
+    const maxSizeMB = Math.round((documentType.maxSize || 2 * 1024 * 1024) / (1024 * 1024));
+    const formats = (documentType.allowedFormats || ['pdf', 'jpg', 'png']).join(', ').toUpperCase();
+    return this.translateService.instant('serviceRequest.uploadHintWithDetails', {
+      maxSize: maxSizeMB,
+      formats: formats
+    });
   }
 
   /**
@@ -592,6 +744,8 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    */
   goToServicesList(): void {
     this.showSuccessModal = false;
+    this.submissionResponse = null;
+    this.submittedRequestNumber = '';
     this.router.navigate(['/service-requests/services']);
   }
 

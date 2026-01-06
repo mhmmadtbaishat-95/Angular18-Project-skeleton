@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
+import { CommonModule, DOCUMENT } from '@angular/common';
 
 /**
  * Step configuration interface
@@ -23,16 +23,34 @@ export interface StepConfig {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './step-wizard.component.html',
-  styleUrls: ['./step-wizard.component.scss']
+  styleUrls: ['./step-wizard.component.scss'],
+  host: {
+    '[attr.dir]': 'getDirection()'
+  }
 })
-export class StepWizardComponent implements OnInit {
+export class StepWizardComponent implements OnInit, OnChanges {
   @Input() steps: StepConfig[] = [];
   @Input() currentStepIndex: number = 0;
   @Input() orientation: 'horizontal' | 'vertical' = 'horizontal';
   @Output() stepClick = new EventEmitter<number>();
 
+  private readonly document = inject(DOCUMENT);
+
   ngOnInit(): void {
     this.updateStepStates();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['currentStepIndex'] || changes['steps']) {
+      this.updateStepStates();
+    }
+  }
+
+  /**
+   * Gets the current direction (RTL/LTR) from document
+   */
+  getDirection(): string {
+    return this.document?.documentElement?.getAttribute('dir') || 'ltr';
   }
 
   /**

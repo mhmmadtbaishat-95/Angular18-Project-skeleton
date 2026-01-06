@@ -32,6 +32,10 @@ export const routes: Routes = [
   {
     path: 'view/:id',
     loadComponent: () => import('./components/request-detail/request-detail.component').then(m => m.RequestDetailComponent)
+  },
+  {
+    path: 'request-log',
+    loadComponent: () => import('./components/request-log/request-log.component').then(m => m.RequestLogComponent)
   }
 ];
 

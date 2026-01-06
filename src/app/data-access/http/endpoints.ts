@@ -61,6 +61,7 @@ export const SERVICE_REQUEST_ENDPOINTS = {
   LIST: '/service-requests',
   DEVELOPER_INFO: '/developers/current',
   UPLOAD_DOCUMENTS: '/service-requests/:id/documents',
+  DOCUMENT_TYPES: '/service-requests/document-types',
   SERVICES: '/services',
   SERVICE_BY_ID: '/services/:id',
 } as const;

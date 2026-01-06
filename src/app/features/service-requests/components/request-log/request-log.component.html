@@ -1,0 +1,75 @@
+<div class="request-log-page">
+  <!-- Header Section -->
+  <div class="request-log-header">
+    <div class="header-content">
+      <div class="header-left-section">
+        <div class="breadcrumb-container">
+          <a routerLink="/dashboard" class="breadcrumb-link">{{ 'pages.home' | t }}</a>
+          <span class="breadcrumb-separator">></span>
+          <span class="breadcrumb-current">{{ 'navigation.requestLog' | t }}</span>
+        </div>
+        <div class="title-container">
+          <h1 class="page-title">{{ 'requestLog.title' | t }}</h1>
+          <button class="refresh-button" title="Refresh">
+            <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Container -->
+  <div class="request-log-main">
+    <app-skeleton-loader [isLoading]="isLoading" [count]="6" type="request"></app-skeleton-loader>
+
+    <div *ngIf="!isLoading && filteredLogs.length === 0" class="empty-state">
+      <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+      <h3 class="empty-title">{{ 'requestLog.noLogsFound' | t }}</h3>
+      <p class="empty-text">{{ 'requestLog.noLogsYet' | t }}</p>
+    </div>
+
+    <!-- Request Log Table Container -->
+    <div *ngIf="!isLoading && filteredLogs.length > 0" class="table-wrapper">
+      <table class="request-log-table">
+        <thead>
+          <tr>
+            <th>{{ 'requestLog.serviceName' | t }}</th>
+            <th>{{ 'requestLog.requestNumber' | t }}</th>
+            <th>{{ 'requestLog.submissionDate' | t }}</th>
+            <th>{{ 'requestLog.applicantName' | t }}</th>
+            <th>{{ 'requestLog.status' | t }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let log of filteredLogs"
+            class="table-row"
+            (click)="viewRequest(log)"
+          >
+            <td class="service-name-cell">
+              <span class="service-name-text">{{ getServiceName(log) }}</span>
+            </td>
+            <td class="request-number-cell">
+              <span class="request-number-text">{{ log.requestNumber }}</span>
+            </td>
+            <td class="date-cell">
+              <span class="date-text">{{ formatDate(log.submittedAt) }}</span>
+            </td>
+            <td class="applicant-cell">
+              <span class="applicant-text">{{ getApplicantName(log) }}</span>
+            </td>
+            <td class="status-cell">
+              <span [class]="'status-badge ' + getStatusClass(log.status)">
+                {{ getStatusLabel(log.status) }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

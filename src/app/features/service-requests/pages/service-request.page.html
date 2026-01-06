@@ -25,112 +25,96 @@
     </div>
   </div>
 
-  <!-- Step Wizard -->
-  <div class="step-wizard-container">
-    <app-step-wizard
-      [steps]="steps"
-      [currentStepIndex]="currentStepIndex"
-      (stepClick)="onStepClick($event)"
-    ></app-step-wizard>
-  </div>
-
-  <!-- Form Container -->
+  <!-- Main Content: Two Column Layout -->
+  <div class="main-content-layout">
+    <!-- Left Column: Form -->
+    <div class="form-column-wrapper">
   <div class="form-container">
-    <form [formGroup]="requestForm" class="request-form">
-      
-      <!-- Step 1: Request Information -->
-      <div *ngIf="currentStepIndex === 0" class="step-content">
-        <h2 class="step-title">{{ 'serviceRequest.requestInformation' | t }}</h2>
-        <p class="step-description">{{ 'serviceRequest.requestInformationDesc' | t }}</p>
-        
-        <div class="form-section">
-          <div class="form-grid">
-            <!-- Right Column (RTL) / Left Column (LTR) -->
-            <div class="form-column">
-              <div class="form-group">
-                <label for="developerRegistrationNumber" class="form-label">{{ 'serviceRequest.developerRegistrationNumber' | t }}</label>
-                <input
-                  type="text"
-                  id="developerRegistrationNumber"
-                  formControlName="developerRegistrationNumber"
-                  class="form-input readonly-input"
-                  readonly
-                />
-              </div>
+        <form [formGroup]="requestForm" class="request-form">
+          
+          <!-- Step 1: Request Information -->
+          <div *ngIf="currentStepIndex === 0" class="step-content">
+            <h2 class="step-title">{{ 'serviceRequest.requestInformation' | t }}</h2>
+            <p class="step-description">{{ 'serviceRequest.requestInformationDesc' | t }}</p>
+            
+      <div class="form-section">
+        <div class="form-grid">
+          <!-- Right Column (RTL) / Left Column (LTR) -->
+          <div class="form-column">
+            <div class="form-group">
+                    <label for="developerRegistrationNumber" class="form-label">{{ 'serviceRequest.developerRegistrationNumber' | t }}</label>
+                    <input
+                      type="text"
+                      id="developerRegistrationNumber"
+                      formControlName="developerRegistrationNumber"
+                      class="form-input readonly-input"
+                      readonly
+                    />
+                  </div>
 
-              <div class="form-group">
-                <label for="developerName" class="form-label">{{ 'serviceRequest.developerName' | t }}</label>
-                <input
-                  type="text"
-                  id="developerName"
-                  formControlName="developerName"
-                  class="form-input readonly-input"
-                  readonly
-                />
-              </div>
+                  <div class="form-group">
+                    <label for="developerName" class="form-label">{{ 'serviceRequest.developerName' | t }}</label>
+                    <input
+                      type="text"
+                      id="developerName"
+                      formControlName="developerName"
+                      class="form-input readonly-input"
+                      readonly
+                    />
+                  </div>
 
-              <div class="form-group">
-                <label for="developerType" class="form-label">{{ 'serviceRequest.developerType' | t }}</label>
-                <input
-                  type="text"
-                  id="developerType"
-                  formControlName="developerType"
-                  class="form-input readonly-input"
-                  readonly
-                />
-              </div>
-            </div>
+                  <div class="form-group">
+                    <label for="developerType" class="form-label">{{ 'serviceRequest.developerType' | t }}</label>
+                    <input
+                      type="text"
+                      id="developerType"
+                      formControlName="developerType"
+                      class="form-input readonly-input"
+                      readonly
+                    />
+                  </div>
+                </div>
 
-            <!-- Left Column (RTL) / Right Column (LTR) -->
-            <div class="form-column">
-              <div class="form-group">
-                <label for="licenseStatus" class="form-label">{{ 'serviceRequest.licenseStatus' | t }}</label>
-                <input
-                  type="text"
-                  id="licenseStatus"
-                  formControlName="licenseStatus"
-                  class="form-input readonly-input"
-                  readonly
-                />
-              </div>
+                <!-- Left Column (RTL) / Right Column (LTR) -->
+                <div class="form-column">
+                  <div class="form-group">
+                    <label for="licenseStatus" class="form-label">{{ 'serviceRequest.licenseStatus' | t }}</label>
+                    <input
+                      type="text"
+                      id="licenseStatus"
+                      formControlName="licenseStatus"
+                      class="form-input readonly-input"
+                      readonly
+                    />
+                  </div>
 
-              <div class="form-group">
-                <label for="licenseExpirationDate" class="form-label">{{ 'serviceRequest.licenseExpirationDate' | t }}</label>
-                <input
-                  type="text"
-                  id="licenseExpirationDate"
-                  formControlName="licenseExpirationDate"
-                  class="form-input readonly-input"
-                  readonly
-                />
+                  <div class="form-group">
+                    <label for="licenseExpirationDate" class="form-label">{{ 'serviceRequest.licenseExpirationDate' | t }}</label>
+                    <input
+                      type="text"
+                      id="licenseExpirationDate"
+                      formControlName="licenseExpirationDate"
+                      class="form-input readonly-input"
+                      readonly
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Read-only Note -->
+              <div class="readonly-note">
+                <p>{{ 'serviceRequest.readonlyNote' | t }}</p>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
       <!-- Step 2: Project Forms (A, B, C, D) -->
       <div *ngIf="currentStepIndex === 1" class="step-content">
         <h2 class="step-title">{{ 'serviceRequest.projectInformation' | t }}</h2>
         <p class="step-description">{{ 'serviceRequest.projectInformationDesc' | t }}</p>
         
-        <!-- Sub-form Navigation Tabs -->
-        <div class="sub-form-tabs">
-          <button
-            *ngFor="let subForm of subForms; let i = index"
-            type="button"
-            class="sub-form-tab"
-            [class.active]="i === currentSubFormIndex"
-            [class.completed]="i < currentSubFormIndex"
-            (click)="goToSubForm(i)"
-          >
-            <span class="tab-number">{{ getTabLetter(i) }}</span>
-            <span class="tab-title">{{ subForm.title }}</span>
-          </button>
-        </div>
-
         <!-- Form A: Project Licenses Request -->
-        <div *ngIf="currentSubFormIndex === 0" class="sub-form-content">
+        <div class="sub-form-content">
           <h3 class="sub-form-title">{{ 'serviceRequest.formA.title' | t }}</h3>
           <div class="form-section">
             <div class="form-grid">
@@ -195,35 +179,35 @@
               <div class="form-column">
                 <div class="form-group">
                   <label for="projectType" class="form-label">{{ 'serviceRequest.formA.projectType' | t }}</label>
-                  <input
-                    type="text"
+              <input
+                type="text"
                     id="projectType"
                     formControlName="projectType"
-                    class="form-input"
+                class="form-input"
                     [class.error]="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched"
                     placeholder="{{ 'serviceRequest.formA.projectTypePlaceholder' | t }}"
-                  />
+              />
                   <span *ngIf="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched" class="error-message">
                     {{ getFieldError('projectType') }}
-                  </span>
-                </div>
+              </span>
+            </div>
 
-                <div class="form-group">
+            <div class="form-group">
                   <label for="plotNumber" class="form-label">{{ 'serviceRequest.formA.plotNumber' | t }}</label>
-                  <input
-                    type="text"
+              <input
+                type="text"
                     id="plotNumber"
                     formControlName="plotNumber"
-                    class="form-input"
+                class="form-input"
                     [class.error]="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
                     placeholder="{{ 'serviceRequest.formA.plotNumberPlaceholder' | t }}"
-                  />
+              />
                   <span *ngIf="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched" class="error-message">
                     {{ getFieldError('plotNumber') }}
-                  </span>
-                </div>
+              </span>
+            </div>
 
-                <div class="form-group">
+            <div class="form-group">
                   <label for="executionPeriod" class="form-label">{{ 'serviceRequest.formA.executionPeriod' | t }}</label>
                   <input
                     type="number"
@@ -243,7 +227,7 @@
         </div>
 
         <!-- Form B: Master Plan & Preliminary Design -->
-        <div *ngIf="currentSubFormIndex === 1" class="sub-form-content">
+        <div class="sub-form-content">
           <h3 class="sub-form-title">{{ 'serviceRequest.formB.title' | t }}</h3>
           <div class="form-section">
             <div class="form-grid">
@@ -297,8 +281,8 @@
               <div class="form-column">
                 <div class="form-group">
                   <label for="designStage" class="form-label">{{ 'serviceRequest.formB.designStage' | t }}</label>
-                  <input
-                    type="text"
+              <input
+                type="text"
                     id="designStage"
                     formControlName="designStage"
                     class="form-input"
@@ -316,26 +300,26 @@
                     type="number"
                     id="numberOfDevelopmentStages"
                     formControlName="numberOfDevelopmentStages"
-                    class="form-input"
+                class="form-input"
                     [class.error]="requestForm.get('numberOfDevelopmentStages')?.invalid && requestForm.get('numberOfDevelopmentStages')?.touched"
                     placeholder="{{ 'serviceRequest.formB.numberOfDevelopmentStagesPlaceholder' | t }}"
-                  />
+              />
                   <span *ngIf="requestForm.get('numberOfDevelopmentStages')?.invalid && requestForm.get('numberOfDevelopmentStages')?.touched" class="error-message">
                     {{ getFieldError('numberOfDevelopmentStages') }}
-                  </span>
+              </span>
                 </div>
               </div>
             </div>
+            </div>
           </div>
-        </div>
 
         <!-- Form C: Escrow Account -->
-        <div *ngIf="currentSubFormIndex === 2" class="sub-form-content">
+        <div class="sub-form-content">
           <h3 class="sub-form-title">{{ 'serviceRequest.formC.title' | t }}</h3>
           <div class="form-section">
             <div class="form-grid">
-              <div class="form-column">
-                <div class="form-group">
+          <div class="form-column">
+            <div class="form-group">
                   <label class="form-label checkbox-label">
                     <input
                       type="checkbox"
@@ -349,8 +333,8 @@
 
                 <div class="form-group">
                   <label for="bankName" class="form-label">{{ 'serviceRequest.formC.bankName' | t }}</label>
-                  <input
-                    type="text"
+              <input
+                type="text"
                     id="bankName"
                     formControlName="bankName"
                     class="form-input"
@@ -370,7 +354,7 @@
                     type="number"
                     id="estimatedProjectValue"
                     formControlName="estimatedProjectValue"
-                    class="form-input"
+                class="form-input"
                     [class.error]="requestForm.get('estimatedProjectValue')?.invalid && requestForm.get('estimatedProjectValue')?.touched"
                     placeholder="{{ 'serviceRequest.formC.estimatedProjectValuePlaceholder' | t }}"
                   />
@@ -384,7 +368,7 @@
         </div>
 
         <!-- Form D: License Application -->
-        <div *ngIf="currentSubFormIndex === 3" class="sub-form-content">
+        <div class="sub-form-content">
           <h3 class="sub-form-title">{{ 'serviceRequest.formD.title' | t }}</h3>
           <div class="form-section">
             <div class="form-grid">
@@ -402,9 +386,9 @@
                   <span *ngIf="requestForm.get('numberOfUnitsForSale')?.invalid && requestForm.get('numberOfUnitsForSale')?.touched" class="error-message">
                     {{ getFieldError('numberOfUnitsForSale') }}
                   </span>
-                </div>
+            </div>
 
-                <div class="form-group">
+            <div class="form-group">
                   <label for="startSaleDate" class="form-label">{{ 'serviceRequest.formD.startSaleDate' | t }}</label>
                   <input
                     type="date"
@@ -422,19 +406,19 @@
               <div class="form-column">
                 <div class="form-group">
                   <label for="expectedDeliveryDate" class="form-label">{{ 'serviceRequest.formD.expectedDeliveryDate' | t }}</label>
-                  <input
-                    type="date"
+              <input
+                type="date"
                     id="expectedDeliveryDate"
                     formControlName="expectedDeliveryDate"
-                    class="form-input"
+                class="form-input"
                     [class.error]="requestForm.get('expectedDeliveryDate')?.invalid && requestForm.get('expectedDeliveryDate')?.touched"
-                  />
+              />
                   <span *ngIf="requestForm.get('expectedDeliveryDate')?.invalid && requestForm.get('expectedDeliveryDate')?.touched" class="error-message">
                     {{ getFieldError('expectedDeliveryDate') }}
-                  </span>
-                </div>
+              </span>
+            </div>
 
-                <div class="form-group">
+            <div class="form-group">
                   <label for="downPaymentPercentage" class="form-label">{{ 'serviceRequest.formD.downPaymentPercentage' | t }}</label>
                   <input
                     type="number"
@@ -463,50 +447,95 @@
         
         <div class="form-section">
           <div class="document-upload-section">
-            <div class="upload-area">
-              <input
-                type="file"
-                id="documentUpload"
-                class="file-input"
-                multiple
-                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                (change)="onFileSelected($event)"
-              />
-              <label for="documentUpload" class="upload-label">
-                <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-                </svg>
-                <span class="upload-text">{{ 'serviceRequest.uploadDocuments' | t }}</span>
-                <span class="upload-hint">{{ 'serviceRequest.uploadHint' | t }}</span>
-              </label>
+            <!-- Loading State -->
+            <div *ngIf="isLoadingDocumentTypes" class="loading-state">
+              <p>{{ 'common.loading' | t }}</p>
             </div>
 
-            <!-- Document Errors -->
-            <div *ngIf="documentErrors.length > 0" class="document-errors">
-              <div *ngFor="let error of documentErrors" class="error-message">
-                {{ error }}
+            <!-- Document Type Selection and Upload -->
+            <div *ngIf="!isLoadingDocumentTypes && documentTypes.length > 0" class="document-upload-controls">
+              <!-- Document Type Dropdown -->
+              <div class="form-group">
+                <label for="documentType" class="form-label">{{ 'serviceRequest.documents' | t }}</label>
+                <select
+                  id="documentType"
+                  class="form-input"
+                  [ngModel]="selectedDocumentType?.id || ''"
+                  (ngModelChange)="onDocumentTypeSelect($event)"
+                  [ngModelOptions]="{standalone: true}"
+                >
+                  <option value="">{{ 'serviceRequest.selectDocument' | t }}</option>
+                  <option *ngFor="let docType of documentTypes" [value]="docType.id">
+                    {{ getDocumentTypeName(docType) }}<span *ngIf="docType.required"> *</span>
+                  </option>
+                </select>
+              </div>
+
+              <!-- File Upload Area -->
+              <div *ngIf="selectedDocumentType" class="upload-area">
+                <input
+                  type="file"
+                  [id]="'documentUpload-' + selectedDocumentType.id"
+                  class="file-input"
+                  [accept]="getAcceptedFormats(selectedDocumentType)"
+                  (change)="onFileSelected($event)"
+                />
+                <label [for]="'documentUpload-' + selectedDocumentType.id" class="upload-label">
+                  <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                  </svg>
+                  <span class="upload-text">{{ 'serviceRequest.browseFiles' | t }}</span>
+                  <span class="upload-hint">{{ getUploadHint(selectedDocumentType) }}</span>
+                </label>
+              </div>
+
+              <!-- Document Errors -->
+              <div *ngIf="documentErrors.length > 0" class="document-errors">
+                <div *ngFor="let error of documentErrors" class="error-message">
+                  {{ error }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Missing Required Documents Warning -->
+            <div *ngIf="documentTypes.length > 0 && !areAllRequiredDocumentsUploaded()" class="missing-documents-warning">
+              <div class="warning-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+              </div>
+              <div class="warning-content">
+                <p class="warning-title">{{ 'serviceRequest.missingRequiredDocuments' | t }}</p>
+                <ul class="missing-documents-list">
+                  <li *ngFor="let docType of getMissingRequiredDocuments()">
+                    {{ getDocumentTypeName(docType) }}
+                  </li>
+                </ul>
               </div>
             </div>
 
             <!-- Uploaded Documents List -->
-            <div *ngIf="uploadedDocuments.length > 0" class="uploaded-documents">
+            <div *ngIf="uploadedDocuments.size > 0" class="uploaded-documents">
               <h3 class="documents-title">{{ 'serviceRequest.uploadedDocuments' | t }}</h3>
               <div class="documents-list">
-                <div *ngFor="let doc of uploadedDocuments; let i = index" class="document-item">
-                  <div class="document-info">
-                    <svg class="document-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    <div class="document-details">
-                      <span class="document-name">{{ doc.name }}</span>
-                      <span class="document-size">{{ formatFileSize(doc.size) }}</span>
+                <div *ngFor="let docType of documentTypes" class="document-type-group">
+                  <div *ngIf="getUploadedDocument(docType.id)" class="document-item">
+                    <div class="document-info">
+                      <svg class="document-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                      </svg>
+                      <div class="document-details">
+                        <span class="document-type-name">{{ getDocumentTypeName(docType) }}</span>
+                        <span class="document-name">{{ getUploadedDocument(docType.id)!.file.name }}</span>
+                        <span class="document-size">{{ formatFileSize(getUploadedDocument(docType.id)!.file.size) }}</span>
+                      </div>
                     </div>
+                    <button type="button" class="remove-document-btn" (click)="removeDocument(docType.id)" aria-label="Remove document">
+                      <svg class="remove-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                      </svg>
+                    </button>
                   </div>
-                  <button type="button" class="remove-document-btn" (click)="removeDocument(i)" aria-label="Remove document">
-                    <svg class="remove-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                  </button>
                 </div>
               </div>
             </div>
@@ -514,105 +543,102 @@
         </div>
       </div>
 
-      <!-- Step 3: Request Submission -->
-      <div *ngIf="currentStepIndex === 3" class="step-content">
-        <div class="submission-success">
-          <div class="success-icon-large">
-            <svg class="checkmark-large" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
-            </svg>
-          </div>
-          <h2 class="submission-title">{{ 'serviceRequest.submissionSuccess' | t }}</h2>
-          <p class="submission-message">{{ getSuccessMessage() }}</p>
-          
-          <div class="reference-number-section">
-            <label class="reference-label">{{ 'serviceRequest.referenceNumber' | t }}:</label>
-            <div class="reference-number">{{ submittedRequestNumber }}</div>
+          <!-- Navigation Buttons -->
+          <div class="form-actions">
+            <button
+              *ngIf="canGoBack()"
+              type="button"
+              (click)="previousStep()"
+              class="btn btn-secondary"
+            >
+              <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'"/>
+              </svg>
+              <span>{{ 'form.previous' | t }}</span>
+            </button>
+
+            <button
+              *ngIf="canProceedNext() && currentStepIndex !== 2"
+              type="button"
+              (click)="nextStep()"
+              class="btn btn-primary"
+            >
+              <span>{{ 'form.next' | t }}</span>
+              <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'"/>
+              </svg>
+            </button>
+
+            <!-- Submit Button on Documents Step -->
+            <button
+              *ngIf="currentStepIndex === 2"
+              type="button"
+              (click)="onSubmit()"
+              class="btn btn-primary"
+              [disabled]="isLoading || !areAllRequiredDocumentsUploaded()"
+              [title]="!areAllRequiredDocumentsUploaded() ? ('serviceRequest.uploadAllRequiredDocuments' | t) : ''"
+            >
+              <span *ngIf="!isLoading">{{ 'serviceRequest.submitRequest' | t }}</span>
+              <span *ngIf="isLoading">{{ 'common.loading' | t }}</span>
+            </button>
           </div>
 
-          <div class="submission-info">
-            <p class="info-text">{{ 'serviceRequest.submissionInfo' | t }}</p>
-          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right Column: Progress Indicator -->
+    <div class="progress-column-wrapper">
+      <div class="step-wizard-container">
+        <app-step-wizard
+          [steps]="steps"
+          [currentStepIndex]="currentStepIndex"
+          [orientation]="'vertical'"
+          (stepClick)="onStepClick($event)"
+        ></app-step-wizard>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <div *ngIf="showSuccessModal" class="success-modal-overlay" (click)="goToServicesList()">
+    <div class="success-modal" (click)="$event.stopPropagation()">
+      <div class="success-icon">
+        <svg class="checkmark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h2 class="success-title">{{ 'serviceRequest.submissionSuccess' | t }}</h2>
+      <p class="success-message">{{ getSuccessMessage() }}</p>
+      
+      <div class="reference-number-section">
+        <label class="reference-label">{{ 'serviceRequest.referenceNumber' | t }}:</label>
+        <div class="reference-number">{{ submittedRequestNumber }}</div>
+      </div>
+
+      <!-- Additional API Response Information -->
+      <div *ngIf="submissionResponse" class="submission-details">
+        <div *ngIf="submissionResponse.status" class="detail-item">
+          <span class="detail-label">{{ 'serviceRequest.status' | t }}:</span>
+          <span class="detail-value">{{ submissionResponse.status }}</span>
+        </div>
+        <div *ngIf="submissionResponse.submittedAt" class="detail-item">
+          <span class="detail-label">{{ 'serviceRequest.submittedAt' | t }}:</span>
+          <span class="detail-value">{{ formatDate(submissionResponse.submittedAt) }}</span>
+        </div>
+        <div *ngIf="submissionResponse.message" class="detail-item">
+          <span class="detail-label">{{ 'serviceRequest.message' | t }}:</span>
+          <span class="detail-value">{{ submissionResponse.message }}</span>
         </div>
       </div>
 
-      <!-- Navigation Buttons -->
-      <div class="form-actions" *ngIf="!isSubmissionStep()">
-        <button
-          *ngIf="canGoBack()"
-          type="button"
-          (click)="previousStep()"
-          class="btn btn-secondary"
-        >
-          <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'"/>
-          </svg>
-          <span>{{ 'form.previous' | t }}</span>
-        </button>
-
-        <button
-          *ngIf="canProceedNext() && !isProjectFormsStep() && currentStepIndex !== 2"
-          type="button"
-          (click)="nextStep()"
-          class="btn btn-primary"
-        >
-          <span>{{ 'form.next' | t }}</span>
-          <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'"/>
-          </svg>
-        </button>
-
-        <!-- Project Forms Step Navigation -->
-        <div *ngIf="isProjectFormsStep()" class="sub-form-navigation">
-          <button
-            *ngIf="canGoBackSubForm()"
-            type="button"
-            (click)="previousStep()"
-            class="btn btn-secondary"
-          >
-            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'"/>
-            </svg>
-            <span>{{ 'form.previous' | t }}</span>
-          </button>
-
-          <button
-            *ngIf="canProceedNextSubForm()"
-            type="button"
-            (click)="nextStep()"
-            class="btn btn-primary"
-          >
-            <span>{{ 'form.next' | t }}</span>
-            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'"/>
-            </svg>
-          </button>
-
-          <button
-            *ngIf="isLastSubForm()"
-            type="button"
-            (click)="nextStep()"
-            class="btn btn-primary"
-          >
-            <span>{{ 'form.next' | t }}</span>
-            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'"/>
-            </svg>
-          </button>
-        </div>
-
+      <div class="submission-info">
+        <p class="info-text">{{ 'serviceRequest.submissionInfo' | t }}</p>
       </div>
 
-      <!-- Submission Step Actions -->
-      <div class="form-actions" *ngIf="isSubmissionStep()">
-        <button
-          type="button"
-          (click)="goToServicesList()"
-          class="btn btn-primary"
-        >
-          <span>{{ 'serviceRequest.goToServicesList' | t }}</span>
-        </button>
-      </div>
-    </form>
+      <button type="button" class="success-btn" (click)="goToServicesList()">
+        {{ 'serviceRequest.goToServicesList' | t }}
+      </button>
+    </div>
   </div>
 </div>

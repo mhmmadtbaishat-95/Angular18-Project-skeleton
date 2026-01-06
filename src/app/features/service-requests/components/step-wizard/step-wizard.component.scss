@@ -4,18 +4,10 @@
   .step-wizard-container {
     @apply relative;
     backdrop-filter: blur(30px);
-    border-radius: 0px;
-  }
-
-  // Progress Bar
-  .progress-bar-container {
-    @apply absolute top-0 left-0 w-full h-0.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden;
-    z-index: 0;
-  }
-
-  .progress-bar {
-    @apply h-full transition-all duration-300 ease-out;
-    background: linear-gradient(90deg, #8B1538 0%, #A01D45 50%, #8B1538 100%);
+    border-radius: 1rem;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(75, 85, 99, 0.3);
   }
 
   // Steps Container
@@ -32,10 +24,22 @@
       @apply cursor-pointer;
     }
 
-    // Step Circle
+    // Step Circle - Figma Design
     .step-circle {
-      @apply w-10 h-10 rounded-full flex items-center justify-center font-semibold text-xs transition-all duration-200 relative z-10;
-      @apply bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      position: relative;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(156, 163, 175, 0.5);
+      color: rgba(255, 255, 255, 0.6);
     }
 
     // Step Content
@@ -44,117 +48,222 @@
     }
 
     .step-title {
-      @apply text-xs font-semibold text-gray-900 dark:text-white mb-0.5;
+      @apply text-sm font-semibold text-white mb-1;
+      font-size: 14px;
+      line-height: 1.4;
     }
 
     .step-description {
-      @apply text-[10px] text-gray-500 dark:text-gray-400;
+      @apply text-xs text-gray-300;
+      font-size: 12px;
+      line-height: 1.4;
+      opacity: 0.8;
     }
 
     // Step Icon
     .step-icon {
-      @apply text-sm font-bold;
-      color:black;
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.6);
     }
 
     .check-icon {
-      @apply text-white;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
     }
 
     .active-icon {
-      color:black;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
     }
 
     // Connector Line
     .step-connector {
-      @apply absolute top-5 left-[calc(50%+20px)] w-full h-0.5 bg-gray-300 dark:bg-gray-600;
+      @apply absolute top-4 left-[calc(50%+16px)] w-full h-0.5;
       transform: translateY(-50%);
       z-index: 0;
+      background: rgba(156, 163, 175, 0.3);
 
       &.completed {
         background: linear-gradient(90deg, #8B1538 0%, #A01D45 100%);
       }
     }
 
-    // States
+    // States - Active
     &.active {
       .step-circle {
-        @apply text-white;
-        border-color: #8B1538;
         background: linear-gradient(135deg, #8B1538 0%, #A01D45 100%);
-        transform: scale(1.05);
-        box-shadow: 0 2px 8px rgba(139, 21, 56, 0.3);
+        border-color: #8B1538;
+        color: white;
+        transform: scale(1);
+        box-shadow: 0 0 0 4px rgba(139, 21, 56, 0.2);
       }
 
       .step-title {
-        @apply font-bold;
+        font-weight: 700;
         color: #8B1538 !important;
       }
+
+      .step-icon {
+        color: white;
+      }
     }
 
+    // States - Completed
     &.completed {
       .step-circle {
-        @apply text-white;
-        border-color: #8B1538;
         background: linear-gradient(135deg, #8B1538 0%, #A01D45 100%);
+        border-color: #8B1538;
+        color: white;
       }
 
       .step-title {
-        @apply text-gray-700 dark:text-gray-300;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .step-icon {
+        color: white;
       }
     }
 
-    &.disabled {
+    // States - Disabled/Pending
+    &.disabled,
+    &.pending {
       .step-circle {
-        @apply border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500;
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(156, 163, 175, 0.5);
+        color: rgba(255, 255, 255, 0.4);
       }
 
       .step-title {
-        @apply text-gray-400 dark:text-gray-500;
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .step-description {
+        opacity: 0.5;
       }
 
       @apply cursor-not-allowed;
     }
-
-    &.pending {
-      .step-circle {
-        @apply border-gray-300 dark:border-gray-600;
-      }
-    }
   }
 
-  // Vertical Orientation
+  // Vertical Orientation - Figma Design
   &.vertical {
     .steps-container {
-      @apply flex-col items-start space-y-6;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 24px;
+      padding: 0;
     }
 
     .step-item {
-      @apply flex-row items-start w-full;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      width: 100%;
       flex: none;
+      position: relative;
+      padding-bottom: 0;
 
-      .step-content {
-        @apply mt-0 ml-4 text-left max-w-none;
+      .step-circle {
+        flex-shrink: 0;
+        width: 32px;
+        height: 32px;
       }
 
+      .step-content {
+        margin-top: 0;
+        margin-left: 16px;
+        text-align: left;
+        max-width: none;
+        flex: 1;
+      }
+
+      .step-title {
+        margin-bottom: 4px;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.4;
+      }
+
+      .step-description {
+        text-align: left;
+        font-size: 12px;
+        line-height: 1.4;
+        opacity: 0.8;
+      }
+
+      // Connector Line - Vertical (between steps)
       .step-connector {
-        @apply top-12 left-6 w-0.5 h-full;
+        position: absolute;
+        top: 32px;
+        left: 16px;
+        width: 2px;
+        height: 24px;
         transform: translateX(-50%);
+        background: rgba(156, 163, 175, 0.3);
+        z-index: 0;
+
+        &.completed {
+          background: linear-gradient(180deg, #8B1538 0%, #A01D45 100%);
+        }
+      }
+
+      // Last item doesn't need connector
+      &:last-child .step-connector {
+        display: none;
+      }
+    }
+
+    // RTL Support for vertical orientation
+    [dir="rtl"] &,
+    :host-context([dir="rtl"]) &,
+    :host-context(.rtl) & {
+      .step-item {
+        .step-content {
+          margin-left: 0;
+          margin-right: 16px;
+          text-align: right;
+        }
+
+        .step-title {
+          text-align: right;
+        }
+
+        .step-description {
+          text-align: right;
+        }
+
+        .step-connector {
+          left: auto;
+          right: 16px;
+          transform: translateX(50%);
+
+          &.completed {
+            background: linear-gradient(180deg, #8B1538 0%, #A01D45 100%);
+          }
+        }
       }
     }
   }
 
-  // RTL Support for connector lines
+  // RTL Support for connector lines (horizontal)
   [dir="rtl"] &,
   :host-context([dir="rtl"]) &,
   :host-context(.rtl) & {
-    .step-item {
-      .step-connector {
-        left: auto;
-        right: calc(50% + 20px);
+    &:not(.vertical) {
+      .step-item {
+        .step-connector {
+          left: auto;
+          right: calc(50% + 16px);
 
-        &.completed {
-          background: linear-gradient(-90deg, #8B1538 0%, #A01D45 100%);
+          &.completed {
+            background: linear-gradient(-90deg, #8B1538 0%, #A01D45 100%);
+          }
         }
       }
     }
