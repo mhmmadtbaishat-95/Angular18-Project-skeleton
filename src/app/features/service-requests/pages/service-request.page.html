@@ -558,7 +558,7 @@
             </button>
 
             <button
-              *ngIf="canProceedNext() && currentStepIndex !== 2"
+              *ngIf="canProceedNext() && currentStepIndex === 0"
               type="button"
               (click)="nextStep()"
               class="btn btn-primary next-btn"
@@ -569,17 +569,34 @@
               </svg>
             </button>
 
-            <!-- Submit Button on Documents Step -->
+            <!-- Submit Button on Stage 2 (Project Information) -->
+            <button
+              *ngIf="currentStepIndex === 1"
+              type="button"
+              (click)="nextStep()"
+              class="btn btn-primary submit-btn"
+              [disabled]="isLoading"
+            >
+              <span *ngIf="!isLoading">{{ 'common.submit' | t }}</span>
+              <span *ngIf="isLoading">{{ 'common.loading' | t }}</span>
+              <svg *ngIf="!isLoading" class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+            </button>
+
+            <!-- Complete Button on Documents Step -->
             <button
               *ngIf="currentStepIndex === 2"
               type="button"
-              (click)="onSubmit()"
-              class="btn btn-primary"
-              [disabled]="isLoading || !areAllRequiredDocumentsUploaded()"
+              (click)="nextStep()"
+              class="btn btn-primary complete-btn"
+              [disabled]="!areAllRequiredDocumentsUploaded()"
               [title]="!areAllRequiredDocumentsUploaded() ? ('serviceRequest.uploadAllRequiredDocuments' | t) : ''"
             >
-              <span *ngIf="!isLoading">{{ 'serviceRequest.submitRequest' | t }}</span>
-              <span *ngIf="isLoading">{{ 'common.loading' | t }}</span>
+              <span>{{ 'serviceRequest.completeSubmission' | t }}</span>
+              <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
             </button>
           </div>
 
@@ -620,7 +637,7 @@
       <div *ngIf="submissionResponse" class="submission-details">
         <div *ngIf="submissionResponse.status" class="detail-item">
           <span class="detail-label">{{ 'serviceRequest.status' | t }}:</span>
-          <span class="detail-value">{{ submissionResponse.status }}</span>
+          <span class="detail-value">{{ 'serviceRequest.statusSubmitted' | t }}</span>
         </div>
         <div *ngIf="submissionResponse.submittedAt" class="detail-item">
           <span class="detail-label">{{ 'serviceRequest.submittedAt' | t }}:</span>
