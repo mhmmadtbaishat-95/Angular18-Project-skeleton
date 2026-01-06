@@ -30,16 +30,20 @@ interface ServiceItem {
             <h1 class="page-title">{{ 'services.title' | t }}</h1>
             <button class="refresh-btn" type="button" aria-label="Refresh">
               <svg class="refresh-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
               </svg>
             </button>
           </div>
           <div class="breadcrumb-nav">
             <a routerLink="/" class="breadcrumb-link">{{ 'services.breadcrumbHome' | t }}</a>
-            <span class="breadcrumb-separator">{{ isRTL() ? '>' : '<' }}</span>
+            <span class="breadcrumb-separator">></span>
             <span class="breadcrumb-current">{{ 'services.breadcrumbServices' | t }}</span>
           </div>
-        
         </div>
       </div>
 
@@ -61,193 +65,191 @@ interface ServiceItem {
       </div>
     </div>
   `,
-  styles: [`
-    .services-page {
-      @apply w-full;
-      min-height: calc(100vh - 12rem);
-    }
-
-    .services-header {
-      @apply mb-8;
-    }
-
-    .header-content {
-      @apply flex flex-col gap-4;
-    }
-
-    .breadcrumb-nav {
-      @apply flex items-center gap-2 mb-4;
-      font-size: 0.75rem;
-    }
-
-    .breadcrumb-link {
-      @apply text-gray-300 hover:text-white transition-colors;
-    }
-
-    .breadcrumb-separator {
-      @apply text-gray-400;
-    }
-
-    .breadcrumb-current {
-      @apply text-white font-medium;
-    }
-
-    .title-section {
-      @apply flex items-center gap-3;
-    }
-
-    .page-title {
-      @apply text-2xl md:text-3xl lg:text-4xl font-bold text-white;
-      margin: 0;
-    }
-
-    .refresh-btn {
-      @apply w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all;
-      @apply hover:scale-110;
-    }
-
-    .refresh-icon {
-      @apply w-5 h-5;
-    }
-
-    .services-grid {
-      @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
-    }
-
-    .service-card {
-      @apply rounded-xl p-6 border border-gray-700/50;
-      @apply hover:bg-gray-800/95 hover:border-gray-600 hover:shadow-xl transition-all cursor-pointer;
-      @apply flex flex-col;
-      min-height: 190px;
-      position: relative;
-      backdrop-filter: blur(30px);
-background: transparent;
-font-size: 10px;
-    }
-
-    .service-content {
-      @apply flex-1 mb-4;
-    }
-
-    .service-title {
-      @apply text-white font-semibold mb-2;
-      font-size: 1.2rem;
-      line-height: 1.4;
-      text-align: left;
-    }
-
-    .service-description {
-      @apply text-gray-300 leading-relaxed;
-      font-size: 0.9rem;
-      text-align: left;
-    }
-
-    .service-arrow {
-      @apply absolute bottom-4 left-4;
-      @apply w-8 h-8 flex items-center justify-center;
-      @apply hover:bg-qatar-maroon-dark transition-all;
-      color: white;
-      
-      i {
-        font-size: 0.875rem;
-      }
-    }
-
-    .arrow-icon {
-      @apply w-4 h-4 text-white;
-    }
-
-    /* RTL Support */
-    .services-page[dir="rtl"],
-    [dir="rtl"] .services-page,
-    :host-context([dir="rtl"]) .services-page,
-    :host-context(.rtl) .services-page {
-      direction: rtl !important;
-      text-align: right !important;
-
-      .breadcrumb-nav {
-       
-        text-align: right !important;
-        direction: rtl !important;
+  styles: [
+    `
+      .services-page {
+        @apply w-full;
+        min-height: calc(100vh - 12rem);
       }
 
-      .breadcrumb-link,
-      .breadcrumb-current {
-        text-align: right !important;
-        direction: rtl !important;
-      }
-
-      .title-section {
-       
-        text-align: right !important;
-        direction: rtl !important;
-      }
-
-      .page-title {
-        text-align: right !important;
-        direction: rtl !important;
-      }
-
-      .service-card {
-        text-align: right !important;
-        direction: rtl !important;
-      }
-
-      .service-content {
-        text-align: right !important;
-        direction: rtl !important;
-      }
-
-      .service-title {
-        text-align: right !important;
-        direction: rtl !important;
-      }
-
-      .service-description {
-        text-align: right !important;
-        direction: rtl !important;
-      }
-
-
-
-      .arrow-icon {
-        transform: scaleX(-1);
+      .services-header {
+        @apply mb-8;
       }
 
       .header-content {
-        text-align: right !important;
-        direction: rtl !important;
-      }
-    }
-
-    @media (max-width: 1024px) {
-      .services-grid {
-        @apply grid-cols-2;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .services-grid {
-        @apply grid-cols-1;
+        @apply flex flex-col gap-4;
       }
 
-      .page-title {
-        @apply text-xl md:text-2xl;
+      .breadcrumb-nav {
+        @apply flex items-center gap-2 mb-4;
+        font-size: 0.75rem;
+      }
+
+      .breadcrumb-link {
+        @apply text-gray-300 hover:text-white transition-colors;
+      }
+
+      .breadcrumb-separator {
+        @apply text-gray-400;
+      }
+
+      .breadcrumb-current {
+        @apply text-white font-medium;
       }
 
       .title-section {
-        @apply flex-col items-start;
+        @apply flex items-center gap-3;
+      }
+
+      .page-title {
+        @apply text-2xl md:text-3xl lg:text-4xl font-bold text-white;
+        margin: 0;
+      }
+
+      .refresh-btn {
+        @apply w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all;
+        @apply hover:scale-110;
+      }
+
+      .refresh-icon {
+        @apply w-5 h-5;
+      }
+
+      .services-grid {
+        @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+      }
+
+      .service-card {
+        @apply rounded-xl p-6 border border-gray-700/50;
+        @apply hover:bg-gray-800/95 hover:border-gray-600 hover:shadow-xl transition-all cursor-pointer;
+        @apply flex flex-col;
+        min-height: 190px;
+        position: relative;
+        backdrop-filter: blur(30px);
+        background: transparent;
+        font-size: 10px;
+      }
+
+      .service-content {
+        @apply flex-1 mb-4;
       }
 
       .service-title {
-        font-size: 0.8125rem;
+        @apply text-white font-semibold mb-2;
+        font-size: 1.2rem;
+        line-height: 1.4;
+        text-align: left;
       }
 
       .service-description {
-        font-size: 0.6875rem;
+        @apply text-gray-300 leading-relaxed;
+        font-size: 0.9rem;
+        text-align: left;
       }
-    }
-  `]
+
+      .service-arrow {
+        @apply absolute bottom-4 left-4;
+        @apply w-8 h-8 flex items-center justify-center;
+        @apply hover:bg-qatar-maroon-dark transition-all;
+        color: white;
+
+        i {
+          font-size: 0.875rem;
+        }
+      }
+
+      .arrow-icon {
+        @apply w-4 h-4 text-white;
+      }
+
+      /* RTL Support */
+      .services-page[dir='rtl'],
+      [dir='rtl'] .services-page,
+      :host-context([dir='rtl']) .services-page,
+      :host-context(.rtl) .services-page {
+        direction: rtl !important;
+        text-align: right !important;
+
+        .breadcrumb-nav {
+          text-align: right !important;
+          direction: rtl !important;
+        }
+
+        .breadcrumb-link,
+        .breadcrumb-current {
+          text-align: right !important;
+          direction: rtl !important;
+        }
+
+        .title-section {
+          text-align: right !important;
+          direction: rtl !important;
+        }
+
+        .page-title {
+          text-align: right !important;
+          direction: rtl !important;
+        }
+
+        .service-card {
+          text-align: right !important;
+          direction: rtl !important;
+        }
+
+        .service-content {
+          text-align: right !important;
+          direction: rtl !important;
+        }
+
+        .service-title {
+          text-align: right !important;
+          direction: rtl !important;
+        }
+
+        .service-description {
+          text-align: right !important;
+          direction: rtl !important;
+        }
+
+        .arrow-icon {
+          transform: scaleX(-1);
+        }
+
+        .header-content {
+          text-align: right !important;
+          direction: rtl !important;
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .services-grid {
+          @apply grid-cols-2;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .services-grid {
+          @apply grid-cols-1;
+        }
+
+        .page-title {
+          @apply text-xl md:text-2xl;
+        }
+
+        .title-section {
+          @apply flex-col items-start;
+        }
+
+        .service-title {
+          font-size: 0.8125rem;
+        }
+
+        .service-description {
+          font-size: 0.6875rem;
+        }
+      }
+    `,
+  ],
 })
 export class ServicesComponent implements OnInit, OnDestroy {
   private i18nService = inject(I18nService);
@@ -256,7 +258,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   private document = inject(DOCUMENT);
   private langChangeSubscription?: Subscription;
   private routerSubscription?: Subscription;
-  
+
   isRTL = signal(this.i18nService.isRTL());
 
   ngOnInit(): void {
@@ -264,14 +266,14 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(() => {
       this.updateRTLState();
     });
-    
+
     // Subscribe to route changes to update RTL state
-    this.routerSubscription = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => {
-      this.updateRTLState();
-    });
-    
+    this.routerSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.updateRTLState();
+      });
+
     // Set initial RTL state
     this.updateRTLState();
   }
@@ -289,56 +291,55 @@ export class ServicesComponent implements OnInit, OnDestroy {
     const currentRTL = htmlDir === 'rtl' || this.i18nService.isRTL();
     this.isRTL.set(currentRTL);
   }
-  
+
   services: ServiceItem[] = [
     {
       id: '1',
       titleKey: 'services.service1.title',
       descriptionKey: 'services.service1.description',
-      route: '/service-requests/service/1'
+      route: '/service-requests/service/1',
     },
     {
       id: '2',
       titleKey: 'services.service2.title',
       descriptionKey: 'services.service2.description',
-      route: '/service-requests/service/2'
+      route: '/service-requests/service/2',
     },
     {
       id: '3',
       titleKey: 'services.service3.title',
       descriptionKey: 'services.service3.description',
-      route: '/service-requests/service/3'
+      route: '/service-requests/service/3',
     },
     {
       id: '4',
       titleKey: 'services.service4.title',
       descriptionKey: 'services.service4.description',
-      route: '/service-requests/service/4'
+      route: '/service-requests/service/4',
     },
     {
       id: '5',
       titleKey: 'services.service5.title',
       descriptionKey: 'services.service5.description',
-      route: '/service-requests/service/5'
+      route: '/service-requests/service/5',
     },
     {
       id: '6',
       titleKey: 'services.service6.title',
       descriptionKey: 'services.service6.description',
-      route: '/service-requests/service/6'
+      route: '/service-requests/service/6',
     },
     {
       id: '7',
       titleKey: 'services.service7.title',
       descriptionKey: 'services.service7.description',
-      route: '/service-requests/service/7'
+      route: '/service-requests/service/7',
     },
     {
       id: '8',
       titleKey: 'services.service8.title',
       descriptionKey: 'services.service8.description',
-      route: '/service-requests/service/8'
-    }
+      route: '/service-requests/service/8',
+    },
   ];
 }
-

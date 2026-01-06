@@ -1,13 +1,16 @@
 <!-- Service Detail View (when accessed from service detail page) -->
-<div *ngIf="isServiceDetailView" class="service-detail-page" [dir]="isRTL() ? 'rtl' : 'ltr'" [attr.dir]="isRTL() ? 'rtl' : 'ltr'">
+<div *ngIf="isServiceDetailView" class="service-detail-page" [dir]="isRTL() ? 'rtl' : 'ltr'"
+  [attr.dir]="isRTL() ? 'rtl' : 'ltr'">
   <app-skeleton-loader [isLoading]="isLoading" [count]="1" type="service"></app-skeleton-loader>
 
   <div *ngIf="!isLoading && service">
     <!-- Title Section - Above breadcrumb -->
     <div class="title-section">
-      <button class="back-arrow-btn" type="button" aria-label="Back" (click)="router.navigate(['/service-requests/service', serviceId])">
+      <button class="back-arrow-btn" type="button" aria-label="Back"
+        (click)="router.navigate(['/service-requests/service', serviceId])">
         <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="!isRTL() ? 'M15 19l-7-7 7-7' : 'M9 19l7-7-7-7'"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            [attr.d]="!isRTL() ? 'M15 19l-7-7 7-7' : 'M9 19l7-7-7-7'" />
         </svg>
       </button>
       <h1 class="page-title">{{ getServiceName(service) }}</h1>
@@ -16,91 +19,91 @@
     <!-- Breadcrumbs - Outside the panel -->
     <div class="breadcrumb-nav">
       <a routerLink="/" class="breadcrumb-link">{{ 'services.breadcrumbHome' | t }}</a>
-      <span class="breadcrumb-separator">{{ isRTL() ? '>' : '<' }}</span>
+      <span class="breadcrumb-separator">></span>
       <a routerLink="/service-requests/services" class="breadcrumb-link">{{ 'services.breadcrumbServices' | t }}</a>
-      <span class="breadcrumb-separator">{{ isRTL() ? '>' : '<' }}</span>
+      <span class="breadcrumb-separator">></span>
       <span class="breadcrumb-current">{{ getServiceName(service) }}</span>
     </div>
 
     <div class="service-info-panel">
 
-    <!-- Service Description -->
-    <div class="service-description-section">
-      <p class="description-text">{{ getServiceDescription(service) }}</p>
-    </div>
-
-    <!-- Information Sections -->
-    <div class="info-sections">
-      <!-- Execution Duration -->
-      <div class="info-section">
-        <h3 class="section-title">{{ 'serviceDetail.executionDuration' | t }}</h3>
-        <p class="section-content">{{ getProcessingTime(service) }}</p>
+      <!-- Service Description -->
+      <div class="service-description-section">
+        <p class="description-text">{{ getServiceDescription(service) }}</p>
       </div>
 
-      <!-- Fees -->
-      <div class="info-section">
-        <h3 class="section-title">{{ 'serviceDetail.fees' | t }}</h3>
-        <p class="section-content">{{ 'serviceDetail.feesDescription' | t }}</p>
-      </div>
+      <!-- Information Sections -->
+      <div class="info-sections">
+        <!-- Execution Duration -->
+        <div class="info-section">
+          <h3 class="section-title">{{ 'serviceDetail.executionDuration' | t }}</h3>
+          <p class="section-content">{{ getProcessingTime(service) }}</p>
+        </div>
 
-      <!-- Service Details -->
-      <div class="info-section">
-        <h3 class="section-title">{{ 'serviceDetail.serviceDetails' | t }}</h3>
-        <p class="section-content">{{ 'serviceDetail.serviceDetailsDescription' | t }}</p>
-      </div>
+        <!-- Fees -->
+        <div class="info-section">
+          <h3 class="section-title">{{ 'serviceDetail.fees' | t }}</h3>
+          <p class="section-content">{{ 'serviceDetail.feesDescription' | t }}</p>
+        </div>
 
-      <!-- Required Documents -->
-      <div class="info-section">
-        <h3 class="section-title">{{ 'serviceDetail.requiredDocuments' | t }}</h3>
-        <ul class="documents-list">
-          <li *ngFor="let doc of getRequiredDocuments()" class="document-item">
-            <span class="document-bullet">-</span>
-            <span>{{ doc | t }}</span>
-          </li>
-        </ul>
+        <!-- Service Details -->
+        <div class="info-section">
+          <h3 class="section-title">{{ 'serviceDetail.serviceDetails' | t }}</h3>
+          <p class="section-content">{{ 'serviceDetail.serviceDetailsDescription' | t }}</p>
+        </div>
+
+        <!-- Required Documents -->
+        <div class="info-section">
+          <h3 class="section-title">{{ 'serviceDetail.requiredDocuments' | t }}</h3>
+          <ul class="documents-list">
+            <li *ngFor="let doc of getRequiredDocuments()" class="document-item">
+              <span class="document-bullet">-</span>
+              <span>{{ doc | t }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Request Detail View (existing behavior) -->
-<div *ngIf="!isServiceDetailView" class="request-detail-page">
-  <!-- Compact Header -->
-  <div class="catalog-header-compact">
-    <div class="header-container">
-      <div class="header-left">
-        <div class="breadcrumb-nav">
-          <a routerLink="/dashboard" class="breadcrumb-link">{{ 'pages.home' | t }}</a>
-          <span class="breadcrumb-separator">/</span>
-          <a routerLink="/service-requests/my-requests" class="breadcrumb-link">{{ 'pages.myRequests' | t }}</a>
-          <span class="breadcrumb-separator">/</span>
-          <span class="breadcrumb-current" *ngIf="request">{{ request.requestNumber }}</span>
-          <span class="breadcrumb-current" *ngIf="!request">{{ 'pages.requestDetails' | t }}</span>
+  <!-- Request Detail View (existing behavior) -->
+  <div *ngIf="!isServiceDetailView" class="request-detail-page">
+    <!-- Compact Header -->
+    <div class="catalog-header-compact">
+      <div class="header-container">
+        <div class="header-left">
+          <div class="breadcrumb-nav">
+            <a routerLink="/dashboard" class="breadcrumb-link">{{ 'pages.home' | t }}</a>
+            <span class="breadcrumb-separator">/</span>
+            <a routerLink="/service-requests/my-requests" class="breadcrumb-link">{{ 'pages.myRequests' | t }}</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current" *ngIf="request">{{ request.requestNumber }}</span>
+            <span class="breadcrumb-current" *ngIf="!request">{{ 'pages.requestDetails' | t }}</span>
+          </div>
+          <h1 class="header-title" *ngIf="request">{{ request.requestNumber }}</h1>
+          <h1 class="header-title" *ngIf="!request">{{ 'pages.requestDetails' | t }}</h1>
+          <p class="header-subtitle" *ngIf="request">{{ getServiceNameFromString(request.serviceName) }}</p>
+          <p class="header-subtitle" *ngIf="!request">{{ 'pages.loadingRequestInfo' | t }}</p>
         </div>
-        <h1 class="header-title" *ngIf="request">{{ request.requestNumber }}</h1>
-        <h1 class="header-title" *ngIf="!request">{{ 'pages.requestDetails' | t }}</h1>
-        <p class="header-subtitle" *ngIf="request">{{ getServiceNameFromString(request.serviceName) }}</p>
-        <p class="header-subtitle" *ngIf="!request">{{ 'pages.loadingRequestInfo' | t }}</p>
-      </div>
-      <div class="header-right" *ngIf="request">
-        <div class="header-stats-inline">
-          <div class="stat-inline">
-            <div [class]="'status-badge ' + getStatusClass(request.status)">
-              {{ getStatusLabel(request.status) }}
+        <div class="header-right" *ngIf="request">
+          <div class="header-stats-inline">
+            <div class="stat-inline">
+              <div [class]="'status-badge ' + getStatusClass(request.status)">
+                {{ getStatusLabel(request.status) }}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Main Container -->
-  <div class="main-container">
-    <app-skeleton-loader [isLoading]="isLoading" [count]="3" type="service"></app-skeleton-loader>
+    <!-- Main Container -->
+    <div class="main-container">
+      <app-skeleton-loader [isLoading]="isLoading" [count]="3" type="service"></app-skeleton-loader>
 
-    <div *ngIf="request && !isLoading" class="request-detail-container">
-      <!-- Request information content here (existing) -->
-      <p>Request details...</p>
+      <div *ngIf="request && !isLoading" class="request-detail-container">
+        <!-- Request information content here (existing) -->
+        <p>Request details...</p>
+      </div>
     </div>
   </div>
-</div>
