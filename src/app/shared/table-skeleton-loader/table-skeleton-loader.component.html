@@ -1,0 +1,22 @@
+<ng-container *ngIf="isLoading">
+    <div class="skeleton-table" [attr.dir]="dir" [class.dense]="dense" [class.animate]="animate"
+        [style.--cols]="columns">
+        <!-- Header -->
+        <div class="skeleton-thead" *ngIf="showHeader">
+            <div class="skeleton-th" *ngFor="let c of colsArray; let i = index"
+                [style.width]="getColWidthStyle(i) || null">
+                <div class="skeleton-block header-block" aria-hidden="true"></div>
+            </div>
+        </div>
+
+        <!-- Body -->
+        <div class="skeleton-tbody" role="table" aria-busy="true" aria-label="Loading table">
+            <div class="skeleton-tr" role="row" *ngFor="let r of rowsArray">
+                <div class="skeleton-td" role="cell" *ngFor="let c of colsArray; let i = index"
+                    [style.width]="getColWidthStyle(i) || null">
+                    <div class="skeleton-block" aria-hidden="true"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>

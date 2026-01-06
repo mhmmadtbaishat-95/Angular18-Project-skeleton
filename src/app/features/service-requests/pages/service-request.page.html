@@ -2,26 +2,29 @@
   <!-- Header Section -->
   <div class="request-header">
     <div class="header-content">
+      <div class="title-section">
+        <button class="back-arrow-btn" type="button" aria-label="Back" (click)="onCancel()">
+          <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              [attr.d]="!isRTL() ? 'M15 19l-7-7 7-7' : 'M9 19l7-7-7-7'" />
+          </svg>
+        </button>
+        <h1 class="page-title">{{ 'serviceRequest.applicationTitle' | t }}</h1>
+      </div>
       <!-- Breadcrumbs -->
       <div class="breadcrumb-nav">
         <a routerLink="/" class="breadcrumb-link">{{ 'services.breadcrumbHome' | t }}</a>
         <span class="breadcrumb-separator">></span>
         <a routerLink="/service-requests/services" class="breadcrumb-link">{{ 'services.breadcrumbServices' | t }}</a>
         <span class="breadcrumb-separator">></span>
-        <a *ngIf="serviceId" [routerLink]="['/service-requests/service', serviceId]" class="breadcrumb-link">{{ serviceName || ('serviceRequest.serviceName' | t) }}</a>
+        <a *ngIf="serviceId" [routerLink]="['/service-requests/service', serviceId]" class="breadcrumb-link">{{
+          serviceName || ('serviceRequest.serviceName' | t) }}</a>
         <span *ngIf="serviceId" class="breadcrumb-separator">></span>
         <span class="breadcrumb-current">{{ 'serviceRequest.submitApplication' | t }}</span>
       </div>
 
       <!-- Title Section -->
-      <div class="title-section">
-        <button class="back-arrow-btn" type="button" aria-label="Back" (click)="onCancel()">
-          <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M15 19l-7-7 7-7' : 'M9 19l7-7-7-7'"/>
-          </svg>
-        </button>
-        <h1 class="page-title">{{ 'serviceRequest.applicationTitle' | t }}</h1>
-      </div>
+
     </div>
   </div>
 
@@ -29,49 +32,35 @@
   <div class="main-content-layout">
     <!-- Left Column: Form -->
     <div class="form-column-wrapper">
-  <div class="form-container">
+      <div class="form-container">
         <form [formGroup]="requestForm" class="request-form">
-          
+
           <!-- Step 1: Request Information -->
           <div *ngIf="currentStepIndex === 0" class="step-content">
             <h2 class="step-title">{{ 'serviceRequest.requestInformation' | t }}</h2>
             <p class="step-description">{{ 'serviceRequest.requestInformationDesc' | t }}</p>
-            
-      <div class="form-section">
-        <div class="form-grid">
-          <!-- Right Column (RTL) / Left Column (LTR) -->
-          <div class="form-column">
-            <div class="form-group">
-                    <label for="developerRegistrationNumber" class="form-label">{{ 'serviceRequest.developerRegistrationNumber' | t }}</label>
-                    <input
-                      type="text"
-                      id="developerRegistrationNumber"
-                      formControlName="developerRegistrationNumber"
-                      class="form-input readonly-input"
-                      readonly
-                    />
+
+            <div class="form-section">
+              <div class="form-grid">
+                <!-- Right Column (RTL) / Left Column (LTR) -->
+                <div class="form-column">
+                  <div class="form-group">
+                    <label for="developerRegistrationNumber" class="form-label">{{
+                      'serviceRequest.developerRegistrationNumber' | t }}</label>
+                    <input type="text" id="developerRegistrationNumber" formControlName="developerRegistrationNumber"
+                      class="form-input readonly-input" readonly />
                   </div>
 
                   <div class="form-group">
                     <label for="developerName" class="form-label">{{ 'serviceRequest.developerName' | t }}</label>
-                    <input
-                      type="text"
-                      id="developerName"
-                      formControlName="developerName"
-                      class="form-input readonly-input"
-                      readonly
-                    />
+                    <input type="text" id="developerName" formControlName="developerName"
+                      class="form-input readonly-input" readonly />
                   </div>
 
                   <div class="form-group">
                     <label for="developerType" class="form-label">{{ 'serviceRequest.developerType' | t }}</label>
-                    <input
-                      type="text"
-                      id="developerType"
-                      formControlName="developerType"
-                      class="form-input readonly-input"
-                      readonly
-                    />
+                    <input type="text" id="developerType" formControlName="developerType"
+                      class="form-input readonly-input" readonly />
                   </div>
                 </div>
 
@@ -79,28 +68,19 @@
                 <div class="form-column">
                   <div class="form-group">
                     <label for="licenseStatus" class="form-label">{{ 'serviceRequest.licenseStatus' | t }}</label>
-                    <input
-                      type="text"
-                      id="licenseStatus"
-                      formControlName="licenseStatus"
-                      class="form-input readonly-input"
-                      readonly
-                    />
+                    <input type="text" id="licenseStatus" formControlName="licenseStatus"
+                      class="form-input readonly-input" readonly />
                   </div>
 
                   <div class="form-group">
-                    <label for="licenseExpirationDate" class="form-label">{{ 'serviceRequest.licenseExpirationDate' | t }}</label>
-                    <input
-                      type="text"
-                      id="licenseExpirationDate"
-                      formControlName="licenseExpirationDate"
-                      class="form-input readonly-input"
-                      readonly
-                    />
+                    <label for="licenseExpirationDate" class="form-label">{{ 'serviceRequest.licenseExpirationDate' | t
+                      }}</label>
+                    <input type="text" id="licenseExpirationDate" formControlName="licenseExpirationDate"
+                      class="form-input readonly-input" readonly />
                   </div>
                 </div>
               </div>
-              
+
               <!-- Read-only Note -->
               <div class="readonly-note">
                 <p>{{ 'serviceRequest.readonlyNote' | t }}</p>
@@ -108,494 +88,419 @@
             </div>
           </div>
 
-      <!-- Step 2: Project Forms (A, B, C, D) -->
-      <div *ngIf="currentStepIndex === 1" class="step-content">
-        <h2 class="step-title">{{ 'serviceRequest.projectInformation' | t }}</h2>
-        <p class="step-description">{{ 'serviceRequest.projectInformationDesc' | t }}</p>
-        
-        <!-- Form A: Project Licenses Request -->
-        <div class="sub-form-content">
-          <h3 class="sub-form-title">{{ 'serviceRequest.formA.title' | t }}</h3>
-          <div class="form-section">
-            <div class="form-grid">
-              <div class="form-column">
-                <div class="form-group">
-                  <label for="projectName" class="form-label">{{ 'serviceRequest.formA.projectName' | t }}</label>
-                  <input
-                    type="text"
-                    id="projectName"
-                    formControlName="projectName"
-                    class="form-input"
-                    [class.error]="requestForm.get('projectName')?.invalid && requestForm.get('projectName')?.touched"
-                    placeholder="{{ 'serviceRequest.formA.projectNamePlaceholder' | t }}"
-                  />
-                  <span *ngIf="requestForm.get('projectName')?.invalid && requestForm.get('projectName')?.touched" class="error-message">
-                    {{ getFieldError('projectName') }}
-                  </span>
-                </div>
+          <!-- Step 2: Project Forms (A, B, C, D) -->
+          <div *ngIf="currentStepIndex === 1" class="step-content">
+            <h2 class="step-title">{{ 'serviceRequest.projectInformation' | t }}</h2>
+            <p class="step-description">{{ 'serviceRequest.projectInformationDesc' | t }}</p>
 
-                <div class="form-group">
-                  <label for="area" class="form-label">{{ 'serviceRequest.formA.area' | t }}</label>
-                  <input
-                    type="text"
-                    id="area"
-                    formControlName="area"
-                    class="form-input"
-                    [class.error]="requestForm.get('area')?.invalid && requestForm.get('area')?.touched"
-                    placeholder="{{ 'serviceRequest.formA.areaPlaceholder' | t }}"
-                  />
-                  <span *ngIf="requestForm.get('area')?.invalid && requestForm.get('area')?.touched" class="error-message">
-                    {{ getFieldError('area') }}
-                  </span>
-                </div>
-
-                <div class="form-group">
-                  <label for="landArea" class="form-label">{{ 'serviceRequest.formA.landArea' | t }}</label>
-                  <input
-                    type="number"
-                    id="landArea"
-                    formControlName="landArea"
-                    class="form-input"
-                    [class.error]="requestForm.get('landArea')?.invalid && requestForm.get('landArea')?.touched"
-                    placeholder="{{ 'serviceRequest.formA.landAreaPlaceholder' | t }}"
-                  />
-                  <span *ngIf="requestForm.get('landArea')?.invalid && requestForm.get('landArea')?.touched" class="error-message">
-                    {{ getFieldError('landArea') }}
-                  </span>
-                </div>
-
-                <div class="form-group">
-                  <label for="numberOfUnits" class="form-label">{{ 'serviceRequest.formA.numberOfUnits' | t }}</label>
-                  <input
-                    type="number"
-                    id="numberOfUnits"
-                    formControlName="numberOfUnits"
-                    class="form-input"
-                    placeholder="{{ 'serviceRequest.formA.numberOfUnitsPlaceholder' | t }}"
-                  />
-                </div>
-              </div>
-
-              <div class="form-column">
-                <div class="form-group">
-                  <label for="projectType" class="form-label">{{ 'serviceRequest.formA.projectType' | t }}</label>
-              <input
-                type="text"
-                    id="projectType"
-                    formControlName="projectType"
-                class="form-input"
-                    [class.error]="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched"
-                    placeholder="{{ 'serviceRequest.formA.projectTypePlaceholder' | t }}"
-              />
-                  <span *ngIf="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched" class="error-message">
-                    {{ getFieldError('projectType') }}
-              </span>
-            </div>
-
-            <div class="form-group">
-                  <label for="plotNumber" class="form-label">{{ 'serviceRequest.formA.plotNumber' | t }}</label>
-              <input
-                type="text"
-                    id="plotNumber"
-                    formControlName="plotNumber"
-                class="form-input"
-                    [class.error]="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
-                    placeholder="{{ 'serviceRequest.formA.plotNumberPlaceholder' | t }}"
-              />
-                  <span *ngIf="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched" class="error-message">
-                    {{ getFieldError('plotNumber') }}
-              </span>
-            </div>
-
-            <div class="form-group">
-                  <label for="executionPeriod" class="form-label">{{ 'serviceRequest.formA.executionPeriod' | t }}</label>
-                  <input
-                    type="number"
-                    id="executionPeriod"
-                    formControlName="executionPeriod"
-                    class="form-input"
-                    [class.error]="requestForm.get('executionPeriod')?.invalid && requestForm.get('executionPeriod')?.touched"
-                    placeholder="{{ 'serviceRequest.formA.executionPeriodPlaceholder' | t }}"
-                  />
-                  <span *ngIf="requestForm.get('executionPeriod')?.invalid && requestForm.get('executionPeriod')?.touched" class="error-message">
-                    {{ getFieldError('executionPeriod') }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Form B: Master Plan & Preliminary Design -->
-        <div class="sub-form-content">
-          <h3 class="sub-form-title">{{ 'serviceRequest.formB.title' | t }}</h3>
-          <div class="form-section">
-            <div class="form-grid">
-              <div class="form-column">
-                <div class="form-group">
-                  <label for="planType" class="form-label">{{ 'serviceRequest.formB.planType' | t }}</label>
-                  <input
-                    type="text"
-                    id="planType"
-                    formControlName="planType"
-                    class="form-input"
-                    [class.error]="requestForm.get('planType')?.invalid && requestForm.get('planType')?.touched"
-                    placeholder="{{ 'serviceRequest.formB.planTypePlaceholder' | t }}"
-                  />
-                  <span *ngIf="requestForm.get('planType')?.invalid && requestForm.get('planType')?.touched" class="error-message">
-                    {{ getFieldError('planType') }}
-                  </span>
-                </div>
-
-                <div class="form-group">
-                  <label for="numberOfBuildings" class="form-label">{{ 'serviceRequest.formB.numberOfBuildings' | t }}</label>
-                  <input
-                    type="number"
-                    id="numberOfBuildings"
-                    formControlName="numberOfBuildings"
-                    class="form-input"
-                    [class.error]="requestForm.get('numberOfBuildings')?.invalid && requestForm.get('numberOfBuildings')?.touched"
-                    placeholder="{{ 'serviceRequest.formB.numberOfBuildingsPlaceholder' | t }}"
-                  />
-                  <span *ngIf="requestForm.get('numberOfBuildings')?.invalid && requestForm.get('numberOfBuildings')?.touched" class="error-message">
-                    {{ getFieldError('numberOfBuildings') }}
-                  </span>
-                </div>
-
-                <div class="form-group">
-                  <label for="approximateHeight" class="form-label">{{ 'serviceRequest.formB.approximateHeight' | t }}</label>
-                  <input
-                    type="number"
-                    id="approximateHeight"
-                    formControlName="approximateHeight"
-                    class="form-input"
-                    [class.error]="requestForm.get('approximateHeight')?.invalid && requestForm.get('approximateHeight')?.touched"
-                    placeholder="{{ 'serviceRequest.formB.approximateHeightPlaceholder' | t }}"
-                  />
-                  <span *ngIf="requestForm.get('approximateHeight')?.invalid && requestForm.get('approximateHeight')?.touched" class="error-message">
-                    {{ getFieldError('approximateHeight') }}
-                  </span>
-                </div>
-              </div>
-
-              <div class="form-column">
-                <div class="form-group">
-                  <label for="designStage" class="form-label">{{ 'serviceRequest.formB.designStage' | t }}</label>
-              <input
-                type="text"
-                    id="designStage"
-                    formControlName="designStage"
-                    class="form-input"
-                    [class.error]="requestForm.get('designStage')?.invalid && requestForm.get('designStage')?.touched"
-                    placeholder="{{ 'serviceRequest.formB.designStagePlaceholder' | t }}"
-                  />
-                  <span *ngIf="requestForm.get('designStage')?.invalid && requestForm.get('designStage')?.touched" class="error-message">
-                    {{ getFieldError('designStage') }}
-                  </span>
-                </div>
-
-                <div class="form-group">
-                  <label for="numberOfDevelopmentStages" class="form-label">{{ 'serviceRequest.formB.numberOfDevelopmentStages' | t }}</label>
-                  <input
-                    type="number"
-                    id="numberOfDevelopmentStages"
-                    formControlName="numberOfDevelopmentStages"
-                class="form-input"
-                    [class.error]="requestForm.get('numberOfDevelopmentStages')?.invalid && requestForm.get('numberOfDevelopmentStages')?.touched"
-                    placeholder="{{ 'serviceRequest.formB.numberOfDevelopmentStagesPlaceholder' | t }}"
-              />
-                  <span *ngIf="requestForm.get('numberOfDevelopmentStages')?.invalid && requestForm.get('numberOfDevelopmentStages')?.touched" class="error-message">
-                    {{ getFieldError('numberOfDevelopmentStages') }}
-              </span>
-                </div>
-              </div>
-            </div>
-            </div>
-          </div>
-
-        <!-- Form C: Escrow Account -->
-        <div class="sub-form-content">
-          <h3 class="sub-form-title">{{ 'serviceRequest.formC.title' | t }}</h3>
-          <div class="form-section">
-            <div class="form-grid">
-          <div class="form-column">
-            <div class="form-group">
-                  <label class="form-label checkbox-label">
-                    <input
-                      type="checkbox"
-                      id="isOffPlan"
-                      formControlName="isOffPlan"
-                      class="form-checkbox"
-                    />
-                    <span>{{ 'serviceRequest.formC.isOffPlan' | t }}</span>
-                  </label>
-                </div>
-
-                <div class="form-group">
-                  <label for="bankName" class="form-label">{{ 'serviceRequest.formC.bankName' | t }}</label>
-              <input
-                type="text"
-                    id="bankName"
-                    formControlName="bankName"
-                    class="form-input"
-                    [class.error]="requestForm.get('bankName')?.invalid && requestForm.get('bankName')?.touched"
-                    placeholder="{{ 'serviceRequest.formC.bankNamePlaceholder' | t }}"
-                  />
-                  <span *ngIf="requestForm.get('bankName')?.invalid && requestForm.get('bankName')?.touched" class="error-message">
-                    {{ getFieldError('bankName') }}
-                  </span>
-                </div>
-              </div>
-
-              <div class="form-column">
-                <div class="form-group">
-                  <label for="estimatedProjectValue" class="form-label">{{ 'serviceRequest.formC.estimatedProjectValue' | t }}</label>
-                  <input
-                    type="number"
-                    id="estimatedProjectValue"
-                    formControlName="estimatedProjectValue"
-                class="form-input"
-                    [class.error]="requestForm.get('estimatedProjectValue')?.invalid && requestForm.get('estimatedProjectValue')?.touched"
-                    placeholder="{{ 'serviceRequest.formC.estimatedProjectValuePlaceholder' | t }}"
-                  />
-                  <span *ngIf="requestForm.get('estimatedProjectValue')?.invalid && requestForm.get('estimatedProjectValue')?.touched" class="error-message">
-                    {{ getFieldError('estimatedProjectValue') }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Form D: License Application -->
-        <div class="sub-form-content">
-          <h3 class="sub-form-title">{{ 'serviceRequest.formD.title' | t }}</h3>
-          <div class="form-section">
-            <div class="form-grid">
-              <div class="form-column">
-                <div class="form-group">
-                  <label for="numberOfUnitsForSale" class="form-label">{{ 'serviceRequest.formD.numberOfUnitsForSale' | t }}</label>
-                  <input
-                    type="number"
-                    id="numberOfUnitsForSale"
-                    formControlName="numberOfUnitsForSale"
-                    class="form-input"
-                    [class.error]="requestForm.get('numberOfUnitsForSale')?.invalid && requestForm.get('numberOfUnitsForSale')?.touched"
-                    placeholder="{{ 'serviceRequest.formD.numberOfUnitsForSalePlaceholder' | t }}"
-                  />
-                  <span *ngIf="requestForm.get('numberOfUnitsForSale')?.invalid && requestForm.get('numberOfUnitsForSale')?.touched" class="error-message">
-                    {{ getFieldError('numberOfUnitsForSale') }}
-                  </span>
-            </div>
-
-            <div class="form-group">
-                  <label for="startSaleDate" class="form-label">{{ 'serviceRequest.formD.startSaleDate' | t }}</label>
-                  <input
-                    type="date"
-                    id="startSaleDate"
-                    formControlName="startSaleDate"
-                    class="form-input"
-                    [class.error]="requestForm.get('startSaleDate')?.invalid && requestForm.get('startSaleDate')?.touched"
-                  />
-                  <span *ngIf="requestForm.get('startSaleDate')?.invalid && requestForm.get('startSaleDate')?.touched" class="error-message">
-                    {{ getFieldError('startSaleDate') }}
-                  </span>
-                </div>
-              </div>
-
-              <div class="form-column">
-                <div class="form-group">
-                  <label for="expectedDeliveryDate" class="form-label">{{ 'serviceRequest.formD.expectedDeliveryDate' | t }}</label>
-              <input
-                type="date"
-                    id="expectedDeliveryDate"
-                    formControlName="expectedDeliveryDate"
-                class="form-input"
-                    [class.error]="requestForm.get('expectedDeliveryDate')?.invalid && requestForm.get('expectedDeliveryDate')?.touched"
-              />
-                  <span *ngIf="requestForm.get('expectedDeliveryDate')?.invalid && requestForm.get('expectedDeliveryDate')?.touched" class="error-message">
-                    {{ getFieldError('expectedDeliveryDate') }}
-              </span>
-            </div>
-
-            <div class="form-group">
-                  <label for="downPaymentPercentage" class="form-label">{{ 'serviceRequest.formD.downPaymentPercentage' | t }}</label>
-                  <input
-                    type="number"
-                    id="downPaymentPercentage"
-                    formControlName="downPaymentPercentage"
-                    class="form-input"
-                    [class.error]="requestForm.get('downPaymentPercentage')?.invalid && requestForm.get('downPaymentPercentage')?.touched"
-                    placeholder="{{ 'serviceRequest.formD.downPaymentPercentagePlaceholder' | t }}"
-                    min="0"
-                    max="100"
-                  />
-                  <span *ngIf="requestForm.get('downPaymentPercentage')?.invalid && requestForm.get('downPaymentPercentage')?.touched" class="error-message">
-                    {{ getFieldError('downPaymentPercentage') }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Step 3: Documents -->
-      <div *ngIf="currentStepIndex === 2" class="step-content">
-        <h2 class="step-title">{{ 'serviceRequest.documents' | t }}</h2>
-        <p class="step-description">{{ 'serviceRequest.documentsDesc' | t }}</p>
-        
-        <div class="form-section">
-          <div class="document-upload-section">
-            <!-- Loading State -->
-            <div *ngIf="isLoadingDocumentTypes" class="loading-state">
-              <p>{{ 'common.loading' | t }}</p>
-            </div>
-
-            <!-- Document Type Selection and Upload -->
-            <div *ngIf="!isLoadingDocumentTypes && documentTypes.length > 0" class="document-upload-controls">
-              <!-- Document Type Dropdown -->
-              <div class="form-group">
-                <label for="documentType" class="form-label">{{ 'serviceRequest.documents' | t }}</label>
-                <select
-                  id="documentType"
-                  class="form-input"
-                  [ngModel]="selectedDocumentType?.id || ''"
-                  (ngModelChange)="onDocumentTypeSelect($event)"
-                  [ngModelOptions]="{standalone: true}"
-                >
-                  <option value="">{{ 'serviceRequest.selectDocument' | t }}</option>
-                  <option *ngFor="let docType of documentTypes" [value]="docType.id">
-                    {{ getDocumentTypeName(docType) }}<span *ngIf="docType.required"> *</span>
-                  </option>
-                </select>
-              </div>
-
-              <!-- File Upload Area -->
-              <div *ngIf="selectedDocumentType" class="upload-area">
-                <input
-                  type="file"
-                  [id]="'documentUpload-' + selectedDocumentType.id"
-                  class="file-input"
-                  [accept]="getAcceptedFormats(selectedDocumentType)"
-                  (change)="onFileSelected($event)"
-                />
-                <label [for]="'documentUpload-' + selectedDocumentType.id" class="upload-label">
-                  <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-                  </svg>
-                  <span class="upload-text">{{ 'serviceRequest.browseFiles' | t }}</span>
-                  <span class="upload-hint">{{ getUploadHint(selectedDocumentType) }}</span>
-                </label>
-              </div>
-
-              <!-- Document Errors -->
-              <div *ngIf="documentErrors.length > 0" class="document-errors">
-                <div *ngFor="let error of documentErrors" class="error-message">
-                  {{ error }}
-                </div>
-              </div>
-            </div>
-
-            <!-- Missing Required Documents Warning -->
-            <div *ngIf="documentTypes.length > 0 && !areAllRequiredDocumentsUploaded()" class="missing-documents-warning">
-              <div class="warning-icon">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-                </svg>
-              </div>
-              <div class="warning-content">
-                <p class="warning-title">{{ 'serviceRequest.missingRequiredDocuments' | t }}</p>
-                <ul class="missing-documents-list">
-                  <li *ngFor="let docType of getMissingRequiredDocuments()">
-                    {{ getDocumentTypeName(docType) }}
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <!-- Uploaded Documents List -->
-            <div *ngIf="uploadedDocuments.size > 0" class="uploaded-documents">
-              <h3 class="documents-title">{{ 'serviceRequest.uploadedDocuments' | t }}</h3>
-              <div class="documents-list">
-                <div *ngFor="let docType of documentTypes" class="document-type-group">
-                  <div *ngIf="getUploadedDocument(docType.id)" class="document-item">
-                    <div class="document-info">
-                      <svg class="document-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                      </svg>
-                      <div class="document-details">
-                        <span class="document-type-name">{{ getDocumentTypeName(docType) }}</span>
-                        <span class="document-name">{{ getUploadedDocument(docType.id)!.file.name }}</span>
-                        <span class="document-size">{{ formatFileSize(getUploadedDocument(docType.id)!.file.size) }}</span>
-                      </div>
+            <!-- Form A: Project Licenses Request -->
+            <div class="sub-form-content">
+              <h3 class="sub-form-title">{{ 'serviceRequest.formA.title' | t }}</h3>
+              <div class="form-section">
+                <div class="form-grid">
+                  <div class="form-column">
+                    <div class="form-group">
+                      <label for="projectName" class="form-label">{{ 'serviceRequest.formA.projectName' | t }}</label>
+                      <input type="text" id="projectName" formControlName="projectName" class="form-input"
+                        [class.error]="requestForm.get('projectName')?.invalid && requestForm.get('projectName')?.touched"
+                        placeholder="{{ 'serviceRequest.formA.projectNamePlaceholder' | t }}" />
+                      <span *ngIf="requestForm.get('projectName')?.invalid && requestForm.get('projectName')?.touched"
+                        class="error-message">
+                        {{ getFieldError('projectName') }}
+                      </span>
                     </div>
-                    <button type="button" class="remove-document-btn" (click)="removeDocument(docType.id)" aria-label="Remove document">
-                      <svg class="remove-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                      </svg>
-                    </button>
+
+                    <div class="form-group">
+                      <label for="area" class="form-label">{{ 'serviceRequest.formA.area' | t }}</label>
+                      <input type="text" id="area" formControlName="area" class="form-input"
+                        [class.error]="requestForm.get('area')?.invalid && requestForm.get('area')?.touched"
+                        placeholder="{{ 'serviceRequest.formA.areaPlaceholder' | t }}" />
+                      <span *ngIf="requestForm.get('area')?.invalid && requestForm.get('area')?.touched"
+                        class="error-message">
+                        {{ getFieldError('area') }}
+                      </span>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="landArea" class="form-label">{{ 'serviceRequest.formA.landArea' | t }}</label>
+                      <input type="number" id="landArea" formControlName="landArea" class="form-input"
+                        [class.error]="requestForm.get('landArea')?.invalid && requestForm.get('landArea')?.touched"
+                        placeholder="{{ 'serviceRequest.formA.landAreaPlaceholder' | t }}" />
+                      <span *ngIf="requestForm.get('landArea')?.invalid && requestForm.get('landArea')?.touched"
+                        class="error-message">
+                        {{ getFieldError('landArea') }}
+                      </span>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="numberOfUnits" class="form-label">{{ 'serviceRequest.formA.numberOfUnits' | t
+                        }}</label>
+                      <input type="number" id="numberOfUnits" formControlName="numberOfUnits" class="form-input"
+                        placeholder="{{ 'serviceRequest.formA.numberOfUnitsPlaceholder' | t }}" />
+                    </div>
+                  </div>
+
+                  <div class="form-column">
+                    <div class="form-group">
+                      <label for="projectType" class="form-label">{{ 'serviceRequest.formA.projectType' | t }}</label>
+                      <input type="text" id="projectType" formControlName="projectType" class="form-input"
+                        [class.error]="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched"
+                        placeholder="{{ 'serviceRequest.formA.projectTypePlaceholder' | t }}" />
+                      <span *ngIf="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched"
+                        class="error-message">
+                        {{ getFieldError('projectType') }}
+                      </span>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="plotNumber" class="form-label">{{ 'serviceRequest.formA.plotNumber' | t }}</label>
+                      <input type="text" id="plotNumber" formControlName="plotNumber" class="form-input"
+                        [class.error]="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
+                        placeholder="{{ 'serviceRequest.formA.plotNumberPlaceholder' | t }}" />
+                      <span *ngIf="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
+                        class="error-message">
+                        {{ getFieldError('plotNumber') }}
+                      </span>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="executionPeriod" class="form-label">{{ 'serviceRequest.formA.executionPeriod' | t
+                        }}</label>
+                      <input type="number" id="executionPeriod" formControlName="executionPeriod" class="form-input"
+                        [class.error]="requestForm.get('executionPeriod')?.invalid && requestForm.get('executionPeriod')?.touched"
+                        placeholder="{{ 'serviceRequest.formA.executionPeriodPlaceholder' | t }}" />
+                      <span
+                        *ngIf="requestForm.get('executionPeriod')?.invalid && requestForm.get('executionPeriod')?.touched"
+                        class="error-message">
+                        {{ getFieldError('executionPeriod') }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form B: Master Plan & Preliminary Design -->
+            <div class="sub-form-content">
+              <h3 class="sub-form-title">{{ 'serviceRequest.formB.title' | t }}</h3>
+              <div class="form-section">
+                <div class="form-grid">
+                  <div class="form-column">
+                    <div class="form-group">
+                      <label for="planType" class="form-label">{{ 'serviceRequest.formB.planType' | t }}</label>
+                      <input type="text" id="planType" formControlName="planType" class="form-input"
+                        [class.error]="requestForm.get('planType')?.invalid && requestForm.get('planType')?.touched"
+                        placeholder="{{ 'serviceRequest.formB.planTypePlaceholder' | t }}" />
+                      <span *ngIf="requestForm.get('planType')?.invalid && requestForm.get('planType')?.touched"
+                        class="error-message">
+                        {{ getFieldError('planType') }}
+                      </span>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="numberOfBuildings" class="form-label">{{ 'serviceRequest.formB.numberOfBuildings' | t
+                        }}</label>
+                      <input type="number" id="numberOfBuildings" formControlName="numberOfBuildings" class="form-input"
+                        [class.error]="requestForm.get('numberOfBuildings')?.invalid && requestForm.get('numberOfBuildings')?.touched"
+                        placeholder="{{ 'serviceRequest.formB.numberOfBuildingsPlaceholder' | t }}" />
+                      <span
+                        *ngIf="requestForm.get('numberOfBuildings')?.invalid && requestForm.get('numberOfBuildings')?.touched"
+                        class="error-message">
+                        {{ getFieldError('numberOfBuildings') }}
+                      </span>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="approximateHeight" class="form-label">{{ 'serviceRequest.formB.approximateHeight' | t
+                        }}</label>
+                      <input type="number" id="approximateHeight" formControlName="approximateHeight" class="form-input"
+                        [class.error]="requestForm.get('approximateHeight')?.invalid && requestForm.get('approximateHeight')?.touched"
+                        placeholder="{{ 'serviceRequest.formB.approximateHeightPlaceholder' | t }}" />
+                      <span
+                        *ngIf="requestForm.get('approximateHeight')?.invalid && requestForm.get('approximateHeight')?.touched"
+                        class="error-message">
+                        {{ getFieldError('approximateHeight') }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-column">
+                    <div class="form-group">
+                      <label for="designStage" class="form-label">{{ 'serviceRequest.formB.designStage' | t }}</label>
+                      <input type="text" id="designStage" formControlName="designStage" class="form-input"
+                        [class.error]="requestForm.get('designStage')?.invalid && requestForm.get('designStage')?.touched"
+                        placeholder="{{ 'serviceRequest.formB.designStagePlaceholder' | t }}" />
+                      <span *ngIf="requestForm.get('designStage')?.invalid && requestForm.get('designStage')?.touched"
+                        class="error-message">
+                        {{ getFieldError('designStage') }}
+                      </span>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="numberOfDevelopmentStages" class="form-label">{{
+                        'serviceRequest.formB.numberOfDevelopmentStages' | t }}</label>
+                      <input type="number" id="numberOfDevelopmentStages" formControlName="numberOfDevelopmentStages"
+                        class="form-input"
+                        [class.error]="requestForm.get('numberOfDevelopmentStages')?.invalid && requestForm.get('numberOfDevelopmentStages')?.touched"
+                        placeholder="{{ 'serviceRequest.formB.numberOfDevelopmentStagesPlaceholder' | t }}" />
+                      <span
+                        *ngIf="requestForm.get('numberOfDevelopmentStages')?.invalid && requestForm.get('numberOfDevelopmentStages')?.touched"
+                        class="error-message">
+                        {{ getFieldError('numberOfDevelopmentStages') }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form C: Escrow Account -->
+            <div class="sub-form-content">
+              <h3 class="sub-form-title">{{ 'serviceRequest.formC.title' | t }}</h3>
+              <div class="form-section">
+                <div class="form-grid">
+                  <div class="form-column">
+                    <div class="form-group">
+                      <label class="form-label checkbox-label">
+                        <input type="checkbox" id="isOffPlan" formControlName="isOffPlan" class="form-checkbox" />
+                        <span>{{ 'serviceRequest.formC.isOffPlan' | t }}</span>
+                      </label>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="bankName" class="form-label">{{ 'serviceRequest.formC.bankName' | t }}</label>
+                      <input type="text" id="bankName" formControlName="bankName" class="form-input"
+                        [class.error]="requestForm.get('bankName')?.invalid && requestForm.get('bankName')?.touched"
+                        placeholder="{{ 'serviceRequest.formC.bankNamePlaceholder' | t }}" />
+                      <span *ngIf="requestForm.get('bankName')?.invalid && requestForm.get('bankName')?.touched"
+                        class="error-message">
+                        {{ getFieldError('bankName') }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-column">
+                    <div class="form-group">
+                      <label for="estimatedProjectValue" class="form-label">{{
+                        'serviceRequest.formC.estimatedProjectValue' | t }}</label>
+                      <input type="number" id="estimatedProjectValue" formControlName="estimatedProjectValue"
+                        class="form-input"
+                        [class.error]="requestForm.get('estimatedProjectValue')?.invalid && requestForm.get('estimatedProjectValue')?.touched"
+                        placeholder="{{ 'serviceRequest.formC.estimatedProjectValuePlaceholder' | t }}" />
+                      <span
+                        *ngIf="requestForm.get('estimatedProjectValue')?.invalid && requestForm.get('estimatedProjectValue')?.touched"
+                        class="error-message">
+                        {{ getFieldError('estimatedProjectValue') }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form D: License Application -->
+            <div class="sub-form-content">
+              <h3 class="sub-form-title">{{ 'serviceRequest.formD.title' | t }}</h3>
+              <div class="form-section">
+                <div class="form-grid">
+                  <div class="form-column">
+                    <div class="form-group">
+                      <label for="numberOfUnitsForSale" class="form-label">{{
+                        'serviceRequest.formD.numberOfUnitsForSale' | t }}</label>
+                      <input type="number" id="numberOfUnitsForSale" formControlName="numberOfUnitsForSale"
+                        class="form-input"
+                        [class.error]="requestForm.get('numberOfUnitsForSale')?.invalid && requestForm.get('numberOfUnitsForSale')?.touched"
+                        placeholder="{{ 'serviceRequest.formD.numberOfUnitsForSalePlaceholder' | t }}" />
+                      <span
+                        *ngIf="requestForm.get('numberOfUnitsForSale')?.invalid && requestForm.get('numberOfUnitsForSale')?.touched"
+                        class="error-message">
+                        {{ getFieldError('numberOfUnitsForSale') }}
+                      </span>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="startSaleDate" class="form-label">{{ 'serviceRequest.formD.startSaleDate' | t
+                        }}</label>
+                      <input type="date" id="startSaleDate" formControlName="startSaleDate" class="form-input"
+                        [class.error]="requestForm.get('startSaleDate')?.invalid && requestForm.get('startSaleDate')?.touched" />
+                      <span
+                        *ngIf="requestForm.get('startSaleDate')?.invalid && requestForm.get('startSaleDate')?.touched"
+                        class="error-message">
+                        {{ getFieldError('startSaleDate') }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-column">
+                    <div class="form-group">
+                      <label for="expectedDeliveryDate" class="form-label">{{
+                        'serviceRequest.formD.expectedDeliveryDate' | t }}</label>
+                      <input type="date" id="expectedDeliveryDate" formControlName="expectedDeliveryDate"
+                        class="form-input"
+                        [class.error]="requestForm.get('expectedDeliveryDate')?.invalid && requestForm.get('expectedDeliveryDate')?.touched" />
+                      <span
+                        *ngIf="requestForm.get('expectedDeliveryDate')?.invalid && requestForm.get('expectedDeliveryDate')?.touched"
+                        class="error-message">
+                        {{ getFieldError('expectedDeliveryDate') }}
+                      </span>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="downPaymentPercentage" class="form-label">{{
+                        'serviceRequest.formD.downPaymentPercentage' | t }}</label>
+                      <input type="number" id="downPaymentPercentage" formControlName="downPaymentPercentage"
+                        class="form-input"
+                        [class.error]="requestForm.get('downPaymentPercentage')?.invalid && requestForm.get('downPaymentPercentage')?.touched"
+                        placeholder="{{ 'serviceRequest.formD.downPaymentPercentagePlaceholder' | t }}" min="0"
+                        max="100" />
+                      <span
+                        *ngIf="requestForm.get('downPaymentPercentage')?.invalid && requestForm.get('downPaymentPercentage')?.touched"
+                        class="error-message">
+                        {{ getFieldError('downPaymentPercentage') }}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+
+          <!-- Step 3: Documents -->
+          <div *ngIf="currentStepIndex === 2" class="step-content">
+            <h2 class="step-title">{{ 'serviceRequest.documents' | t }}</h2>
+            <p class="step-description">{{ 'serviceRequest.documentsDesc' | t }}</p>
+
+            <div class="form-section">
+              <div class="document-upload-section">
+                <!-- Loading State -->
+                <div *ngIf="isLoadingDocumentTypes" class="loading-state">
+                  <p>{{ 'common.loading' | t }}</p>
+                </div>
+
+                <!-- Document Type Selection and Upload -->
+                <div *ngIf="!isLoadingDocumentTypes && documentTypes.length > 0" class="document-upload-controls">
+                  <!-- Document Type Dropdown -->
+                  <div class="form-group">
+                    <label for="documentType" class="form-label">{{ 'serviceRequest.documents' | t }}</label>
+                    <select id="documentType" class="form-input" [ngModel]="selectedDocumentType?.id || ''"
+                      (ngModelChange)="onDocumentTypeSelect($event)" [ngModelOptions]="{standalone: true}">
+                      <option value="">{{ 'serviceRequest.selectDocument' | t }}</option>
+                      <option *ngFor="let docType of documentTypes" [value]="docType.id">
+                        {{ getDocumentTypeName(docType) }}<span *ngIf="docType.required"> *</span>
+                      </option>
+                    </select>
+                  </div>
+
+                  <!-- File Upload Area -->
+                  <div *ngIf="selectedDocumentType" class="upload-area">
+                    <input type="file" [id]="'documentUpload-' + selectedDocumentType.id" class="file-input"
+                      [accept]="getAcceptedFormats(selectedDocumentType)" (change)="onFileSelected($event)" />
+                    <label [for]="'documentUpload-' + selectedDocumentType.id" class="upload-label">
+                      <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                      <span class="upload-text">{{ 'serviceRequest.browseFiles' | t }}</span>
+                      <span class="upload-hint">{{ getUploadHint(selectedDocumentType) }}</span>
+                    </label>
+                  </div>
+
+                  <!-- Document Errors -->
+                  <div *ngIf="documentErrors.length > 0" class="document-errors">
+                    <div *ngFor="let error of documentErrors" class="error-message">
+                      {{ error }}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Missing Required Documents Warning -->
+                <div *ngIf="documentTypes.length > 0 && !areAllRequiredDocumentsUploaded()"
+                  class="missing-documents-warning">
+                  <div class="warning-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  </div>
+                  <div class="warning-content">
+                    <p class="warning-title">{{ 'serviceRequest.missingRequiredDocuments' | t }}</p>
+                    <ul class="missing-documents-list">
+                      <li *ngFor="let docType of getMissingRequiredDocuments()">
+                        {{ getDocumentTypeName(docType) }}
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- Uploaded Documents List -->
+                <div *ngIf="uploadedDocuments.size > 0" class="uploaded-documents">
+                  <h3 class="documents-title">{{ 'serviceRequest.uploadedDocuments' | t }}</h3>
+                  <div class="documents-list">
+                    <div *ngFor="let docType of documentTypes" class="document-type-group">
+                      <div *ngIf="getUploadedDocument(docType.id)" class="document-item">
+                        <div class="document-info">
+                          <svg class="document-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          <div class="document-details">
+                            <span class="document-type-name">{{ getDocumentTypeName(docType) }}</span>
+                            <span class="document-name">{{ getUploadedDocument(docType.id)!.file.name }}</span>
+                            <span class="document-size">{{ formatFileSize(getUploadedDocument(docType.id)!.file.size)
+                              }}</span>
+                          </div>
+                        </div>
+                        <button type="button" class="remove-document-btn" (click)="removeDocument(docType.id)"
+                          aria-label="Remove document">
+                          <svg class="remove-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <!-- Navigation Buttons -->
           <div class="form-actions">
-            <button
-              *ngIf="canGoBack()"
-              type="button"
-              (click)="previousStep()"
-              class="btn btn-secondary"
-            >
+            <button *ngIf="canGoBack()" type="button" (click)="previousStep()" class="btn btn-secondary">
               <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  [attr.d]="isRTL() ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'" />
               </svg>
               <span>{{ 'form.previous' | t }}</span>
             </button>
 
-            <button
-              *ngIf="canProceedNext() && currentStepIndex === 0"
-              type="button"
-              (click)="nextStep()"
-              class="btn btn-primary next-btn"
-            >
+            <button *ngIf="canProceedNext() && currentStepIndex === 0" type="button" (click)="nextStep()"
+              class="btn btn-primary next-btn">
               <span>{{ 'form.next' | t }}</span>
               <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="isRTL() ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  [attr.d]="isRTL() ? 'M15 19l-7-7 7-7' : 'M9 5l7 7-7 7'" />
               </svg>
             </button>
 
             <!-- Submit Button on Stage 2 (Project Information) -->
-            <button
-              *ngIf="currentStepIndex === 1"
-              type="button"
-              (click)="nextStep()"
-              class="btn btn-primary submit-btn"
-              [disabled]="isLoading"
-            >
+            <button *ngIf="currentStepIndex === 1" type="button" (click)="nextStep()" class="btn btn-primary submit-btn"
+              [disabled]="isLoading">
               <span *ngIf="!isLoading">{{ 'common.submit' | t }}</span>
               <span *ngIf="isLoading">{{ 'common.loading' | t }}</span>
               <svg *ngIf="!isLoading" class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </button>
 
             <!-- Complete Button on Documents Step -->
-            <button
-              *ngIf="currentStepIndex === 2"
-              type="button"
-              (click)="nextStep()"
-              class="btn btn-primary complete-btn"
-              [disabled]="!areAllRequiredDocumentsUploaded()"
-              [title]="!areAllRequiredDocumentsUploaded() ? ('serviceRequest.uploadAllRequiredDocuments' | t) : ''"
-            >
+            <button *ngIf="currentStepIndex === 2" type="button" (click)="nextStep()"
+              class="btn btn-primary complete-btn" [disabled]="!areAllRequiredDocumentsUploaded()"
+              [title]="!areAllRequiredDocumentsUploaded() ? ('serviceRequest.uploadAllRequiredDocuments' | t) : ''">
               <span>{{ 'serviceRequest.completeSubmission' | t }}</span>
               <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
               </svg>
             </button>
           </div>
@@ -607,12 +512,8 @@
     <!-- Right Column: Progress Indicator -->
     <div class="progress-column-wrapper">
       <div class="step-wizard-container">
-        <app-step-wizard
-          [steps]="steps"
-          [currentStepIndex]="currentStepIndex"
-          [orientation]="'vertical'"
-          (stepClick)="onStepClick($event)"
-        ></app-step-wizard>
+        <app-step-wizard [steps]="steps" [currentStepIndex]="currentStepIndex" [orientation]="'vertical'"
+          (stepClick)="onStepClick($event)"></app-step-wizard>
       </div>
     </div>
   </div>
@@ -622,19 +523,19 @@
     <div class="success-modal" (click)="$event.stopPropagation()">
       <div class="success-icon">
         <svg class="checkmark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
         </svg>
       </div>
       <h2 class="success-title">{{ 'serviceRequest.submissionSuccess' | t }}</h2>
       <p class="success-message">{{ getSuccessMessage() }}</p>
-      
+
       <div class="reference-number-section">
         <label class="reference-label">{{ 'serviceRequest.referenceNumber' | t }}:</label>
         <div class="reference-number">{{ submittedRequestNumber }}</div>
       </div>
 
       <!-- Additional API Response Information -->
-      <div *ngIf="submissionResponse" class="submission-details">
+      <!-- <div *ngIf="submissionResponse" class="submission-details">
         <div *ngIf="submissionResponse.status" class="detail-item">
           <span class="detail-label">{{ 'serviceRequest.status' | t }}:</span>
           <span class="detail-value">{{ 'serviceRequest.statusSubmitted' | t }}</span>
@@ -647,11 +548,11 @@
           <span class="detail-label">{{ 'serviceRequest.message' | t }}:</span>
           <span class="detail-value">{{ submissionResponse.message }}</span>
         </div>
-      </div>
+      </div> -->
 
-      <div class="submission-info">
+      <!-- <div class="submission-info">
         <p class="info-text">{{ 'serviceRequest.submissionInfo' | t }}</p>
-      </div>
+      </div> -->
 
       <button type="button" class="success-btn" (click)="goToServicesList()">
         {{ 'serviceRequest.goToServicesList' | t }}
@@ -664,12 +565,13 @@
     <div class="eligibility-modal" (click)="$event.stopPropagation()">
       <div class="eligibility-icon">
         <svg class="warning-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
       </div>
       <h2 class="eligibility-title">{{ 'serviceRequest.notEligibleTitle' | t }}</h2>
       <p class="eligibility-message">{{ 'serviceRequest.notEligibleMessage' | t }}</p>
-      
+
       <div class="eligibility-info">
         <p class="info-text">{{ 'serviceRequest.notEligibleInfo' | t }}</p>
       </div>

@@ -7,6 +7,7 @@ import { ServiceRequestService } from '../../services/service-request.service';
 import { SkeletonLoaderComponent } from '@shared/ui/skeleton-loader/skeleton-loader.component';
 import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 import { TranslateService } from '@ngx-translate/core';
+import { TableSkeletonLoaderComponent } from '@shared/table-skeleton-loader/table-skeleton-loader.component';
 
 /**
  * Service catalog component
@@ -15,9 +16,16 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-service-catalog',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, SkeletonLoaderComponent, TranslatePipe],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    SkeletonLoaderComponent,
+    TableSkeletonLoaderComponent,
+    TranslatePipe,
+  ],
   templateUrl: './service-catalog.component.html',
-  styleUrls: ['./service-catalog.component.scss']
+  styleUrls: ['./service-catalog.component.scss'],
 })
 export class ServiceCatalogComponent implements OnInit {
   private readonly serviceRequestService = inject(ServiceRequestService);
@@ -37,7 +45,7 @@ export class ServiceCatalogComponent implements OnInit {
     { value: ServiceCategory.TRADE, labelKey: 'catalog.trade' },
     { value: ServiceCategory.INVESTMENT, labelKey: 'catalog.investment' },
     { value: ServiceCategory.INTELLECTUAL_PROPERTY, labelKey: 'catalog.intellectualProperty' },
-    { value: ServiceCategory.CONSUMER_PROTECTION, labelKey: 'catalog.consumerProtection' }
+    { value: ServiceCategory.CONSUMER_PROTECTION, labelKey: 'catalog.consumerProtection' },
   ];
 
   ngOnInit(): void {
@@ -58,7 +66,7 @@ export class ServiceCatalogComponent implements OnInit {
       error: (error) => {
         console.error('Failed to load services:', error);
         this.isLoading = false;
-      }
+      },
     });
   }
 
@@ -85,19 +93,22 @@ export class ServiceCatalogComponent implements OnInit {
 
     // Filter by category
     if (this.selectedCategory !== 'all') {
-      filtered = filtered.filter(s => s.category === this.selectedCategory);
+      filtered = filtered.filter((s) => s.category === this.selectedCategory);
     }
 
     // Filter by search query
     if (this.searchQuery.trim()) {
       const query = this.searchQuery.toLowerCase();
       const currentLang = this.translateService.currentLang || 'en';
-      filtered = filtered.filter(s => {
+      filtered = filtered.filter((s) => {
         const name = currentLang === 'ar' && s.nameAr ? s.nameAr : s.name;
-        const description = currentLang === 'ar' && s.descriptionAr ? s.descriptionAr : s.description;
-        return name.toLowerCase().includes(query) ||
-               description.toLowerCase().includes(query) ||
-               s.code.toLowerCase().includes(query);
+        const description =
+          currentLang === 'ar' && s.descriptionAr ? s.descriptionAr : s.description;
+        return (
+          name.toLowerCase().includes(query) ||
+          description.toLowerCase().includes(query) ||
+          s.code.toLowerCase().includes(query)
+        );
       });
     }
 
@@ -124,7 +135,7 @@ export class ServiceCatalogComponent implements OnInit {
       [ServiceCategory.TRADE]: '📦',
       [ServiceCategory.INVESTMENT]: '💼',
       [ServiceCategory.INTELLECTUAL_PROPERTY]: '📄',
-      [ServiceCategory.CONSUMER_PROTECTION]: '🛡️'
+      [ServiceCategory.CONSUMER_PROTECTION]: '🛡️',
     };
     return icons[category] || '📋';
   }
@@ -142,7 +153,9 @@ export class ServiceCatalogComponent implements OnInit {
    */
   getServiceDescription(service: Service): string {
     const currentLang = this.translateService.currentLang || 'en';
-    return currentLang === 'ar' && service.descriptionAr ? service.descriptionAr : service.description;
+    return currentLang === 'ar' && service.descriptionAr
+      ? service.descriptionAr
+      : service.description;
   }
 
   /**
@@ -150,15 +163,19 @@ export class ServiceCatalogComponent implements OnInit {
    */
   getProcessingTime(service: Service): string {
     const currentLang = this.translateService.currentLang || 'en';
-    let processingTime = currentLang === 'ar' && service.estimatedProcessingTimeAr 
-      ? service.estimatedProcessingTimeAr 
-      : service.estimatedProcessingTime;
-    
+    let processingTime =
+      currentLang === 'ar' && service.estimatedProcessingTimeAr
+        ? service.estimatedProcessingTimeAr
+        : service.estimatedProcessingTime;
+
     // Replace "business days" with translated version
     if (currentLang === 'ar') {
-      processingTime = processingTime.replace(/business days/gi, this.translateService.instant('common.businessDays'));
+      processingTime = processingTime.replace(
+        /business days/gi,
+        this.translateService.instant('common.businessDays')
+      );
     }
-    
+
     return processingTime;
   }
 
@@ -173,4 +190,3 @@ export class ServiceCatalogComponent implements OnInit {
     return currency;
   }
 }
-

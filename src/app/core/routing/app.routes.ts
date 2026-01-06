@@ -7,7 +7,7 @@ import { ShellComponent } from '../../layout/shell/shell.component';
 export const routes: Routes = [
   {
     path: 'auth',
-    loadChildren: () => import('../../features/auth/auth.routes').then(m => m.authRoutes)
+    loadChildren: () => import('../../features/auth/auth.routes').then((m) => m.authRoutes),
   },
   {
     path: '',
@@ -16,20 +16,29 @@ export const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        loadChildren: () => import('../../features/home/routes').then(m => m.homeRoutes)
+        loadChildren: () => import('../../features/home/routes').then((m) => m.homeRoutes),
       },
       {
         path: 'dashboard',
-        loadChildren: () => import('../../features/dashboard/routes').then(m => m.routes)
+        loadChildren: () => import('../../features/dashboard/routes').then((m) => m.routes),
       },
       {
         path: 'service-requests',
-        loadChildren: () => import('../../features/service-requests/routes').then(m => m.routes)
-      }
-    ]
+        loadChildren: () => import('../../features/service-requests/routes').then((m) => m.routes),
+      },
+      {
+        path: 'my-cases',
+        loadChildren: () => import('../../features/my-cases/routes').then((m) => m.myCasesRoutes),
+      },
+      {
+        path: 'fines',
+        loadChildren: () => import('../../features/fines/routes').then((m) => m.finesRoutes),
+      },
+    ],
   },
   {
     path: '**',
-    loadComponent: () => import('../../shared/ui/not-found/not-found.component').then(m => m.NotFoundComponent)
-  }
+    loadComponent: () =>
+      import('../../shared/ui/not-found/not-found.component').then((m) => m.NotFoundComponent),
+  },
 ];
