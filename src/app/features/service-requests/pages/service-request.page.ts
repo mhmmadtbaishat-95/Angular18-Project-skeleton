@@ -18,6 +18,7 @@ import { Subscription, filter } from 'rxjs';
 import { StepWizardComponent, StepConfig } from '../components/step-wizard/step-wizard.component';
 import { IDocumentType, IUploadedDocument } from '../models/document.model';
 import { IServiceRequestResponse } from '../models/api-request.model';
+import { environment } from '../../../../environments/environment';
 
 /**
  * Service request page component
@@ -237,22 +238,40 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       next: (developerInfo) => {
         console.log('Developer info received from API:', developerInfo);
         
-        // Check license status eligibility
-        const licenseStatus = developerInfo.licenseStatus || '';
-        this.isEligible = licenseStatus === 'Active';
-        
-        if (!this.isEligible) {
-          // Show eligibility modal
-          this.showEligibilityModal = true;
-          // Disable the entire form
-          this.requestForm.disable();
-          // Show error notification
-          this.notificationService.error(
-            this.translateService.instant('serviceRequest.notEligibleMessage') || 
-            'Your license is not active. You are not eligible to submit service requests.'
-          );
+        // Check license status eligibility (only if enabled in configuration)
+        if (environment.enableLicenseEligibilityCheck) {
+          const licenseStatus = developerInfo.licenseStatus || '';
+          this.isEligible = licenseStatus === 'Active';
+          
+          if (!this.isEligible) {
+            // Show eligibility modal
+            this.showEligibilityModal = true;
+            // Disable the entire form
+            this.requestForm.disable();
+            // Show error notification
+            this.notificationService.error(
+              this.translateService.instant('serviceRequest.notEligibleMessage') || 
+              'Your license is not active. You are not eligible to submit service requests.'
+            );
+          } else {
+            // Enable form if eligible
+            this.requestForm.enable();
+            // Re-disable the read-only fields
+            const readOnlyFields = [
+              'developerRegistrationNumber',
+              'developerName',
+              'developerType',
+              'licenseStatus',
+              'licenseExpirationDate'
+            ];
+            readOnlyFields.forEach(field => {
+              this.requestForm.get(field)?.disable({ emitEvent: false });
+            });
+          }
         } else {
-          // Enable form if eligible
+          // Eligibility check is disabled - allow form submission
+          console.log('⚠️ License eligibility check is disabled (enableLicenseEligibilityCheck: false)');
+          this.isEligible = true;
           this.requestForm.enable();
           // Re-disable the read-only fields
           const readOnlyFields = [
@@ -300,14 +319,21 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       },
       error: (error) => {
         console.error('Failed to load developer information:', error);
-        // On error, show eligibility modal and disable form
-        this.isEligible = false;
-        this.showEligibilityModal = true;
-        this.requestForm.disable();
-        this.notificationService.error(
-          this.translateService.instant('serviceRequest.errorLoadingDeveloperInfo') ||
-          'Failed to load developer information. Please contact support.'
-        );
+        // On error, only show eligibility modal if check is enabled
+        if (environment.enableLicenseEligibilityCheck) {
+          this.isEligible = false;
+          this.showEligibilityModal = true;
+          this.requestForm.disable();
+          this.notificationService.error(
+            this.translateService.instant('serviceRequest.errorLoadingDeveloperInfo') ||
+            'Failed to load developer information. Please contact support.'
+          );
+        } else {
+          // Eligibility check is disabled - allow form to continue
+          console.warn('⚠️ Failed to load developer info, but eligibility check is disabled. Form will remain enabled.');
+          this.isEligible = true;
+          this.requestForm.enable();
+        }
       },
     });
   }
