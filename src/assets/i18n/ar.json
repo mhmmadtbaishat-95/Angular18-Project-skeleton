@@ -307,10 +307,10 @@
     "status": "الحالة"
   },
   "cases": {
-    "applicationTitle": "القضايا",
-    "caseNumber": "رقم القضية",
-    "caseType": "نوع القضية",
-    "caseCategory": "تصنيف القضية",
+    "applicationTitle": "طلباتي",
+    "caseNumber": "رقم الطلب",
+    "caseType": "نوع الطلب",
+    "caseCategory": "تصنيف الطلب",
     "status": "الحالة"
   },
   "serviceDetail": {

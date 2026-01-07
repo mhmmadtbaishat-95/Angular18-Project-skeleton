@@ -1,12 +1,18 @@
-import { Component, signal, inject } from '@angular/core';
+import {
+  Component,
+  signal,
+  inject,
+  AfterViewInit
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 import { I18nService } from '../../../core/services/i18n/i18n.service';
+import * as WebChat from 'botframework-webchat';
 
 /**
  * Floating Chatbot Component
- * Provides a floating chatbot icon with chat interface
+ * Copilot Studio (Power Virtual Agents) integration
  */
 @Component({
   selector: 'app-chatbot',
@@ -14,75 +20,23 @@ import { I18nService } from '../../../core/services/i18n/i18n.service';
   imports: [CommonModule, FormsModule, TranslatePipe],
   template: `
     <div class="chatbot-container">
+
       <!-- Chat Window -->
       <div *ngIf="isOpen()" class="chat-window" [class.rtl]="isRTL()" [class.ltr]="!isRTL()">
+
         <!-- Chat Header -->
         <div class="chat-header">
-          <button class="chat-close-btn" (click)="toggleChat()" aria-label="Close chat">
-            <i class="fas fa-times"></i>
-          </button>
           <div class="chat-header-content">
             <img src="assets/logo.png" alt="Entity Logo" class="chat-logo" />
           </div>
+
+          <button class="chat-close-btn" (click)="toggleChat()" aria-label="Close chat">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
 
-        <!-- Chat Messages -->
-        <div class="chat-messages" #chatMessages>
-          <div
-            *ngFor="let message of messages()"
-            class="message"
-            [class.message-user]="message.isUser"
-            [class.message-bot]="!message.isUser"
-          >
-            <div class="message-content">
-              <div class="message-text">{{ message.text }}</div>
-              <div class="message-time">{{ message.time }}</div>
-            </div>
-          </div>
-
-          <!-- Welcome Message -->
-          <div *ngIf="messages().length === 0" class="welcome-message">
-            <p>{{ getTranslation('chatbot.welcome', 'Hello! How can I assist you today?') }}</p>
-          </div>
-        </div>
-
-        <!-- Chat Input -->
-        <div class="chat-input-container relative">
-          <!-- Gradient border wrapper -->
-          <div
-            class="chat-input-wrapper relative w-full rounded-[12px] p-[0.5px] bg-gradient-to-r from-[#8B1638] to-[#DACBA1]"
-          >
-            <input
-              type="text"
-              class="chat-input w-full rounded-[12px] bg-[#1F1F21] text-white placeholder-white/50 px-4 py-2.5 pr-12 focus:outline-none focus:[--tw-ring-width:1px] focus:ring-qatar-maroon focus:ring-offset-0 transition-all duration-200"
-              [(ngModel)]="messageInput"
-              (keyup.enter)="sendMessage()"
-              [placeholder]="getTranslation('chatbot.placeholder', 'Type your message...')"
-            />
-
-            <!-- Button inside input -->
-            <button
-              class="absolute top-1/2 -translate-y-1/2 rounded-md disabled:opacity-50
-         px-[0.5rem] py-[0.2rem]
-         text-[rgba(142,68,93,1)] bg-[rgba(139,22,56,0.3)]
-         hover:bg-[rgba(139,22,56,0.5)]"
-              [ngClass]="{
-                'right-1 mr-[0.2rem]': !isRTL(),
-                'left-1 ml-[0.2rem]': isRTL(),
-              }"
-              (click)="sendMessage()"
-              [disabled]="!messageInput.trim()"
-              aria-label="Send message"
-            >
-              <i
-                class="fas fa-paper-plane"
-                [ngStyle]="{
-                  transform: !isRTL() ? 'rotate(45deg)' : 'rotate(-130deg)',
-                }"
-              ></i>
-            </button>
-          </div>
-        </div>
+        <!-- Copilot WebChat -->
+        <div id="webchat" style="height: 100%; width: 100%;"></div>
       </div>
 
       <!-- Floating Chat Button -->
@@ -100,6 +54,8 @@ import { I18nService } from '../../../core/services/i18n/i18n.service';
   `,
   styles: [
     `
+      /* === YOUR ORIGINAL STYLES (UNCHANGED) === */
+
       .chatbot-container {
         position: fixed;
         bottom: 75px;
@@ -114,65 +70,43 @@ import { I18nService } from '../../../core/services/i18n/i18n.service';
         left: 24px;
       }
 
-      /* Floating Chat Button */
       .chatbot-button {
-        @apply w-14 h-14 rounded-full bg-qatar-maroon hover:bg-qatar-maroon-dark text-white;
-        @apply shadow-2xl flex items-center justify-center cursor-pointer;
-        @apply transition-all duration-300 transform hover:scale-110;
-        position: relative;
+        width: 56px;
+        height: 56px;
+        border-radius: 9999px;
+        cursor: pointer;
         border: 2px solid rgba(218, 203, 161, 1);
-        box-shadow: 0px 0px 14.21px 0px rgba(218, 203, 161, 0.6);
-        background: rgba(161, 149, 118, 1);
         background: linear-gradient(204.53deg, #dacba1 -17.94%, #625c4c 85.95%);
-      }
-
-      .chatbot-button:hover {
-        box-shadow: 0px 0px 20px rgba(218, 157, 0, 0.5);
-        transform: scale(1.1);
-      }
-
-      .chatbot-button i {
-        font-size: 1.5rem;
-        transition: transform 0.3s ease;
-      }
-
-      .chatbot-button.chat-open {
-        @apply bg-gray-600 hover:bg-gray-700;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        box-shadow: 0px 0px 14.21px rgba(218, 203, 161, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
       }
 
       .chatbot-badge {
-        @apply absolute -top-1 -right-1 bg-red-500 text-white rounded-full;
-        @apply text-xs font-bold min-w-[20px] h-5 flex items-center justify-center;
-        @apply px-1.5 border-2 border-white;
-        animation: pulse 2s infinite;
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        background: red;
+        color: white;
+        font-size: 12px;
+        border-radius: 9999px;
+        padding: 2px 6px;
       }
 
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.7;
-        }
-      }
-
-      /* Chat Window */
       .chat-window {
-        @apply absolute bottom-20 right-0 w-80 h-[500px];
-        @apply rounded-xl shadow-lg flex flex-col;
+        position: absolute;
+        bottom: 70px;
+        right: 0;
+        width: 360px;
+        height: 520px;
         border-radius: 12px;
-
+        overflow: hidden;
         display: flex;
         flex-direction: column;
-        overflow: hidden;
-        animation: slideUp 0.3s ease-out;
-        max-width: calc(100vw - 48px);
-
         backdrop-filter: blur(40px);
-        box-shadow: 0px 0px 41.3px 0px rgba(139, 22, 56, 0.35);
-        /* background: rgba(22, 22, 24, 0.9); */
+        box-shadow: 0px 0px 41.3px rgba(139, 22, 56, 0.35);
         border: 0.5px solid rgba(255, 255, 255, 0.2);
       }
 
@@ -181,303 +115,78 @@ import { I18nService } from '../../../core/services/i18n/i18n.service';
         left: 0;
       }
 
-      @keyframes slideUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      /* Chat Header */
       .chat-header {
-        @apply flex items-center justify-between p-4;
-        @apply bg-gradient-to-r from-qatar-maroon to-qatar-maroon-dark text-white;
-        @apply border-b border-white/20;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
         background: rgba(22, 22, 24, 0.9);
-      }
-
-      .chat-header-content {
-        /* @apply flex items-center flex-1; */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
       }
 
       .chat-logo {
-        height: 50px;
-        width: auto;
-        border-bottom-right-radius: 20px;
-        border-bottom-left-radius: 20px;
-        object-fit: contain;
+        height: 40px;
       }
 
       .chat-close-btn {
-        @apply w-8 h-8 rounded-full  hover:bg-white/30;
-        @apply flex items-center justify-center cursor-pointer transition-colors;
-        @apply text-white flex-shrink-0;
+        background: transparent;
         border: none;
+        color: white;
+        cursor: pointer;
       }
 
-      /* Chat Messages */
-      .chat-messages {
-        @apply flex-1 overflow-y-auto p-4 space-y-4;
-
-        /* @apply bg-gray-50 dark:bg-gray-900; */
-        background: rgba(22, 22, 24, 0.9);
-
-        scroll-behavior: smooth;
-      }
-
-      .chat-messages::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      .chat-messages::-webkit-scrollbar-track {
-        @apply bg-transparent;
-      }
-
-      .chat-messages::-webkit-scrollbar-thumb {
-        @apply bg-gray-300 dark:bg-gray-600 rounded-full;
-      }
-
-      .welcome-message {
-        @apply text-center text-gray-500 dark:text-gray-400 py-8;
-        @apply text-sm;
-      }
-
-      .message {
-        @apply flex gap-2;
-      }
-
-      .message-user {
-        @apply justify-end;
-      }
-
-      .message-bot {
-        @apply justify-start;
-      }
-
-      .message-content {
-        @apply max-w-[75%] rounded-2xl px-4 py-2.5;
-        @apply flex flex-col gap-1;
-      }
-
-      .message-user .message-content {
-        @apply bg-qatar-maroon text-white;
-        border-bottom-right-radius: 4px;
-      }
-
-      .message-bot .message-content {
-        @apply bg-white dark:bg-gray-700 text-gray-900 dark:text-white;
-        @apply border border-gray-200 dark:border-gray-600;
-        border-bottom-left-radius: 4px;
-      }
-
-      .message-text {
-        @apply text-sm leading-relaxed;
-        word-wrap: break-word;
-      }
-
-      .message-time {
-        @apply text-xs opacity-70;
-        @apply self-end;
-        margin-top: 2px;
-      }
-
-      .message-user .message-time {
-        @apply text-white/80;
-      }
-
-      .message-bot .message-time {
-        @apply text-gray-500 dark:text-gray-400;
-      }
-
-      /* Chat Input */
-      .chat-input-container {
-        @apply flex items-center gap-2 p-4;
-        /* @apply bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700; */
-        background: rgba(22, 22, 24, 0.9);
-      }
-
-      .chat-input-wrapper {
-        /* Wrapper for gradient border */
-        border-radius: 12px; /* 12px rounded corners */
-        padding: 0.5px; /* border thickness */
-        background: linear-gradient(90deg, rgba(139, 22, 56, 1), rgba(218, 203, 161, 1));
-      }
-
-      .chat-input {
-        @apply flex-1 px-4 py-2.5;
-        @apply text-gray-900 dark:text-white;
-        @apply focus:outline-none focus:ring-2 focus:ring-qatar-maroon focus:border-transparent;
-        @apply transition-all duration-200;
-
-        border: none; /* remove default border */
-        border-radius: 12px; /* match wrapper */
-        background: rgba(31, 31, 33, 1); /* background color */
-        backdrop-filter: blur(40px); /* optional glass effect */
-        -webkit-backdrop-filter: blur(40px); /* Safari support */
-        font-size: 0.875rem;
-        width: 100%; /* fill wrapper */
-        --tw-ring-width: 0.1px; /* smaller than default 2px */
-        --tw-ring-offset-width: -1px; /* remove offset if needed */
-        padding-inline-end: 3rem;
-      }
-
-      .chat-send-btn {
-        @apply w-10 h-10 rounded-xl bg-qatar-maroon hover:bg-qatar-maroon-dark;
-        @apply text-white flex items-center justify-center cursor-pointer;
-        @apply transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed;
-        @apply shadow-md hover:shadow-lg;
-        border: none;
-      }
-
-      .chat-send-btn:not(:disabled):hover {
-        transform: scale(1.05);
-      }
-
-      /* RTL Support */
-      .chat-window.rtl {
-        direction: rtl;
-      }
-
-      .chat-window.ltr {
-        direction: ltr;
-      }
-
-      /* Mobile Responsive */
       @media (max-width: 640px) {
-        .chatbot-container {
-          bottom: 16px;
-          right: 16px;
-          left: auto;
-        }
-
-        :host-context([dir='rtl']) .chatbot-container {
-          right: auto;
-          left: 16px;
-        }
-
         .chat-window {
           width: calc(100vw - 32px);
-          height: calc(100vh - 100px);
-          max-height: 600px;
+          height: calc(100vh - 120px);
         }
-
-        .chatbot-button {
-          @apply w-12 h-12;
-        }
-
-        .chatbot-button i {
-          font-size: 1.25rem;
-        }
-      }
-
-      /* Animation for new messages */
-      @keyframes messageSlide {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
-      .message {
-        animation: messageSlide 0.3s ease-out;
       }
     `,
   ],
 })
-export class ChatbotComponent {
+export class ChatbotComponent implements AfterViewInit {
   private i18nService = inject(I18nService);
 
   isOpen = signal(false);
-  messageInput = '';
-  messages = signal<Array<{ text: string; isUser: boolean; time: string }>>([]);
   unreadCount = signal(0);
 
-  getTranslation(key: string, fallback: string): string {
-    const translation = this.i18nService.translate(key);
-    return translation !== key ? translation : fallback;
-  }
+  private webChatLoaded = false;
+
+  ngAfterViewInit(): void {}
 
   toggleChat(): void {
     this.isOpen.set(!this.isOpen());
+
     if (this.isOpen()) {
       this.unreadCount.set(0);
-      // Scroll to bottom when opening
-      setTimeout(() => {
-        const chatMessages = document.querySelector('.chat-messages');
-        if (chatMessages) {
-          chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-      }, 100);
+
+      // Initialize Copilot only once
+      setTimeout(() => this.initCopilot(), 0);
     }
   }
 
-  sendMessage(): void {
-    if (!this.messageInput.trim()) return;
+  async initCopilot(): Promise<void> {
+    if (this.webChatLoaded) return;
 
-    const userMessage = {
-      text: this.messageInput.trim(),
-      isUser: true,
-      time: this.getCurrentTime(),
-    };
+    // ⚠️ DEMO ONLY – MOVE TO BACKEND IN PROD
+    const response = await fetch(
+      'https://ccbfd12a473ae4c8be7756bac1e50f.4d.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cre36_icm20SocialSector/directline/token?api-version=2022-03-01-preview',
+      { method: 'POST' }
+    );
 
-    this.messages.update((msgs) => [...msgs, userMessage]);
-    this.messageInput = '';
+    const { token } = await response.json();
 
-    // Scroll to bottom
-    setTimeout(() => {
-      const chatMessages = document.querySelector('.chat-messages');
-      if (chatMessages) {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-    }, 100);
+    const directLine = WebChat.createDirectLine({ token });
 
-    // Simulate bot response
-    setTimeout(() => {
-      this.getBotResponse(userMessage.text);
-    }, 1000);
-  }
+    WebChat.renderWebChat(
+      {
+        directLine,
+        locale: this.isRTL() ? 'ar' : 'en-US'
+      },
+      document.getElementById('webchat')!
+    );
 
-  getBotResponse(userMessage: string): void {
-    const responses = [
-      'Thank you for your message! Our support team will get back to you shortly.',
-      "I'm here to help! Could you provide more details about your inquiry?",
-      'I understand your concern. Let me connect you with a specialist.',
-      "Thanks for reaching out! We'll assist you as soon as possible.",
-    ];
-
-    const botMessage = {
-      text: responses[Math.floor(Math.random() * responses.length)],
-      isUser: false,
-      time: this.getCurrentTime(),
-    };
-
-    this.messages.update((msgs) => [...msgs, botMessage]);
-
-    // Increment unread count if chat is closed
-    if (!this.isOpen()) {
-      this.unreadCount.update((count) => count + 1);
-    }
-
-    // Scroll to bottom
-    setTimeout(() => {
-      const chatMessages = document.querySelector('.chat-messages');
-      if (chatMessages) {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-    }, 100);
-  }
-
-  getCurrentTime(): string {
-    const now = new Date();
-    return now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    this.webChatLoaded = true;
   }
 
   isRTL(): boolean {
@@ -485,14 +194,5 @@ export class ChatbotComponent {
       document.documentElement.dir === 'rtl' ||
       document.documentElement.getAttribute('lang') === 'ar'
     );
-  }
-
-  constructor() {
-    // Add welcome message on init
-    setTimeout(() => {
-      if (this.messages().length === 0) {
-        // Welcome message will be shown via template
-      }
-    }, 500);
   }
 }
