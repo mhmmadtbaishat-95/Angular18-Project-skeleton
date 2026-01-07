@@ -14,7 +14,8 @@
     "lint:fix": "ng lint --fix",
     "format": "prettier --write \"src/**/*.{ts,html,css,scss,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,css,scss,json}\"",
-    "analyze": "ng build --stats-json && webpack-bundle-analyzer dist/angular-18-skeleton/stats.json"
+    "analyze": "ng build --stats-json && webpack-bundle-analyzer dist/angular-18-skeleton/stats.json",
+    "docker:run": "docker run -p 3000:3000 AQARAT-portal"
   },
   "private": true,
   "dependencies": {

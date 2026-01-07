@@ -36,7 +36,7 @@ import { environment } from '../../../../environments/environment';
 
         <!-- Copilot WebChat iframe -->
         <iframe 
-          src="https://copilotstudio.preview.microsoft.com/environments/d82f0fb9-f12b-e015-9078-b65bd0bf3817/bots/copilots_header_9bd81/webchat?__version__=2" 
+          src="https://copilotstudio.preview.microsoft.com/environments/d82f0fb9-f12b-e015-9078-b65bd0bf3817/bots/copilots_header_382c2/webchat?__version__=2%22" 
           frameborder="0" 
           style="width: 100%; height: 100%; border: none;"
           allow="microphone; camera"
@@ -60,7 +60,10 @@ import { environment } from '../../../../environments/environment';
   styles: [
     `
       /* === YOUR ORIGINAL STYLES (UNCHANGED) === */
+      .webchat__send-box__editable{
 
+        padding:10px !important;
+      }
       .chatbot-container {
         position: fixed;
         bottom: 75px;

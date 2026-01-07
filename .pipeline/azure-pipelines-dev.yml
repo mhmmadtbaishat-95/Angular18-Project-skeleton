@@ -1,0 +1,31 @@
+trigger:
+- dev
+ 
+variables:
+  dockerRegistryServiceConnection: "6ee9c833-596d-4493-8550-54152359ff6c"
+  imageRepository: "aqaratportal"
+  containerRegistry: "aqaratportal.azurecr.io"
+  dockerfilePath: "$(Build.SourcesDirectory)/Dockerfile"
+  tag: "$(Build.BuildId)"
+  vmImageName: "ubuntu-latest"
+ 
+stages:
+- stage: BuildAndPush
+  displayName: Build and push image
+  jobs:
+  - job: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - checkout: self
+ 
+    - task: Docker@2
+      displayName: Build and push
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+          latest
