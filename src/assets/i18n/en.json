@@ -22,6 +22,9 @@
     "reset": "Reset",
     "actions": "Actions",
     "businessDays": "business days",
+    "unknownService": "Unknown Service",
+    "unknownApplicant": "Unknown Applicant",
+    "refresh": "Refresh",
     "qar": "QAR",
     "currency": {
       "qar": "QAR",
@@ -559,6 +562,20 @@
       "downPaymentPercentagePlaceholder": "Enter down payment percentage"
     }
   },
+  "fines": {
+    "applicationTitle": "Fine & Violations",
+    "fineNumber": "Fine Number",
+    "fineDetails": "Fine Details",
+    "fineAmount": "Fine Amount",
+    "status": "Status"
+  },
+  "cases": {
+    "applicationTitle": "Cases",
+    "caseNumber": "Case Number",
+    "caseType": "Case Type",
+    "caseCategory": "Case Category",
+    "status": "Status"
+  },
   "payment": {
     "paymentSummary": "Payment Summary",
     "serviceAmount": "Service Amount",
@@ -582,4 +599,3 @@
     "placeholder": "Type your message..."
   }
 }
-
