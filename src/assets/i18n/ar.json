@@ -22,6 +22,9 @@
     "reset": "إعادة تعيين",
     "actions": "إجراءات",
     "businessDays": "أيام عمل",
+    "unknownService": "خدمة غير معروفة",
+    "unknownApplicant": "غير معروف",
+    "refresh": "تحديث",
     "qar": "ريال قطري",
     "currency": {
       "qar": "ريال قطري",
@@ -295,6 +298,20 @@
     "investment": "استثمار",
     "intellectualProperty": "الملكية الفكرية",
     "consumerProtection": "حماية المستهلك"
+  },
+  "fines": {
+    "applicationTitle": "المخالفات والغرامات",
+    "fineNumber": "رقم الغرامة",
+    "fineDetails": "تفاصيل الغرامة",
+    "fineAmount": "قيمة الغرامة",
+    "status": "الحالة"
+  },
+  "cases": {
+    "applicationTitle": "القضايا",
+    "caseNumber": "رقم القضية",
+    "caseType": "نوع القضية",
+    "caseCategory": "تصنيف القضية",
+    "status": "الحالة"
   },
   "serviceDetail": {
     "executionDuration": "مدة التنفيذ",
@@ -579,4 +596,3 @@
     "placeholder": "اكتب رسالتك..."
   }
 }
-
