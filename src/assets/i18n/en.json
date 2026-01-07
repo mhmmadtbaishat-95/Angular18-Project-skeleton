@@ -546,11 +546,13 @@
     },
     "formC": {
       "title": "C - Escrow Account",
-      "isOffPlan": "Is the project off-plan style?",
+      "isOffPlan": "Is the project off-plan?",
       "bankName": "Bank Name",
       "bankNamePlaceholder": "Enter bank name",
       "estimatedProjectValue": "Estimated Value of the Project",
-      "estimatedProjectValuePlaceholder": "Enter estimated project value"
+      "estimatedProjectValuePlaceholder": "Enter estimated project value",
+      "yes": "Yes",
+      "no": "No"
     },
     "formD": {
       "title": "D - License Application",

@@ -561,7 +561,9 @@
       "bankName": "اسم البنك",
       "bankNamePlaceholder": "أدخل اسم البنك",
       "estimatedProjectValue": "القيمة المقدرة للمشروع",
-      "estimatedProjectValuePlaceholder": "أدخل القيمة المقدرة للمشروع"
+      "estimatedProjectValuePlaceholder": "أدخل القيمة المقدرة للمشروع",
+      "yes": "نعم",
+      "no": "لا"
     },
     "formD": {
       "title": "د - طلب الترخيص",

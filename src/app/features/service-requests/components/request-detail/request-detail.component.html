@@ -1,7 +1,10 @@
 <!-- Service Detail View (when accessed from service detail page) -->
 <div *ngIf="isServiceDetailView" class="service-detail-page" [dir]="isRTL() ? 'rtl' : 'ltr'"
   [attr.dir]="isRTL() ? 'rtl' : 'ltr'">
-  <app-skeleton-loader [isLoading]="isLoading" [count]="1" type="service"></app-skeleton-loader>
+  <!-- <app-skeleton-loader [isLoading]="isLoading" [count]="1" type="service"></app-skeleton-loader> -->
+  <app-skeleton-loader-request-details [isLoading]="isLoading" [count]="1"
+    type="service"></app-skeleton-loader-request-details>
+
 
   <div *ngIf="!isLoading && service">
     <!-- Title Section - Above breadcrumb -->

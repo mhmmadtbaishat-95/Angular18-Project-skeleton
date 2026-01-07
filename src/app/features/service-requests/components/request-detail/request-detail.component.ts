@@ -9,6 +9,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { I18nService } from '@core/services/i18n/i18n.service';
 import { Subscription, filter } from 'rxjs';
 import { TableSkeletonLoaderComponent } from '@shared/table-skeleton-loader/table-skeleton-loader.component';
+import { SkeletonLoaderRequestCardComponent } from '@shared/ui/skeleton-loader-request-card/skeleton-loader-request-card.component';
+import { SkeletonLoaderRequestDetailsComponent } from '@shared/ui/skeleton-loader-request-details/skeleton-loader-request-details.component';
 
 /**
  * Request detail component
@@ -22,6 +24,8 @@ import { TableSkeletonLoaderComponent } from '@shared/table-skeleton-loader/tabl
     RouterLink,
     SkeletonLoaderComponent,
     TableSkeletonLoaderComponent,
+    SkeletonLoaderRequestCardComponent,
+    SkeletonLoaderRequestDetailsComponent,
     TranslatePipe,
   ],
   templateUrl: './request-detail.component.html',

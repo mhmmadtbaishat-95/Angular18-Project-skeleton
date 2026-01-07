@@ -9,6 +9,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { I18nService } from '@core/services/i18n/i18n.service';
 import { Subscription, filter } from 'rxjs';
 import { TableSkeletonLoaderComponent } from '@shared/table-skeleton-loader/table-skeleton-loader.component';
+import { SkeletonLoaderRequestCardComponent } from '@shared/ui/skeleton-loader-request-card/skeleton-loader-request-card.component';
+import { SkeletonLoaderRequestDetailsComponent } from '@shared/ui/skeleton-loader-request-details/skeleton-loader-request-details.component';
 
 /**
  * Service detail component
@@ -21,6 +23,8 @@ import { TableSkeletonLoaderComponent } from '@shared/table-skeleton-loader/tabl
     CommonModule,
     RouterLink,
     TableSkeletonLoaderComponent,
+    SkeletonLoaderRequestCardComponent,
+    SkeletonLoaderRequestDetailsComponent,
     SkeletonLoaderComponent,
     TranslatePipe,
   ],
@@ -322,7 +326,9 @@ export class ServiceDetailComponent implements OnInit, OnDestroy {
   getServiceName(service: Service | null): string {
     if (!service) return '';
     const currentLang = this.translateService.currentLang || 'en';
-    return currentLang === 'ar' && service.nameAr ? service.nameAr : service.name;
+    return currentLang === 'ar' && service.nameAr
+      ? 'ترخيص تطوير مشروع عقاري'
+      : 'Real Estate Development Licensing Services';
   }
 
   /**
