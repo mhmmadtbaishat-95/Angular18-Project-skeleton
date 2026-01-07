@@ -308,7 +308,7 @@ export class ChatbotComponent implements AfterViewInit, OnDestroy {
         : `${environment.apiUrl}${tokenEndpoint}`;
 
       console.log('Fetching Copilot token from:', tokenUrl);
-
+      console.log('https://d82f0fb9f12be0159078b65bd0bf38.17.environment.api.powerplatform.com/powervirtualagents/botsbyschema/copilots_header_9bd81/directline/token?api-version=2022-03-01-preview')
       const response = await fetch(tokenUrl, { 
         method: 'POST',
         headers: {
