@@ -1,29 +1,27 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
 - main
 
-resources:
-- repo: self
-
 variables:
+  dockerRegistryServiceConnection: '6c3e4e65-db52-4817-92a8-0d5ebfbeb855'
+  imageRepository: 'aqaratportal'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
+  vmImageName: 'ubuntu-latest'
 
 stages:
-- stage: Build
-  displayName: Build image
+- stage: BuildAndPush
   jobs:
   - job: Build
-    displayName: Build
     pool:
-      vmImage: ubuntu-latest
+      vmImage: $(vmImageName)
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Build and push
       inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        command: buildAndPush
+        containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
         tags: |
           $(tag)
+          latest
