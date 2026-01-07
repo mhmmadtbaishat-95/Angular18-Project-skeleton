@@ -295,6 +295,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
 
   services: ServiceItem[] = [
     {
+      id: '3',
+      titleKey: 'services.service3.title',
+      descriptionKey: 'services.service3.description',
+      route: '/service-requests/service/3',
+    },
+    {
       id: '1',
       titleKey: 'services.service1.title',
       descriptionKey: 'services.service1.description',
@@ -305,12 +311,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
       titleKey: 'services.service2.title',
       descriptionKey: 'services.service2.description',
       route: '/service-requests/service/2',
-    },
-    {
-      id: '3',
-      titleKey: 'services.service3.title',
-      descriptionKey: 'services.service3.description',
-      route: '/service-requests/service/3',
     },
     {
       id: '4',

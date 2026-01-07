@@ -8,6 +8,8 @@ import { SkeletonLoaderComponent } from '@shared/ui/skeleton-loader/skeleton-loa
 import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 import { TranslateService } from '@ngx-translate/core';
 import { TableSkeletonLoaderComponent } from '@shared/table-skeleton-loader/table-skeleton-loader.component';
+import { SkeletonLoaderRequestCardComponent } from '@shared/ui/skeleton-loader-request-card/skeleton-loader-request-card.component';
+import { SkeletonLoaderRequestDetailsComponent } from '@shared/ui/skeleton-loader-request-details/skeleton-loader-request-details.component';
 
 /**
  * Service catalog component
@@ -22,6 +24,8 @@ import { TableSkeletonLoaderComponent } from '@shared/table-skeleton-loader/tabl
     RouterLink,
     SkeletonLoaderComponent,
     TableSkeletonLoaderComponent,
+    SkeletonLoaderRequestCardComponent,
+    SkeletonLoaderRequestDetailsComponent,
     TranslatePipe,
   ],
   templateUrl: './service-catalog.component.html',

@@ -54,7 +54,7 @@
 
   <!-- Main Container -->
   <div class="main-container">
-    <app-skeleton-loader [isLoading]="isLoading" [count]="6" type="request"></app-skeleton-loader>
+    <app-skeleton-loader [isLoading]="true" [count]="6" type="request"></app-skeleton-loader>
 
     <div *ngIf="!isLoading && filteredRequests.length === 0" class="empty-state">
       <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -37,7 +37,10 @@
 
 	<!-- Requests List -->
 	<div class="requests-container">
-		<app-skeleton-loader [isLoading]="isLoading" [count]="4" type="service"></app-skeleton-loader>
+		<!-- <app-skeleton-loader [isLoading]="isLoading" [count]="4" type="service"></app-skeleton-loader> -->
+		<app-skeleton-loader-request-card [isLoading]="isLoading" [count]="4"
+			type="service"></app-skeleton-loader-request-card>
+
 
 		<div *ngIf="!isLoading" class="requests-list">
 			<div *ngFor="let request of getFilteredRequests()" class="request-card">

@@ -48,7 +48,7 @@
             <th>{{ 'requestLog.serviceName' | t }}</th>
             <th>{{ 'requestLog.requestNumber' | t }}</th>
             <th>{{ 'requestLog.submissionDate' | t }}</th>
-            <th>{{ 'requestLog.applicantName' | t }}</th>
+            <!-- <th>{{ 'requestLog.applicantName' | t }}</th> -->
             <th>{{ 'requestLog.status' | t }}</th>
           </tr>
         </thead>
@@ -63,9 +63,9 @@
             <td class="date-cell">
               <span class="date-text">{{ formatDate(log.submittedAt) }}</span>
             </td>
-            <td class="applicant-cell">
+            <!-- <td class="applicant-cell">
               <span class="applicant-text">{{ getApplicantName(log) }}</span>
-            </td>
+            </td> -->
             <td class="status-cell">
               <span [class]="'status-badge ' + getStatusClass(log.status)">
                 {{ getStatusLabel(log.status) }}

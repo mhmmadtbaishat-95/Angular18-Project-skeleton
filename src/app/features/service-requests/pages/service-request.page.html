@@ -143,9 +143,19 @@
                   <div class="form-column">
                     <div class="form-group">
                       <label for="projectType" class="form-label">{{ 'serviceRequest.formA.projectType' | t }}</label>
-                      <input type="text" id="projectType" formControlName="projectType" class="form-input"
-                        [class.error]="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched"
-                        placeholder="{{ 'serviceRequest.formA.projectTypePlaceholder' | t }}" />
+                      <select id="projectType" formControlName="projectType" class="form-input"
+                        [class.error]="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched">
+                        <option value="" disabled>
+                          {{ 'serviceRequest.formA.projectTypePlaceholder' | t }}
+                        </option>
+                        <option *ngFor="let project of [
+    { value: 0, labelEn: 'Residential', labelAr: 'سكني' },
+    { value: 1, labelEn: 'Commercial', labelAr: 'تجاري' }
+  ]" [value]="project.value">
+                          {{ isRTL() ? project.labelAr : project.labelEn }}
+                        </option>
+
+                      </select>
                       <span *ngIf="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched"
                         class="error-message">
                         {{ getFieldError('projectType') }}
@@ -188,9 +198,20 @@
                   <div class="form-column">
                     <div class="form-group">
                       <label for="planType" class="form-label">{{ 'serviceRequest.formB.planType' | t }}</label>
-                      <input type="text" id="planType" formControlName="planType" class="form-input"
-                        [class.error]="requestForm.get('planType')?.invalid && requestForm.get('planType')?.touched"
-                        placeholder="{{ 'serviceRequest.formB.planTypePlaceholder' | t }}" />
+                      <select id="planType" formControlName="planType" class="form-input"
+                        [class.error]="requestForm.get('planType')?.invalid && requestForm.get('planType')?.touched">
+                        <option value="" disabled selected>
+                          {{ 'serviceRequest.formB.planTypePlaceholder' | t }}
+                        </option>
+                        <option *ngFor="let plan of [
+    { value: 0, labelEn: 'Residential', labelAr: 'سكني' },
+    { value: 1, labelEn: 'Commercial', labelAr: 'تجاري' }
+  ]" [value]="plan.value">
+                          {{ isRTL() ? plan.labelAr : plan.labelEn }}
+                        </option>
+                      </select>
+
+
                       <span *ngIf="requestForm.get('planType')?.invalid && requestForm.get('planType')?.touched"
                         class="error-message">
                         {{ getFieldError('planType') }}
@@ -227,9 +248,18 @@
                   <div class="form-column">
                     <div class="form-group">
                       <label for="designStage" class="form-label">{{ 'serviceRequest.formB.designStage' | t }}</label>
-                      <input type="text" id="designStage" formControlName="designStage" class="form-input"
-                        [class.error]="requestForm.get('designStage')?.invalid && requestForm.get('designStage')?.touched"
-                        placeholder="{{ 'serviceRequest.formB.designStagePlaceholder' | t }}" />
+                      <select id="designStage" formControlName="designStage" class="form-input"
+                        [class.error]="requestForm.get('designStage')?.invalid && requestForm.get('designStage')?.touched">
+                        <option value="" disabled selected>
+                          {{ 'serviceRequest.formB.designStagePlaceholder' | t }}
+                        </option>
+                        <option *ngFor="let stage of [
+    { value: 0, labelEn: 'Initial', labelAr: 'مبدئي' },
+    { value: 1, labelEn: 'Final', labelAr: 'نهائي' }
+  ]" [value]="stage.value">
+                          {{ isRTL() ? stage.labelAr : stage.labelEn }}
+                        </option>
+                      </select>
                       <span *ngIf="requestForm.get('designStage')?.invalid && requestForm.get('designStage')?.touched"
                         class="error-message">
                         {{ getFieldError('designStage') }}
@@ -260,12 +290,6 @@
               <div class="form-section">
                 <div class="form-grid">
                   <div class="form-column">
-                    <div class="form-group">
-                      <label class="form-label checkbox-label">
-                        <input type="checkbox" id="isOffPlan" formControlName="isOffPlan" class="form-checkbox" />
-                        <span>{{ 'serviceRequest.formC.isOffPlan' | t }}</span>
-                      </label>
-                    </div>
 
                     <div class="form-group">
                       <label for="bankName" class="form-label">{{ 'serviceRequest.formC.bankName' | t }}</label>
@@ -277,6 +301,20 @@
                         {{ getFieldError('bankName') }}
                       </span>
                     </div>
+                    <div class="form-group">
+                      <label class="form-label" for="isOffPlan">{{ 'serviceRequest.formC.isOffPlan' | t }}</label>
+                      <select id="isOffPlan" formControlName="isOffPlan" class="form-input"
+                        [class.error]="requestForm.get('isOffPlan')?.invalid && requestForm.get('isOffPlan')?.touched">
+                        <option [value]="true">{{ 'serviceRequest.formC.yes' | t }}</option>
+                        <option [value]="false">{{ 'serviceRequest.formC.no' | t }}</option>
+                      </select>
+                    </div>
+                    <!-- <div class="form-group">
+                      <label class="form-label checkbox-label">
+                        <input type="checkbox" id="isOffPlan" formControlName="isOffPlan" class="form-checkbox" />
+                        <span>{{ 'serviceRequest.formC.isOffPlan' | t }}</span>
+                      </label>
+                    </div> -->
                   </div>
 
                   <div class="form-column">

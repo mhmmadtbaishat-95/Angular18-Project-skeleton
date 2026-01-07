@@ -1,0 +1,15 @@
+<div *ngIf="isLoading" class="requests-list skeleton-requests-list">
+  <div *ngFor="let item of skeletonArray" class="request-card skeleton-card">
+    <!-- Content -->
+    <div class="request-content">
+      <div class="skeleton-badge"></div>
+      <div class="skeleton-title"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="request-actions">
+      <div class="skeleton-button small"></div>
+      <div class="skeleton-button small"></div>
+    </div>
+  </div>
+</div>
