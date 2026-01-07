@@ -25,6 +25,20 @@ export const environment = {
     tokenExpiry: 15 * 60 * 1000 // 15 minutes
   },
   enableLogging: true,
-  enableCache: true
+  enableCache: true,
+  // Copilot Studio (Power Virtual Agents) configuration
+  copilot: {
+    // DirectLine token endpoint
+    // Option 1: Use Power Platform API directly (requires CORS to be enabled)
+    tokenEndpoint: 'https://ccbfd12a473ae4c8be7756bac1e50f.4d.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cre36_icm20SocialSector/directline/token?api-version=2022-03-01-preview',
+    // Option 2: Use your backend API to proxy the token request (recommended for production)
+    // tokenEndpoint: '/api/copilot/token', // e.g., '/api/copilot/token'
+    // Bot ID/Schema name
+    botSchema: 'cre36_icm20SocialSector',
+    // API Version
+    apiVersion: '2022-03-01-preview',
+    // Enable/disable chatbot
+    enabled: true
+  }
 };
 
