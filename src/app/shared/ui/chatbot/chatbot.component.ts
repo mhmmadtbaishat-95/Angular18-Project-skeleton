@@ -41,6 +41,7 @@ import * as WebChat from 'botframework-webchat';
 
         <!-- Copilot WebChat -->
         <div #webchatElement id="webchat" style="height: 100%; width: 100%;"></div>
+        <!DOCTYPE html><html><body><iframe src="https://copilotstudio.preview.microsoft.com/environments/d82f0fb9-f12b-e015-9078-b65bd0bf3817/bots/copilots_header_9bd81/webchat?__version__=2" frameborder="0" style="width: 100%; height: 100%;"></iframe></body></html>
       </div>
 
       <!-- Floating Chat Button -->
