@@ -29,11 +29,17 @@ export const environment = {
   // Copilot Studio (Power Virtual Agents) configuration
   copilot: {
     // DirectLine token endpoint
-    // Option 1: Use Power Platform API directly (requires CORS to be enabled)
-    tokenEndpoint: 'https://ccbfd12a473ae4c8be7756bac1e50f.4d.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cre36_icm20SocialSector/directline/token?api-version=2022-03-01-preview',
-    // Option 2: Use your backend API to proxy the token request (recommended for production)
-    // tokenEndpoint: '/api/copilot/token', // e.g., '/api/copilot/token'
-    // Bot ID/Schema name
+    // 
+    // RECOMMENDED: Use your backend API to proxy the token request
+    // Create an endpoint like: POST /api/copilot/token
+    // Your backend should call Power Platform API and return { token: "..." }
+    tokenEndpoint: '/api/copilot/token', // Backend endpoint (recommended)
+    //
+    // ALTERNATIVE: Use Power Platform API directly (requires CORS and may have auth issues)
+    // Format: https://{environment}.api.powerplatform.com/powervirtualagents/botsbyschema/{botSchema}/directline/token?api-version={apiVersion}
+    // tokenEndpoint: 'https://ccbfd12a473ae4c8be7756bac1e50f.4d.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cre36_icm20SocialSector/directline/token?api-version=2022-03-01-preview',
+    //
+    // Bot ID/Schema name (used for building Power Platform URL if needed)
     botSchema: 'cre36_icm20SocialSector',
     // API Version
     apiVersion: '2022-03-01-preview',

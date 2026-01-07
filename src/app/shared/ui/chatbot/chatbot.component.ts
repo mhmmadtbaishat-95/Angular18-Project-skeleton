@@ -1,18 +1,13 @@
 import {
   Component,
   signal,
-  inject,
-  AfterViewInit,
-  OnDestroy,
-  ViewChild,
-  ElementRef
+  inject
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 import { I18nService } from '../../../core/services/i18n/i18n.service';
 import { environment } from '../../../../environments/environment';
-import * as WebChat from 'botframework-webchat';
 
 /**
  * Floating Chatbot Component
@@ -31,7 +26,7 @@ import * as WebChat from 'botframework-webchat';
         <!-- Chat Header -->
         <div class="chat-header">
           <div class="chat-header-content">
-            <img src="assets/logo.png" alt="Entity Logo" class="chat-logo" />
+            <img src="assets/logo.png" alt="AQARAT" class="chat-logo" />
           </div>
 
           <button class="chat-close-btn" (click)="toggleChat()" aria-label="Close chat">
@@ -39,9 +34,14 @@ import * as WebChat from 'botframework-webchat';
           </button>
         </div>
 
-        <!-- Copilot WebChat -->
-        <div #webchatElement id="webchat" style="height: 100%; width: 100%;"></div>
-        <!DOCTYPE html><html><body><iframe src="https://copilotstudio.preview.microsoft.com/environments/d82f0fb9-f12b-e015-9078-b65bd0bf3817/bots/copilots_header_9bd81/webchat?__version__=2" frameborder="0" style="width: 100%; height: 100%;"></iframe></body></html>
+        <!-- Copilot WebChat iframe -->
+        <iframe 
+          src="https://copilotstudio.preview.microsoft.com/environments/d82f0fb9-f12b-e015-9078-b65bd0bf3817/bots/copilots_header_9bd81/webchat?__version__=2" 
+          frameborder="0" 
+          style="width: 100%; height: 100%; border: none;"
+          allow="microphone; camera"
+          title="Copilot Chat">
+        </iframe>
       </div>
 
       <!-- Floating Chat Button -->
@@ -156,7 +156,7 @@ import * as WebChat from 'botframework-webchat';
         }
       }
 
-      #webchat {
+      iframe {
         flex: 1;
         min-height: 0;
         overflow: hidden;
@@ -229,172 +229,21 @@ import * as WebChat from 'botframework-webchat';
     `,
   ],
 })
-export class ChatbotComponent implements AfterViewInit, OnDestroy {
+export class ChatbotComponent {
   private i18nService = inject(I18nService);
-  
-  @ViewChild('webchatElement', { static: false }) webchatElementRef?: ElementRef<HTMLDivElement>;
 
   isOpen = signal(false);
   unreadCount = signal(0);
 
-  private webChatLoaded = false;
-  private directLine: any = null;
-
-  ngAfterViewInit(): void {}
-
-  ngOnDestroy(): void {
-    // Cleanup: end DirectLine connection if it exists
-    if (this.directLine) {
-      try {
-        this.directLine.end();
-      } catch (error) {
-        console.error('Error ending DirectLine connection:', error);
-      }
-    }
-  }
-
   toggleChat(): void {
     this.isOpen.set(!this.isOpen());
-
     if (this.isOpen()) {
       this.unreadCount.set(0);
-
-      // Initialize Copilot only once
-      setTimeout(() => this.initCopilot(), 0);
     }
   }
 
   isCopilotEnabled(): boolean {
     return environment.copilot?.enabled !== false;
-  }
-
-  async initCopilot(): Promise<void> {
-    if (this.webChatLoaded) return;
-
-    // Check if Copilot is enabled
-    if (!this.isCopilotEnabled()) {
-      console.warn('Copilot is disabled in environment configuration');
-      return;
-    }
-
-    // Wait for the element to be available
-    const webchatElement = this.webchatElementRef?.nativeElement || document.getElementById('webchat');
-    if (!webchatElement) {
-      console.error('WebChat container not found');
-      // Retry after a short delay
-      setTimeout(() => this.initCopilot(), 100);
-      return;
-    }
-
-    // Check if token endpoint is configured
-    const tokenEndpoint = environment.copilot?.tokenEndpoint;
-    if (!tokenEndpoint) {
-      console.error('Copilot token endpoint is not configured. Please set environment.copilot.tokenEndpoint');
-      webchatElement.innerHTML = `
-        <div style="padding: 20px; text-align: center; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
-          <i class="fas fa-cog" style="font-size: 2rem; margin-bottom: 1rem; color: #ffa500;"></i>
-          <p style="margin: 0;">Chat service is not configured.</p>
-          <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; opacity: 0.8;">Please contact support.</p>
-        </div>
-      `;
-      return;
-    }
-
-    try {
-      // Build the token URL
-      // If tokenEndpoint starts with http, use it directly (external API)
-      // Otherwise, use it as a relative path (backend API)
-      const tokenUrl = tokenEndpoint.startsWith('http') 
-        ? tokenEndpoint 
-        : `${environment.apiUrl}${tokenEndpoint}`;
-
-      console.log('Fetching Copilot token from:', tokenUrl);
-      console.log('https://d82f0fb9f12be0159078b65bd0bf38.17.environment.api.powerplatform.com/powervirtualagents/botsbyschema/copilots_header_9bd81/directline/token?api-version=2022-03-01-preview')
-      const response = await fetch(tokenUrl, { 
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Token fetch failed:', {
-          url: tokenUrl,
-          status: response.status,
-          statusText: response.statusText,
-          error: errorText
-        });
-        
-        // Provide more specific error messages
-        let errorMessage = `Failed to fetch token: ${response.status} ${response.statusText}`;
-        if (response.status === 404) {
-          errorMessage = `Token endpoint not found (404). Please verify the endpoint URL is correct:\n${tokenUrl}`;
-        } else if (response.status === 403 || response.status === 401) {
-          errorMessage = `Authentication failed (${response.status}). The endpoint may require authentication.`;
-        } else if (response.status === 0 || response.status === 500) {
-          errorMessage = `Server error or CORS issue. Please check if CORS is enabled on the Power Platform API.`;
-        }
-        
-        throw new Error(errorMessage);
-      }
-
-      const data = await response.json();
-      
-      if (!data.token) {
-        throw new Error('Token not found in response. Response: ' + JSON.stringify(data));
-      }
-
-      this.directLine = WebChat.createDirectLine({ token: data.token });
-
-      WebChat.renderWebChat(
-        {
-          directLine: this.directLine,
-          locale: this.isRTL() ? 'ar' : 'en-US',
-          styleOptions: {
-            bubbleBackground: 'rgba(139, 22, 56, 0.9)',
-            bubbleTextColor: '#FFFFFF',
-            bubbleFromUserBackground: 'rgba(218, 203, 161, 0.9)',
-            bubbleFromUserTextColor: '#000000',
-            backgroundColor: 'rgba(22, 22, 24, 0.95)',
-            botAvatarBackgroundColor: 'rgba(139, 22, 56, 1)',
-            userAvatarBackgroundColor: 'rgba(218, 203, 161, 1)',
-            hideUploadButton: false,
-            sendBoxTextWrap: true,
-          }
-        },
-        webchatElement
-      );
-
-      this.webChatLoaded = true;
-    } catch (error: any) {
-      console.error('Error initializing Copilot:', error);
-      // Show error message to user
-      if (webchatElement) {
-        const errorMessage = error.message || 'Unknown error occurred';
-        const is404 = errorMessage.includes('404') || errorMessage.includes('not found');
-        
-        webchatElement.innerHTML = `
-          <div style="padding: 20px; text-align: center; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
-            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem; color: #ff6b6b;"></i>
-            <p style="margin: 0; font-weight: 600;">Unable to connect to chat service.</p>
-            <p style="margin: 0.5rem 0 0 0; font-size: 0.875rem; opacity: 0.9;">${errorMessage}</p>
-            ${is404 ? `
-              <div style="margin-top: 1rem; padding: 1rem; background: rgba(255, 255, 255, 0.1); border-radius: 8px; text-align: left; max-width: 100%;">
-                <p style="margin: 0 0 0.5rem 0; font-size: 0.75rem; opacity: 0.9; font-weight: 600;">Possible solutions:</p>
-                <ul style="margin: 0; padding-left: 1.5rem; font-size: 0.75rem; opacity: 0.8; text-align: left;">
-                  <li>Verify the Power Platform endpoint URL is correct</li>
-                  <li>Check if the bot schema name is correct</li>
-                  <li>Create a backend API endpoint to proxy the token request</li>
-                  <li>Ensure CORS is enabled on Power Platform API</li>
-                </ul>
-              </div>
-            ` : ''}
-            <p style="margin: 1rem 0 0 0; font-size: 0.75rem; opacity: 0.6;">Please contact support if the issue persists.</p>
-          </div>
-        `;
-      }
-    }
   }
 
   isRTL(): boolean {
