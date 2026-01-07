@@ -305,8 +305,9 @@ getRequestLog(): Observable<RequestLogEntry[]> {
           id: item.Id || item.id || '',
           requestNumber: item.RequestNumber || item.requestNumber || '',
           serviceId: item.ServiceId || item.serviceId || '',
-          serviceName: item.ServiceName || item.serviceName || 'Unknown Service',
-          serviceNameAr: item.ServiceNameAr || item.serviceNameAr,
+          // Prefer ProcessTemplate fields from API if present, fallback to ServiceName
+          serviceName: item.ProcessTemplate || item.ServiceName || item.serviceName || 'Unknown Service',
+          serviceNameAr: item.ProcessTemplateAr || item.ServiceNameAr || item.serviceNameAr,
           status: mapStatus(item.ExternalStatus || item.externalStatus || item.Status || item.status || 'Draft'),
           submittedAt: item.SubmittedAt || item.submittedAt || now,
           updatedAt: item.UpdatedAt || item.updatedAt || now,

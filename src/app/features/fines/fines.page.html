@@ -43,42 +43,15 @@
         </thead>
 
         <tbody>
-          <tr class="table-row">
-            <td class="fine-number-cell">
-              FINE-001235
-            </td>
-
-            <td class="fine-details-cell">
-              {{ 'common.unknownService' | t }}
-            </td>
-
+          <tr class="table-row" *ngFor="let f of fines">
+            <td class="fine-number-cell">{{ f.fineNumber }}</td>
+            <td class="fine-details-cell">{{ f.detailsKey | t }}</td>
             <td class="fine-amount-cell">
-              1,500 {{ 'common.currency.qar' | t }}
+              {{ f.amount | number }} {{ 'common.currency.qar' | t }}
             </td>
-
             <td class="status-cell">
-              <span class="status-badge sent">
-                {{ 'requestLog.submitted' | t }}
-              </span>
-            </td>
-          </tr>
-
-          <tr class="table-row">
-            <td class="fine-number-cell">
-              FINE-001239
-            </td>
-
-            <td class="fine-details-cell">
-              {{ 'common.unknownService' | t }}
-            </td>
-
-            <td class="fine-amount-cell">
-              750 {{ 'common.currency.qar' | t }}
-            </td>
-
-            <td class="status-cell">
-              <span class="status-badge draft">
-                {{ 'requestLog.draft' | t }}
+              <span class="status-badge" [ngClass]="getStatusClass(f.statusKey)">
+                {{ ('requestLog.' + f.statusKey) | t }}
               </span>
             </td>
           </tr>

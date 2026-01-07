@@ -20,6 +20,7 @@ export class TranslatePipe implements PipeTransform, OnDestroy {
   private injector = inject(Injector);
   private subscription: Subscription | null = null;
   private lastLang: string = '';
+  private reloadAttemptedForLang = new Set<string>();
 
   /**
    * Gets TranslateService lazily
@@ -70,6 +71,25 @@ export class TranslatePipe implements PipeTransform, OnDestroy {
       // If instant returns the key, translations might not be loaded yet
       // Try to access translations directly
       if (translation === key || !translation) {
+        // If we're missing keys (common during dev when JSON changes), force a one-time reload
+        // for the current language so newly-added keys can resolve without a hard refresh.
+        if (currentLang && !this.reloadAttemptedForLang.has(currentLang)) {
+          this.reloadAttemptedForLang.add(currentLang);
+          try {
+            // reloadLang exists in ngx-translate and re-fetches the JSON file
+            (translateService as any).reloadLang?.(currentLang)?.subscribe?.({
+              next: () => {
+                this.lastLang = '';
+              },
+              error: () => {
+                // ignore
+              }
+            });
+          } catch {
+            // ignore
+          }
+        }
+
         try {
           const translations = (translateService as any).translations;
           if (translations && currentLang && translations[currentLang]) {

@@ -41,42 +41,13 @@
         </thead>
 
         <tbody>
-          <tr class="table-row">
-            <td class="case-number-cell">
-              CASE-000245
-            </td>
-
-            <td class="case-type-cell">
-              {{ 'common.unknownService' | t }}
-            </td>
-
-            <td class="case-category-cell">
-              {{ 'common.unknownService' | t }}
-            </td>
-
+          <tr class="table-row" *ngFor="let c of cases">
+            <td class="case-number-cell">{{ c.caseNumber }}</td>
+            <td class="case-type-cell">{{ c.caseTypeKey | t }}</td>
+            <td class="case-category-cell">{{ c.caseCategoryKey | t }}</td>
             <td class="status-cell">
-              <span class="status-badge sent">
-                {{ 'requestLog.submitted' | t }}
-              </span>
-            </td>
-          </tr>
-
-          <tr class="table-row">
-            <td class="case-number-cell">
-              CASE-000251
-            </td>
-
-            <td class="case-type-cell">
-              {{ 'common.unknownService' | t }}
-            </td>
-
-            <td class="case-category-cell">
-              {{ 'common.unknownService' | t }}
-            </td>
-
-            <td class="status-cell">
-              <span class="status-badge draft">
-                {{ 'requestLog.draft' | t }}
+              <span class="status-badge" [ngClass]="getStatusClass(c.statusKey)">
+                {{ ('requestLog.' + c.statusKey) | t }}
               </span>
             </td>
           </tr>

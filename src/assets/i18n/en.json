@@ -569,14 +569,23 @@
     "fineNumber": "Fine Number",
     "fineDetails": "Fine Details",
     "fineAmount": "Fine Amount",
-    "status": "Status"
+    "status": "Status",
+    "demoDetails": {
+      "lateSubmission": "Late submission of Commercial License Application",
+      "missingDocument": "Missing document in Trade License Renewal",
+      "safetyNonCompliance": "Non-compliance: Industrial License safety requirements",
+      "complaintResolutionFee": "Complaint resolution fee - Consumer Protection"
+    }
   },
   "cases": {
     "applicationTitle": "Cases",
     "caseNumber": "Case Number",
     "caseType": "Case Type",
     "caseCategory": "Case Category",
-    "status": "Status"
+    "status": "Status",
+    "category": {
+      "licensing": "Licensing"
+    }
   },
   "payment": {
     "paymentSummary": "Payment Summary",

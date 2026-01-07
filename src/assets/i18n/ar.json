@@ -304,14 +304,23 @@
     "fineNumber": "رقم الغرامة",
     "fineDetails": "تفاصيل الغرامة",
     "fineAmount": "قيمة الغرامة",
-    "status": "الحالة"
+    "status": "الحالة",
+    "demoDetails": {
+      "lateSubmission": "التأخر في تقديم طلب الترخيص التجاري",
+      "missingDocument": "نقص مستند في طلب تجديد الترخيص التجاري",
+      "safetyNonCompliance": "عدم الامتثال: متطلبات السلامة لترخيص صناعي",
+      "complaintResolutionFee": "رسوم معالجة الشكوى - حماية المستهلك"
+    }
   },
   "cases": {
     "applicationTitle": "طلباتي",
     "caseNumber": "رقم الطلب",
     "caseType": "نوع الطلب",
     "caseCategory": "تصنيف الطلب",
-    "status": "الحالة"
+    "status": "الحالة",
+    "category": {
+      "licensing": "التراخيص"
+    }
   },
   "serviceDetail": {
     "executionDuration": "مدة التنفيذ",

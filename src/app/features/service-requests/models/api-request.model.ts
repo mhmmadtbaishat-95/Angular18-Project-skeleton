@@ -87,7 +87,6 @@ export interface IDocumentUploadResponse {
   uploadedAt: string;
 }
 
-
 /**
  * Create and Submit Request API Payload
  * Request structure for /Request/CreateAndSubmitRequest endpoint
@@ -125,11 +124,13 @@ export interface ICreateAndSubmitRequestPayload {
  */
 export interface IRequestDocument {
   DocumentName: string;
+  DocumentNameAr?: string; // Arabic document name
   DocumentGuid: string;
   DocumentDescription: string;
   Attachment: string | null;
   pageIndex: number;
   entityName: string | null;
+  ProcessTemplateAr?: string; // Arabic process template
 }
 
 /**
@@ -143,23 +144,23 @@ export interface ICreateAndSubmitRequestResponse {
 }
 
 /**
- * Attachment structure for document upload
+ * Attachment payload used when creating a document
  */
 export interface IAttachment {
-  AttachmentGuid: string; // "00000000-0000-0000-0000-000000000000" for new attachments
+  AttachmentGuid: string; // Empty GUID for new attachments
   MimeType: string;
   FileName: string;
   Size: number;
-  AttachmentBody: string; // Base64 encoded file content
+  AttachmentBody: string; // Base64 without data URI prefix
 }
 
 /**
- * Create Document API Payload
- * Request structure for /Document/CreateDocument endpoint
+ * Create Document API payload
+ * Uses details returned from RequestDocuments in the create-and-submit response
  */
 export interface ICreateDocumentPayload {
   DocumentName: string;
-  DocumentGuid: string; // From RequestDocuments in submit response
+  DocumentGuid: string;
   DocumentDescription: string;
   Attachment: IAttachment;
   pageIndex: number;

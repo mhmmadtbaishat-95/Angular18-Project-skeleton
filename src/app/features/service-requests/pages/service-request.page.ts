@@ -481,10 +481,10 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
     return requestDocuments.map((doc, index) => ({
       id: doc.DocumentGuid,
       name: doc.DocumentName || `Document ${index + 1}`,
-      nameAr: doc.DocumentName || `مستند ${index + 1}`, // Default Arabic name
+      nameAr: doc.DocumentNameAr || doc.DocumentName || `مستند ${index + 1}`, // Use DocumentNameAr if available
       required: true, // All documents from API are required
       description: doc.DocumentDescription || '',
-      descriptionAr: doc.DocumentDescription || '',
+      descriptionAr: doc.ProcessTemplateAr || doc.DocumentDescription || '', // Use ProcessTemplateAr if available
       allowedFormats: ['pdf', 'jpg', 'png', 'doc', 'docx'], // Default formats
       maxSize: 10 * 1024 * 1024 // 10MB default
     }));
