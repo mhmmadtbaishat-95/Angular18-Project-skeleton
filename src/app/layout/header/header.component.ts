@@ -61,23 +61,22 @@ import { ClickOutsideDirective } from '@shared/pipes-directives/click-outside.di
             <!-- Authenticated: Profile Dropdown -->
             <div *ngIf="isAuthenticated()" class="profile-dropdown-container" (clickOutside)="closeProfileDropdown()">
               <button 
-                class="profile-btn" 
+                class="profile-avatar-btn" 
                 type="button" 
                 (click)="toggleProfileDropdown()"
                 [attr.aria-label]="'Profile menu'"
                 [attr.aria-expanded]="isProfileDropdownOpen()"
+                [title]="getDisplayName()"
               >
                 <div class="profile-avatar">
-                  <i class="fas fa-user" aria-hidden="true"></i>
+                  {{ getUserInitial() }}
                 </div>
-                <span class="profile-name">{{ getDisplayName() }}</span>
-                <i class="fas fa-chevron-down profile-chevron" [class.rotated]="isProfileDropdownOpen()"></i>
               </button>
               
               <div *ngIf="isProfileDropdownOpen()" class="profile-dropdown">
                 <div class="profile-dropdown-header">
                   <div class="profile-dropdown-avatar">
-                    <i class="fas fa-user"></i>
+                    {{ getUserInitial() }}
                   </div>
                   <div class="profile-dropdown-info">
                     <div class="profile-dropdown-name">{{ getDisplayName() }}</div>
@@ -192,45 +191,27 @@ import { ClickOutsideDirective } from '@shared/pipes-directives/click-outside.di
       @apply relative;
     }
 
-    .profile-btn {
-      @apply flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-all;
-      @apply text-white text-sm;
+    .profile-avatar-btn {
+      @apply p-0 rounded-full transition-all;
       border: none;
       cursor: pointer;
-      min-width: fit-content;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-avatar-btn:hover {
+      transform: scale(1.1);
     }
 
     .profile-avatar {
       @apply w-8 h-8 rounded-full bg-qatar-maroon flex items-center justify-center;
-      @apply text-white text-xs font-semibold;
+      @apply text-white text-sm font-semibold;
       flex-shrink: 0;
-    }
-    
-    .profile-avatar i {
       font-size: 0.875rem;
-      display: block;
-    }
-
-    .profile-name {
-      @apply hidden md:block;
-      font-size: 0.875rem;
-      max-width: 120px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .profile-chevron {
-      @apply hidden md:block text-xs transition-transform duration-200;
-      font-size: 0.625rem;
-      margin-left: 0.25rem;
-    }
-    
-    /* Show at least the avatar on mobile */
-    @media (max-width: 768px) {
-      .profile-btn {
-        padding: 0.5rem;
-      }
+      font-weight: 600;
+      transition: transform 0.2s ease;
     }
 
     .profile-chevron.rotated {
@@ -248,8 +229,8 @@ import { ClickOutsideDirective } from '@shared/pipes-directives/click-outside.di
     }
 
     .profile-dropdown-avatar {
-      @apply w-12 h-12 rounded-full bg-qatar-maroon flex items-center justify-center;
-      @apply text-white text-lg;
+      @apply w-10 h-10 rounded-full bg-qatar-maroon flex items-center justify-center;
+      @apply text-white text-sm font-semibold;
       flex-shrink: 0;
     }
 
@@ -392,9 +373,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
   getDisplayName(): string {
     const user = this.authService.getCurrentUser();
     if (user) {
-      return `${user.firstName} ${user.lastName}`.trim() || user.username || user.email;
+      // Return firstName (which is the username) or fallback to username/email
+      return user.firstName || user.username || user.email || 'User';
     }
     return 'User';
+  }
+
+  /**
+   * Gets the first letter of the user's name for avatar
+   */
+  getUserInitial(): string {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      const name = user.firstName || user.username || user.email || 'U';
+      return name.charAt(0).toUpperCase();
+    }
+    return 'U';
   }
 
   getCurrentUserEmail(): string {

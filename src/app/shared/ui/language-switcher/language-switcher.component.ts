@@ -21,7 +21,7 @@ export class LanguageSwitcherComponent {
   
   languages = [
     { code: 'en' as SupportedLanguage, label: 'English', flag: '🇺🇸' },
-    { code: 'ar' as SupportedLanguage, label: 'العربية', flag: '🇸🇦' }
+    { code: 'ar' as SupportedLanguage, label: 'العربية', flag: '🇶🇦' }
   ];
 
   get currentLanguage(): SupportedLanguage {

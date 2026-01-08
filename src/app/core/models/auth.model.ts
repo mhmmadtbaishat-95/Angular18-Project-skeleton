@@ -7,6 +7,7 @@ export interface ILoginRequest {
   email: string;
   password: string;
   rememberMe?: boolean;
+  username?: string; // Optional username to be used as firstName
 }
 
 /**

@@ -147,6 +147,36 @@
   @apply text-white font-semibold text-xl mb-4;
 }
 
+.off-plan-question {
+  @apply max-w-md;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(75, 85, 99, 0.3);
+
+  .form-label {
+    @apply text-lg font-semibold;
+    margin-bottom: 0.75rem;
+  }
+
+  .form-input {
+    width: 100%;
+  }
+}
+
+.stage-2-actions {
+  @apply flex flex-row gap-4 items-center;
+  
+  .draft-btn {
+    @apply flex items-center gap-2;
+  }
+  
+  .submit-btn {
+    margin-inline-start: auto;
+  }
+}
+
 .sub-form-navigation {
   @apply flex justify-between items-center gap-4;
 }
@@ -924,6 +954,10 @@
 
   .form-actions {
     @apply flex-col;
+  }
+
+  .stage-2-actions {
+    @apply flex-col gap-3;
   }
 
   .btn {

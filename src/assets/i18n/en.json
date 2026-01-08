@@ -562,7 +562,9 @@
       "expectedDeliveryDate": "Expected Delivery Date",
       "downPaymentPercentage": "Down Payment Percentage (%)",
       "downPaymentPercentagePlaceholder": "Enter down payment percentage"
-    }
+    },
+    "saveDraft": "Save Draft",
+    "draftSaved": "Draft saved successfully"
   },
   "fines": {
     "applicationTitle": "Fine & Violations",

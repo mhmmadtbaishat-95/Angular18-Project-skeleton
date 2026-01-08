@@ -21,7 +21,7 @@ import { environment } from '../../../../environments/environment';
     <div class="chatbot-container" *ngIf="isCopilotEnabled()">
 
       <!-- Chat Window -->
-      <div *ngIf="isOpen()" class="chat-window" [class.rtl]="isRTL()" [class.ltr]="!isRTL()">
+      <div [class.chat-window-hidden]="!isOpen()" class="chat-window" [class.rtl]="isRTL()" [class.ltr]="!isRTL()">
 
         <!-- Chat Header -->
         <div class="chat-header">
@@ -145,6 +145,20 @@ import { environment } from '../../../../environments/environment';
         border: 0.5px solid rgba(255, 255, 255, 0.2);
         background: rgba(22, 22, 24, 0.95);
         z-index: 99999;
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+      }
+
+      .chat-window.chat-window-hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(20px);
+      }
+
+      .chat-window:not(.chat-window-hidden) {
         animation: slideUp 0.3s ease-out;
       }
 

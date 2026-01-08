@@ -65,14 +65,9 @@
               type="text"
               formControlName="username"
               autocomplete="username"
-              required
               class="form-input"
-              [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+              placeholder="{{ 'auth.login.username' | t }}"
             />
-            <p *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
-               class="error-message">
-              {{ 'auth.login.usernameRequired' | t }}
-            </p>
           </div>
 
           <!-- Password Field -->
@@ -109,7 +104,7 @@
           <!-- Continue Button -->
           <button
             type="submit"
-            [disabled]="loginForm.invalid || isLoading"
+            [disabled]="loginForm.get('password')?.invalid || isLoading"
             class="btn-continue"
           >
             <span *ngIf="!isLoading">{{ 'auth.login.continue' | t }}</span>

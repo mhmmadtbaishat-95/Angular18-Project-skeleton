@@ -28,7 +28,7 @@ export class LoginComponent {
     private readonly router: Router
   ) {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
+      username: [''], // Accept any username - no validation required
       password: ['', Validators.required],
       rememberMe: [false]
     });
@@ -52,15 +52,19 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
+    // Only validate password, username can be anything
+    if (this.loginForm.get('password')?.valid) {
       this.isLoading = true;
       this.errorMessage = null;
       
-      // Map username to email for API compatibility
+      const username = this.loginForm.value.username || 'User';
+      
+      // Map username to email for API compatibility and use username as firstName
       const loginData = {
-        email: this.loginForm.value.username,
+        email: username, // Use username as email for demo
         password: this.loginForm.value.password,
-        rememberMe: this.loginForm.value.rememberMe
+        rememberMe: this.loginForm.value.rememberMe,
+        username: username // Pass username to be used as firstName
       };
       
       this.authService.login(loginData).subscribe({
@@ -75,10 +79,8 @@ export class LoginComponent {
         }
       });
     } else {
-      // Mark all fields as touched to show validation errors
-      Object.keys(this.loginForm.controls).forEach(key => {
-        this.loginForm.get(key)?.markAsTouched();
-      });
+      // Mark password field as touched to show validation errors
+      this.loginForm.get('password')?.markAsTouched();
     }
   }
 }

@@ -82,6 +82,13 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   requestGuid: string = ''; // Request GUID from API response
 
   constructor() {
+    // Demo dates - set to future dates for realistic demo
+    const today = new Date();
+    const startSaleDate = new Date(today);
+    startSaleDate.setMonth(today.getMonth() + 2); // 2 months from now
+    const expectedDeliveryDate = new Date(today);
+    expectedDeliveryDate.setFullYear(today.getFullYear() + 2); // 2 years from now
+
     // Pre-populated developer information (read-only, populated dynamically from API)
     this.requestForm = this.fb.group({
       // Developer info (read-only, populated from API)
@@ -91,33 +98,45 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       licenseStatus: [{ value: '', disabled: true }],
       licenseExpirationDate: [{ value: '', disabled: true }],
 
-      // Form A: Project Licenses Request
-      projectName: ['', Validators.required],
-      projectType: ['', Validators.required],
-      area: ['', Validators.required],
-      plotNumber: ['', Validators.required],
-      landArea: ['', Validators.required],
-      numberOfUnits: [''],
-      executionPeriod: ['', Validators.required],
+      // Form A: Project Licenses Request (Pre-populated with demo data)
+      projectName: ['Al Wakra Residential Complex', Validators.required],
+      projectType: [0, Validators.required], // 0 = Residential
+      area: ['Al Wakra', Validators.required],
+      plotNumber: ['1234/2024', Validators.required],
+      landArea: ['5000', Validators.required],
+      numberOfUnits: ['120'],
+      executionPeriod: ['24', Validators.required],
 
-      // Form B: Master Plan & Preliminary Design
-      planType: ['', Validators.required],
-      designStage: ['', Validators.required],
-      numberOfBuildings: ['', Validators.required],
-      numberOfDevelopmentStages: ['', Validators.required],
-      approximateHeight: ['', Validators.required],
+      // Form B: Master Plan & Preliminary Design (Pre-populated with demo data)
+      planType: [0, Validators.required], // 0 = Residential
+      designStage: [1, Validators.required], // 1 = Final
+      numberOfBuildings: ['5', Validators.required],
+      numberOfDevelopmentStages: ['3', Validators.required],
+      approximateHeight: ['12', Validators.required],
 
-      // Form C: Escrow Account
-      isOffPlan: [false],
-      bankName: ['', Validators.required],
-      estimatedProjectValue: ['', Validators.required],
+      // Form C: Escrow Account (optional initially, will be required if isOffPlan is true)
+      // Pre-populated with demo data for showcase
+      isOffPlan: [true], // Set to true by default for demo so Forms C & D are visible
+      bankName: ['Qatar National Bank', ''],
+      estimatedProjectValue: ['15000000', ''], // 15 million QAR
 
-      // Form D: License Application
-      numberOfUnitsForSale: ['', Validators.required],
-      startSaleDate: ['', Validators.required],
-      expectedDeliveryDate: ['', Validators.required],
-      downPaymentPercentage: ['', Validators.required],
+      // Form D: License Application (optional initially, will be required if isOffPlan is true)
+      // Pre-populated with demo data for showcase
+      numberOfUnitsForSale: ['100', ''],
+      startSaleDate: [this.formatDateForInput(startSaleDate), ''],
+      expectedDeliveryDate: [this.formatDateForInput(expectedDeliveryDate), ''],
+      downPaymentPercentage: ['20', ''],
     });
+  }
+
+  /**
+   * Formats date for input[type="date"] (YYYY-MM-DD format)
+   */
+  private formatDateForInput(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   ngOnInit(): void {
@@ -320,6 +339,20 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
             this.requestForm.get(field)?.disable({ emitEvent: false });
           });
         }
+
+        // Initialize toggle based on initial value first
+        // Use setTimeout to ensure form is fully initialized
+        setTimeout(() => {
+          const initialIsOffPlan = this.requestForm.get('isOffPlan')?.value;
+          if (initialIsOffPlan !== undefined) {
+            this.toggleOffPlanForms(initialIsOffPlan);
+          }
+
+          // Subscribe to isOffPlan changes to toggle Form C and D validators
+          this.requestForm.get('isOffPlan')?.valueChanges.subscribe(isOffPlan => {
+            this.toggleOffPlanForms(isOffPlan);
+          });
+        }, 0);
       },
       error: (error) => {
         console.error('Failed to load developer information:', error);
@@ -340,6 +373,50 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
         }
       },
     });
+  }
+
+  /**
+   * Toggles Form C and D validators based on isOffPlan value
+   * If isOffPlan is true, makes forms required; if false, makes them optional
+   */
+  toggleOffPlanForms(isOffPlan: any): void {
+    // Convert string to boolean if needed
+    const isOffPlanBool = isOffPlan === true || isOffPlan === 'true' || isOffPlan === 'True';
+    const formCFields = ['bankName', 'estimatedProjectValue'];
+    const formDFields = ['numberOfUnitsForSale', 'startSaleDate', 'expectedDeliveryDate', 'downPaymentPercentage'];
+    
+    if (isOffPlanBool) {
+      // Make Form C and D fields required
+      formCFields.forEach(field => {
+        this.requestForm.get(field)?.setValidators([Validators.required]);
+        this.requestForm.get(field)?.updateValueAndValidity({ emitEvent: false });
+      });
+      formDFields.forEach(field => {
+        this.requestForm.get(field)?.setValidators([Validators.required]);
+        this.requestForm.get(field)?.updateValueAndValidity({ emitEvent: false });
+      });
+    } else {
+      // Make Form C and D fields optional (clear validators)
+      formCFields.forEach(field => {
+        this.requestForm.get(field)?.clearValidators();
+        this.requestForm.get(field)?.updateValueAndValidity({ emitEvent: false });
+      });
+      formDFields.forEach(field => {
+        this.requestForm.get(field)?.clearValidators();
+        this.requestForm.get(field)?.updateValueAndValidity({ emitEvent: false });
+      });
+    }
+  }
+
+  /**
+   * Handles draft button click (showcase functionality)
+   */
+  onSaveDraft(): void {
+    // Showcase functionality - just show a notification
+    this.notificationService.info(
+      this.translateService.instant('serviceRequest.draftSaved') || 'Draft saved successfully'
+    );
+    console.log('📝 Draft saved (showcase):', this.requestForm.getRawValue());
   }
 
   /**
@@ -476,18 +553,34 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
 
   /**
    * Converts RequestDocuments from API response to IDocumentType format
+   * Only Commercial Registration is required, all others are optional
    */
   private convertRequestDocumentsToDocumentTypes(requestDocuments: IRequestDocument[]): IDocumentType[] {
-    return requestDocuments.map((doc, index) => ({
-      id: doc.DocumentGuid,
-      name: doc.DocumentName || `Document ${index + 1}`,
-      nameAr: doc.DocumentNameAr || doc.DocumentName || `مستند ${index + 1}`, // Use DocumentNameAr if available
-      required: true, // All documents from API are required
-      description: doc.DocumentDescription || '',
-      descriptionAr: doc.ProcessTemplateAr || doc.DocumentDescription || '', // Use ProcessTemplateAr if available
-      allowedFormats: ['pdf', 'jpg', 'png', 'doc', 'docx'], // Default formats
-      maxSize: 10 * 1024 * 1024 // 10MB default
-    }));
+    return requestDocuments.map((doc, index) => {
+      const docName = (doc.DocumentName || '').toLowerCase();
+      const docNameAr = (doc.DocumentNameAr || '').toLowerCase();
+      
+      // Check if this is a commercial registration document
+      // Look for keywords: commercial, registration, certificate, trade license, company registration
+      const isCommercialRegistration = 
+        docName.includes('commercial') && (docName.includes('registration') || docName.includes('certificate')) ||
+        docName.includes('trade') && docName.includes('license') ||
+        docName.includes('company') && docName.includes('registration') ||
+        docNameAr.includes('تجاري') && (docNameAr.includes('قيد') || docNameAr.includes('شهادة')) ||
+        docNameAr.includes('ترخيص') && docNameAr.includes('تجاري') ||
+        docNameAr.includes('شركة') && docNameAr.includes('قيد');
+      
+      return {
+        id: doc.DocumentGuid,
+        name: doc.DocumentName || `Document ${index + 1}`,
+        nameAr: doc.DocumentNameAr || doc.DocumentName || `مستند ${index + 1}`, // Use DocumentNameAr if available
+        required: isCommercialRegistration, // Only commercial registration is required
+        description: doc.DocumentDescription || '',
+        descriptionAr: doc.ProcessTemplateAr || doc.DocumentDescription || '', // Use ProcessTemplateAr if available
+        allowedFormats: ['pdf', 'jpg', 'png', 'doc', 'docx'], // Default formats
+        maxSize: 10 * 1024 * 1024 // 10MB default
+      };
+    });
   }
 
   /**
@@ -501,6 +594,9 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       this.goToStep(1);
     } else if (this.currentStepIndex === 1) {
       // Project forms step - validate all forms before submitting
+      const isOffPlan = this.isOffPlanSelected();
+      
+      // Always required fields (Forms A and B)
       const projectFormFields = [
         'projectName',
         'projectType',
@@ -513,13 +609,19 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
         'numberOfBuildings',
         'numberOfDevelopmentStages',
         'approximateHeight',
-        'bankName',
-        'estimatedProjectValue',
-        'numberOfUnitsForSale',
-        'startSaleDate',
-        'expectedDeliveryDate',
-        'downPaymentPercentage',
       ];
+
+      // Add Form C and D fields only if isOffPlan is true
+      if (isOffPlan) {
+        projectFormFields.push(
+          'bankName',
+          'estimatedProjectValue',
+          'numberOfUnitsForSale',
+          'startSaleDate',
+          'expectedDeliveryDate',
+          'downPaymentPercentage'
+        );
+      }
 
       // Mark all project form fields as touched
       projectFormFields.forEach((field) => {
@@ -638,6 +740,15 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    */
   isProjectFormsStep(): boolean {
     return this.currentStepIndex === 1;
+  }
+
+  /**
+   * Checks if off-plan is selected (converts string to boolean)
+   */
+  isOffPlanSelected(): boolean {
+    const value = this.requestForm.get('isOffPlan')?.value;
+    // Handle both boolean and string values from select
+    return value === true || value === 'true' || value === 'True';
   }
 
   /**
@@ -1100,6 +1211,21 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       month: 'long',
       day: 'numeric',
     });
+  }
+
+  /**
+   * Formats date as YYYY-MM-DD (year-month-day only)
+   * Used for readonly fields like license expiration date
+   */
+  formatDateShort(dateString: string): string {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return dateString; // Return original if invalid date
+    
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   /**

@@ -75,7 +75,8 @@
                   <div class="form-group">
                     <label for="licenseExpirationDate" class="form-label">{{ 'serviceRequest.licenseExpirationDate' | t
                       }}</label>
-                    <input type="text" id="licenseExpirationDate" formControlName="licenseExpirationDate"
+                    <input type="text" id="licenseExpirationDate" 
+                      [value]="formatDateShort(requestForm.get('licenseExpirationDate')?.value || '')"
                       class="form-input readonly-input" readonly />
                   </div>
                 </div>
@@ -284,13 +285,26 @@
               </div>
             </div>
 
-            <!-- Form C: Escrow Account -->
+            <!-- Off-Plan Question (Above Forms C and D) -->
             <div class="sub-form-content">
+              <div class="form-section">
+                <div class="form-group off-plan-question">
+                  <label class="form-label" for="isOffPlan">{{ 'serviceRequest.formC.isOffPlan' | t }}</label>
+                  <select id="isOffPlan" formControlName="isOffPlan" class="form-input"
+                    [class.error]="requestForm.get('isOffPlan')?.invalid && requestForm.get('isOffPlan')?.touched">
+                    <option [value]="false">{{ 'serviceRequest.formC.no' | t }}</option>
+                    <option [value]="true">{{ 'serviceRequest.formC.yes' | t }}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form C: Escrow Account (Conditional - shown only if isOffPlan is true) -->
+            <div *ngIf="isOffPlanSelected()" class="sub-form-content">
               <h3 class="sub-form-title">{{ 'serviceRequest.formC.title' | t }}</h3>
               <div class="form-section">
                 <div class="form-grid">
                   <div class="form-column">
-
                     <div class="form-group">
                       <label for="bankName" class="form-label">{{ 'serviceRequest.formC.bankName' | t }}</label>
                       <input type="text" id="bankName" formControlName="bankName" class="form-input"
@@ -301,20 +315,6 @@
                         {{ getFieldError('bankName') }}
                       </span>
                     </div>
-                    <div class="form-group">
-                      <label class="form-label" for="isOffPlan">{{ 'serviceRequest.formC.isOffPlan' | t }}</label>
-                      <select id="isOffPlan" formControlName="isOffPlan" class="form-input"
-                        [class.error]="requestForm.get('isOffPlan')?.invalid && requestForm.get('isOffPlan')?.touched">
-                        <option [value]="true">{{ 'serviceRequest.formC.yes' | t }}</option>
-                        <option [value]="false">{{ 'serviceRequest.formC.no' | t }}</option>
-                      </select>
-                    </div>
-                    <!-- <div class="form-group">
-                      <label class="form-label checkbox-label">
-                        <input type="checkbox" id="isOffPlan" formControlName="isOffPlan" class="form-checkbox" />
-                        <span>{{ 'serviceRequest.formC.isOffPlan' | t }}</span>
-                      </label>
-                    </div> -->
                   </div>
 
                   <div class="form-column">
@@ -336,8 +336,8 @@
               </div>
             </div>
 
-            <!-- Form D: License Application -->
-            <div class="sub-form-content">
+            <!-- Form D: License Application (Conditional - shown only if isOffPlan is true) -->
+            <div *ngIf="isOffPlanSelected()" class="sub-form-content">
               <h3 class="sub-form-title">{{ 'serviceRequest.formD.title' | t }}</h3>
               <div class="form-section">
                 <div class="form-grid">
@@ -522,15 +522,24 @@
               </svg>
             </button>
 
-            <!-- Submit Button on Stage 2 (Project Information) -->
-            <button *ngIf="currentStepIndex === 1" type="button" (click)="nextStep()" class="btn btn-primary submit-btn"
-              [disabled]="isLoading">
-              <span *ngIf="!isLoading">{{ 'common.submit' | t }}</span>
-              <span *ngIf="isLoading">{{ 'common.loading' | t }}</span>
-              <svg *ngIf="!isLoading" class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-            </button>
+            <!-- Draft and Submit Buttons on Stage 2 (Project Information) -->
+            <div *ngIf="currentStepIndex === 1" class="stage-2-actions">
+              <button type="button" (click)="onSaveDraft()" class="btn btn-secondary draft-btn">
+                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                </svg>
+                <span>{{ 'serviceRequest.saveDraft' | t }}</span>
+              </button>
+              
+              <button type="button" (click)="nextStep()" class="btn btn-primary submit-btn"
+                [disabled]="isLoading">
+                <span *ngIf="!isLoading">{{ 'common.submit' | t }}</span>
+                <span *ngIf="isLoading">{{ 'common.loading' | t }}</span>
+                <svg *ngIf="!isLoading" class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              </button>
+            </div>
 
             <!-- Complete Button on Documents Step -->
             <button *ngIf="currentStepIndex === 2" type="button" (click)="nextStep()"

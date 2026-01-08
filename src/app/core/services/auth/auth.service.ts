@@ -71,13 +71,10 @@ export class AuthService {
     const accessToken = this.tokenService.getAccessToken();
     const refreshToken = this.tokenService.getRefreshToken();
 
-    // Check if this is a simulation user (for development/testing)
-    const isSimulationUser = user?.email === 'mohammad.tubishat@pwc.com';
-
+    // For demo purposes, accept any user with valid token
     if (user && accessToken) {
-      // For simulation users, skip token expiration check
-      // For real users, check if token is expired
-      const isTokenValid = isSimulationUser || !this.tokenService.isAccessTokenExpired();
+      // Skip token expiration check for demo
+      const isTokenValid = true;
       
       if (isTokenValid) {
         this.updateAuthState({
@@ -88,9 +85,7 @@ export class AuthService {
           isLoading: false,
           error: null
         });
-        if (!isSimulationUser) {
-          this.refreshTokenService.startAutoRefresh();
-        }
+        // Skip auto refresh for demo
       } else {
         this.clearAuth();
       }
@@ -123,41 +118,29 @@ export class AuthService {
   login(credentials: ILoginRequest): Observable<IAuthResponse> {
     this.updateAuthState({ isLoading: true, error: null });
 
-    // Simulation mode: Check if email matches the simulation user
-    if (credentials.email === 'mohammad.tubishat@pwc.com' || 
-        credentials.email.toLowerCase() === 'mohammad.tubishat@pwc.com') {
-      return this.simulateLogin(credentials.rememberMe);
-    }
-
-    const url = `${environment.apiUrl}${ENDPOINTS.AUTH.LOGIN}`;
-
-    return this.http.post<IApiResponse<IAuthResponse>>(url, credentials).pipe(
-      map((response) => response.data),
-      tap((authResponse) => {
-        this.handleAuthSuccess(authResponse, credentials.rememberMe);
-      }),
-      catchError((error) => {
-        this.updateAuthState({
-          isLoading: false,
-          error: error.message || 'Login failed'
-        });
-        return throwError(() => new AuthenticationError(error.message));
-      })
-    );
+    // Simulation mode: Accept any username/password for demo
+    // For demo purposes, accept any login
+    return this.simulateLogin(credentials.rememberMe, credentials);
   }
 
   /**
    * Simulates login for development/testing purposes
    * Stores user data in local storage
    * @param rememberMe - Whether to remember the user
+   * @param credentials - Login credentials (includes username)
    * @private
    */
-  private simulateLogin(rememberMe: boolean = false): Observable<IAuthResponse> {
+  private simulateLogin(rememberMe: boolean = false, credentials?: ILoginRequest): Observable<IAuthResponse> {
+    // Use username from credentials as firstName, or default to email
+    const username = credentials?.username || credentials?.email || 'User';
+    const firstName = username.split(' ')[0] || username; // Get first word or use full username
+    const lastName = username.split(' ').slice(1).join(' ') || ''; // Get remaining words as lastName
+    
     // Generate mock tokens (simple base64 encoded strings for simulation)
     const mockAccessToken = btoa(JSON.stringify({
       sub: 'user-123',
-      email: 'mohammad.tubishat@pwc.com',
-      username: 'Mohammad Tubishat',
+      email: credentials?.email || username,
+      username: username,
       role: UserRole.USER,
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
@@ -169,13 +152,13 @@ export class AuthService {
       exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60) // 7 days
     }));
 
-    // Create mock user object
+    // Create mock user object with username as firstName
     const mockUser: IUser = {
       id: 'user-123',
-      email: 'mohammad.tubishat@pwc.com',
-      username: 'Mohammad Tubishat',
-      firstName: 'Mohammad',
-      lastName: 'Tubishat',
+      email: credentials?.email || username,
+      username: username,
+      firstName: firstName,
+      lastName: lastName,
       role: UserRole.USER,
       isActive: true,
       isEmailVerified: true,
@@ -289,20 +272,14 @@ export class AuthService {
   logout(): Observable<void> {
     this.updateAuthState({ isLoading: true });
 
-    // Check if user is from simulation (check email in stored user)
-    const currentUser = this.getCurrentUser();
-    const isSimulation = currentUser?.email === 'mohammad.tubishat@pwc.com';
-
-    if (isSimulation) {
-      // Simulate logout for development
-      return of(void 0).pipe(
-        delay(200),
-        tap(() => {
-          this.clearAuth();
-          this.router.navigate(['/auth/login']);
-        })
-      );
-    }
+    // For demo purposes, always simulate logout
+    return of(void 0).pipe(
+      delay(200),
+      tap(() => {
+        this.clearAuth();
+        this.router.navigate(['/auth/login']);
+      })
+    );
 
     const url = `${environment.apiUrl}${ENDPOINTS.AUTH.LOGOUT}`;
 
@@ -370,16 +347,8 @@ export class AuthService {
       return false;
     }
     
-    // Check if this is a simulation user (for development/testing)
-    const isSimulationUser = state.user?.email === 'mohammad.tubishat@pwc.com';
-    
-    // For simulation users, skip token expiration check
-    if (isSimulationUser) {
-      return true;
-    }
-    
-    // For real users, check if token is expired
-    return !this.tokenService.isAccessTokenExpired();
+    // For demo purposes, skip token expiration check
+    return true;
   }
 
   /**

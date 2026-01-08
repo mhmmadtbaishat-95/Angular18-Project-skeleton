@@ -582,7 +582,9 @@
       "expectedDeliveryDate": "تاريخ التسليم المتوقع",
       "downPaymentPercentage": "نسبة الدفعة الأولى (%)",
       "downPaymentPercentagePlaceholder": "أدخل نسبة الدفعة الأولى"
-    }
+    },
+    "saveDraft": "حفظ كمسودة",
+    "draftSaved": "تم حفظ المسودة بنجاح"
   },
   "payment": {
     "paymentSummary": "ملخص الدفع",
