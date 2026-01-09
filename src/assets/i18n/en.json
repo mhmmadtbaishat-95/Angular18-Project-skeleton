@@ -530,6 +530,14 @@
     "replace": "Replace",
     "upload": "Upload",
     "maxSize": "Max Size",
+    "aiAnalysis": "AI Analysis",
+    "aiSummary": "AI Summary",
+    "aiWarnings": "AI Warnings",
+    "aiExtractedData": "Extracted Data",
+    "aiProcessing": "Processing document with AI OCR...",
+    "aiStep1": "Uploading document",
+    "aiStep2": "Extracting text and data",
+    "aiStep3": "Analyzing content",
     "status": "Status",
     "submittedAt": "Submitted At",
     "message": "Message",
@@ -599,7 +607,10 @@
       "loading": "Loading map...",
       "loadingHint": "If the map doesn't load, please refresh the page",
       "error": "Map failed to load. Please check your Mapbox token or internet connection.",
-      "instructions": "Click anywhere on the map to select a location, or drag the marker to adjust the position"
+      "instructions": "Click anywhere on the map to select a location, or drag the marker to adjust the position",
+      "selectFromMap": "Select from Map",
+      "locationSelected": "Location selected successfully",
+      "selectFromMapHint": "Select location from map to auto-fill this field"
     },
     "formC": {
       "title": "C - Escrow Account",

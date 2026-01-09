@@ -112,24 +112,25 @@
                     </div>
 
                     <div class="form-group">
-                      <label for="area" class="form-label">{{ 'serviceRequest.formA.area' | t }}</label>
-                      <input type="text" id="area" formControlName="area" class="form-input"
-                        [class.error]="requestForm.get('area')?.invalid && requestForm.get('area')?.touched"
-                        placeholder="{{ 'serviceRequest.formA.areaPlaceholder' | t }}" />
-                      <span *ngIf="requestForm.get('area')?.invalid && requestForm.get('area')?.touched"
+                      <label for="projectType" class="form-label">{{ 'serviceRequest.formA.projectType' | t }}</label>
+                      <select id="projectType" formControlName="projectType" class="form-input"
+                        [class.error]="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched">
+                        <option value="" disabled>
+                          {{ 'serviceRequest.formA.projectTypePlaceholder' | t }}
+                        </option>
+                        <option *ngFor="let project of [
+    { value: 0, labelEn: 'Residential', labelAr: 'سكني' },
+    { value: 1, labelEn: 'Commercial', labelAr: 'تجاري' },
+    { value: 3, labelEn: 'Tourist', labelAr: 'اداري' },
+    { value: 2, labelEn: 'Industrial', labelAr: 'سكني استثماري' },
+    { value: 4, labelEn: 'Other', labelAr: 'أخرى' }
+  ]" [value]="project.value">
+                          {{ isRTL() ? project.labelAr : project.labelEn }}
+                        </option>
+                      </select>
+                      <span *ngIf="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched"
                         class="error-message">
-                        {{ getFieldError('area') }}
-                      </span>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="plotNumber" class="form-label">{{ 'serviceRequest.formA.plotNumber' | t }}</label>
-                      <input type="text" id="plotNumber" formControlName="plotNumber" class="form-input"
-                        [class.error]="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
-                        placeholder="{{ 'serviceRequest.formA.plotNumberPlaceholder' | t }}" />
-                      <span *ngIf="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
-                        class="error-message">
-                        {{ getFieldError('plotNumber') }}
+                        {{ getFieldError('projectType') }}
                       </span>
                     </div>
 
@@ -166,33 +167,46 @@
                   </div>
 
                   <div class="form-column">
-                    <div class="form-group">
-                      <label for="projectType" class="form-label">{{ 'serviceRequest.formA.projectType' | t }}</label>
-                      <select id="projectType" formControlName="projectType" class="form-input"
-                        [class.error]="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched">
-                        <option value="" disabled>
-                          {{ 'serviceRequest.formA.projectTypePlaceholder' | t }}
-                        </option>
-                        <option *ngFor="let project of [
-    { value: 0, labelEn: 'Residential', labelAr: 'سكني' },
-    { value: 1, labelEn: 'Commercial', labelAr: 'تجاري' },
-    { value: 3, labelEn: 'Tourist', labelAr: 'اداري' },
-    { value: 2, labelEn: 'Industrial', labelAr: 'سكني استثماري' },
-    { value: 4, labelEn: 'Other', labelAr: 'أخرى' }
-  ]" [value]="project.value">
-                          {{ isRTL() ? project.labelAr : project.labelEn }}
-                        </option>
-
-                      </select>
-                      <span *ngIf="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched"
-                        class="error-message">
-                        {{ getFieldError('projectType') }}
-                      </span>
+                    <!-- Map Selector Button -->
+                    <div class="form-group map-selector-wrapper">
+                      <label class="form-label">{{ 'serviceRequest.mapSelector.title' | t }}</label>
+                      <button type="button" class="map-select-btn" (click)="openMapModal()">
+                        <i class="fas fa-map-marker-alt"></i>
+                        {{ 'serviceRequest.mapSelector.selectFromMap' | t }}
+                      </button>
+                      <div *ngIf="requestForm.get('area')?.value || requestForm.get('plotNumber')?.value" class="selected-location-info">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="location-details">
+                          <span *ngIf="requestForm.get('area')?.value" class="location-area">{{ requestForm.get('area')?.value }}</span>
+                          <span *ngIf="requestForm.get('plotNumber')?.value" class="location-plot">{{ 'serviceRequest.formA.plotNumber' | t }}: {{ requestForm.get('plotNumber')?.value }}</span>
+                        </div>
+                      </div>
                     </div>
 
-                    <!-- Map Selector for Land Location -->
-                    <div class="form-group map-selector-group">
-                      <app-map-selector (landSelected)="onLandSelected($event)"></app-map-selector>
+                    <div class="form-group">
+                      <label for="area" class="form-label">{{ 'serviceRequest.formA.area' | t }}</label>
+                      <input type="text" id="area" formControlName="area" class="form-input"
+                        [class.error]="requestForm.get('area')?.invalid && requestForm.get('area')?.touched"
+                        placeholder="{{ 'serviceRequest.formA.areaPlaceholder' | t }}"
+                        [readonly]="true" />
+                      <span *ngIf="requestForm.get('area')?.invalid && requestForm.get('area')?.touched"
+                        class="error-message">
+                        {{ getFieldError('area') }}
+                      </span>
+                      <small class="field-hint">{{ 'serviceRequest.mapSelector.selectFromMapHint' | t }}</small>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="plotNumber" class="form-label">{{ 'serviceRequest.formA.plotNumber' | t }}</label>
+                      <input type="text" id="plotNumber" formControlName="plotNumber" class="form-input"
+                        [class.error]="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
+                        placeholder="{{ 'serviceRequest.formA.plotNumberPlaceholder' | t }}"
+                        [readonly]="true" />
+                      <span *ngIf="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
+                        class="error-message">
+                        {{ getFieldError('plotNumber') }}
+                      </span>
+                      <small class="field-hint">{{ 'serviceRequest.mapSelector.selectFromMapHint' | t }}</small>
                     </div>
                   </div>
                 </div>
@@ -437,6 +451,77 @@
                           </svg>
                         </button>
                       </div>
+
+                      <!-- OCR/AI Processing Loader -->
+                      <div *ngIf="getUploadedDocument(docType.id) && isDocumentAnalysisLoading(docType.id)" class="ai-processing-loader">
+                        <div class="loader-content">
+                          <div class="loader-spinner">
+                            <div class="spinner-ring"></div>
+                            <div class="spinner-ring"></div>
+                            <div class="spinner-ring"></div>
+                          </div>
+                          <div class="loader-text">
+                            <i class="fas fa-eye"></i>
+                            <span>{{ 'serviceRequest.aiProcessing' | t }}</span>
+                          </div>
+                          <div class="loader-steps">
+                            <div class="loader-step active">
+                              <i class="fas fa-check-circle"></i>
+                              <span>{{ 'serviceRequest.aiStep1' | t }}</span>
+                            </div>
+                            <div class="loader-step active">
+                              <i class="fas fa-spinner fa-spin"></i>
+                              <span>{{ 'serviceRequest.aiStep2' | t }}</span>
+                            </div>
+                            <div class="loader-step">
+                              <i class="fas fa-circle"></i>
+                              <span>{{ 'serviceRequest.aiStep3' | t }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- AI Analysis Section -->
+                      <div *ngIf="getUploadedDocument(docType.id) && getDocumentAnalysis(docType.id)" class="ai-analysis-section">
+                        <div class="ai-header">
+                          <i class="fas fa-robot ai-icon"></i>
+                          <span class="ai-title">{{ 'serviceRequest.aiAnalysis' | t }}</span>
+                        </div>
+                        
+                        <!-- AI Summary -->
+                        <div class="ai-summary">
+                          <div class="ai-summary-label">{{ 'serviceRequest.aiSummary' | t }}:</div>
+                          <div class="ai-summary-text">{{ getDocumentAnalysis(docType.id)?.summary }}</div>
+                        </div>
+
+                        <!-- Extracted Data -->
+                        <div *ngIf="getDocumentAnalysis(docType.id)?.extractedData" class="ai-extracted-data">
+                          <div class="ai-extracted-label">
+                            <i class="fas fa-database"></i>
+                            {{ 'serviceRequest.aiExtractedData' | t }}:
+                          </div>
+                          <div class="ai-extracted-items">
+                            <div *ngFor="let item of getExtractedDataItems(docType.id)" class="ai-extracted-item">
+                              <span class="extracted-key">{{ item.key }}:</span>
+                              <span class="extracted-value">{{ item.value }}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- AI Warnings -->
+                        <div *ngIf="getDocumentAnalysis(docType.id)?.warnings && getDocumentAnalysis(docType.id)!.warnings.length > 0" class="ai-warnings">
+                          <div class="ai-warnings-label">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            {{ 'serviceRequest.aiWarnings' | t }}:
+                          </div>
+                          <ul class="ai-warnings-list">
+                            <li *ngFor="let warning of getDocumentAnalysis(docType.id)!.warnings" class="ai-warning-item">
+                              <i class="fas fa-exclamation-circle"></i>
+                              <span>{{ warning }}</span>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
                     </div>
                     <div class="document-upload-action">
                       <input type="file" 
@@ -611,6 +696,29 @@
       <button type="button" class="eligibility-btn" (click)="closeEligibilityModal()">
         {{ 'common.close' | t }}
       </button>
+    </div>
+  </div>
+
+  <!-- Map Modal -->
+  <div *ngIf="showMapModal" class="map-modal-overlay" (click)="closeMapModal()">
+    <div class="map-modal-content" (click)="$event.stopPropagation()" [dir]="isRTL() ? 'rtl' : 'ltr'">
+      <div class="map-modal-header">
+        <h3 class="map-modal-title">{{ 'serviceRequest.mapSelector.title' | t }}</h3>
+        <button type="button" class="map-modal-close" (click)="closeMapModal()" aria-label="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="map-modal-body">
+        <app-map-selector (landSelected)="onLandSelectedFromModal($event)"></app-map-selector>
+      </div>
+      <div class="map-modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeMapModal()">
+          {{ 'common.cancel' | t }}
+        </button>
+        <button type="button" class="btn btn-primary" (click)="confirmMapSelection()" [disabled]="!pendingLandDetails">
+          {{ 'common.confirm' | t }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

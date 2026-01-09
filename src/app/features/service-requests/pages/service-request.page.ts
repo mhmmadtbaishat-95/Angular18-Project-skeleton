@@ -83,6 +83,49 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   requestDocuments: IRequestDocument[] = []; // Documents from API response for stage 3
   requestGuid: string = ''; // Request GUID from API response
 
+  // Map modal properties
+  showMapModal = false;
+  pendingLandDetails: LandDetails | null = null;
+
+  // AI Document Analysis properties
+  documentAnalysis: Map<string, {
+    summary: string;
+    warnings: string[];
+    extractedData?: any;
+  }> = new Map();
+  
+  // Track AI analysis loading state for each document
+  documentAnalysisLoading: Map<string, boolean> = new Map();
+
+  // Static OCR extracted data (pre-defined JSON)
+  private staticExtractedData: Map<string, any> = new Map([
+    // License documents
+    ['license', {
+      licenseNumber: 'LIC-2024-001234',
+      issueDate: '15 يناير 2022',
+      expiryDate: '31 ديسمبر 2024',
+      licenseStatus: 'Expired',
+      licenseHolder: 'شركة قطر للتطوير العقاري',
+      licenseHolderEn: 'Qatar Real Estate Development Company'
+    }],
+    // Plan documents
+    ['plan', {
+      plotArea: '2500 m²',
+      coordinates: { lat: '25.2854', lng: '51.5310' },
+      zone: 'المنطقة السكنية',
+      zoneEn: 'Residential Zone',
+      approvalDate: '20 يونيو 2023'
+    }],
+    // Building permit documents
+    ['permit', {
+      permitNumber: 'BP-2024-56789',
+      buildingHeight: '18 meters',
+      numberOfFloors: 6,
+      issueDate: '10 يناير 2024',
+      validUntil: '10 يناير 2026'
+    }]
+  ]);
+
   constructor() {
     // Demo dates - set to future dates for realistic demo
     const today = new Date();
@@ -100,33 +143,31 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       licenseStatus: [{ value: '', disabled: true }],
       licenseExpirationDate: [{ value: '', disabled: true }],
 
-      // Form A: Project Licenses Request (Pre-populated with demo data in Arabic)
-      projectName: ['مجمع الوكرة السكني', Validators.required],
-      projectType: [0, Validators.required], // 0 = Residential
-      area: ['الوكرة', Validators.required],
-      plotNumber: ['1234/2024', Validators.required],
-      landArea: ['5000', Validators.required],
-      numberOfUnits: ['120'],
-      executionPeriod: ['24', Validators.required],
+      // Form A: Project Licenses Request (No pre-populated data)
+      projectName: ['', Validators.required],
+      projectType: ['', Validators.required],
+      area: ['', Validators.required],
+      plotNumber: ['', Validators.required], // Will be populated only after map selection
+      landArea: ['', Validators.required],
+      numberOfUnits: [''],
+      executionPeriod: ['', Validators.required],
 
-      // Form B: Master Plan & Preliminary Design (Pre-populated with demo data)
-      designStage: [1, Validators.required], // 1 = Final
-      numberOfBuildings: ['5', Validators.required],
-      numberOfDevelopmentStages: ['3', Validators.required],
-      approximateHeight: ['12', Validators.required],
+      // Form B: Master Plan & Preliminary Design
+      designStage: ['', Validators.required],
+      numberOfBuildings: ['', Validators.required],
+      numberOfDevelopmentStages: ['', Validators.required],
+      approximateHeight: ['', Validators.required],
 
       // Form C: Escrow Account (optional initially, will be required if isOffPlan is true)
-      // Pre-populated with demo data for showcase in Arabic
-      isOffPlan: [true], // Set to true by default for demo so Forms C & D are visible
-      bankName: ['البنك الوطني القطري', ''],
-      estimatedProjectValue: ['15000000', ''], // 15 million QAR
+      isOffPlan: [false],
+      bankName: ['', ''],
+      estimatedProjectValue: ['', ''],
 
       // Form D: License Application (optional initially, will be required if isOffPlan is true)
-      // Pre-populated with demo data for showcase
-      numberOfUnitsForSale: ['100', ''],
-      startSaleDate: [this.formatDateForInput(startSaleDate), ''],
-      expectedDeliveryDate: [this.formatDateForInput(expectedDeliveryDate), ''],
-      downPaymentPercentage: ['20', ''],
+      numberOfUnitsForSale: ['', ''],
+      startSaleDate: ['', ''],
+      expectedDeliveryDate: ['', ''],
+      downPaymentPercentage: ['', ''],
     });
   }
 
@@ -134,15 +175,49 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    * Formats date for input[type="date"] (YYYY-MM-DD format)
    */
   /**
-   * Handle land selection from map
+   * Opens map modal
+   */
+  openMapModal(): void {
+    this.showMapModal = true;
+  }
+
+  /**
+   * Closes map modal
+   */
+  closeMapModal(): void {
+    this.showMapModal = false;
+    this.pendingLandDetails = null;
+  }
+
+  /**
+   * Handle land selection from map in modal
+   */
+  onLandSelectedFromModal(landDetails: LandDetails): void {
+    this.pendingLandDetails = landDetails;
+  }
+
+  /**
+   * Confirms map selection and updates form
+   */
+  confirmMapSelection(): void {
+    if (this.pendingLandDetails) {
+      this.requestForm.patchValue({
+        area: this.pendingLandDetails.area,
+        plotNumber: this.pendingLandDetails.plotNumber,
+      }, { emitEvent: false });
+      this.notificationService.success(
+        this.translateService.instant('serviceRequest.mapSelector.locationSelected')
+      );
+    }
+    this.closeMapModal();
+  }
+
+  /**
+   * Handle land selection from map (legacy - kept for compatibility)
    */
   onLandSelected(landDetails: LandDetails): void {
-    // Update form fields with selected land details
-    this.requestForm.patchValue({
-      area: landDetails.area,
-      plotNumber: landDetails.plotNumber,
-      // You can add more fields here if needed
-    }, { emitEvent: false });
+    // This is called from modal, so we just store it
+    this.pendingLandDetails = landDetails;
   }
 
   private formatDateForInput(date: Date): string {
@@ -1008,6 +1083,9 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
             this.translateService.instant('serviceRequest.documentUploadedSuccessfully')
           );
           console.log('✅ Document uploaded successfully:', response);
+          
+          // Perform AI analysis on uploaded document
+          this.analyzeDocument(uploadedDoc.documentTypeId, file, requestDocument);
         },
         error: (error) => {
           uploadedDoc.uploadProgress = 0;
@@ -1088,6 +1166,275 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    */
   getDocumentDescription(documentType: IDocumentType): string {
     return this.isRTL() ? (documentType.descriptionAr || '') : (documentType.description || '');
+  }
+
+  /**
+   * Performs AI analysis on uploaded document (static/mock analysis)
+   */
+  private analyzeDocument(documentTypeId: string, file: File, requestDocument: IRequestDocument): void {
+    // Set loading state
+    this.documentAnalysisLoading.set(documentTypeId, true);
+    
+    // Simulate OCR/AI processing delay (2-3 seconds to feel realistic)
+    const processingTime = 2500;
+    setTimeout(() => {
+      const analysis = this.generateMockAIAnalysis(documentTypeId, file, requestDocument);
+      this.documentAnalysis.set(documentTypeId, analysis);
+      this.documentAnalysisLoading.set(documentTypeId, false);
+    }, processingTime);
+  }
+
+  /**
+   * Checks if AI analysis is loading for a document
+   */
+  isDocumentAnalysisLoading(documentTypeId: string): boolean {
+    return this.documentAnalysisLoading.get(documentTypeId) || false;
+  }
+
+  /**
+   * Generates mock AI analysis for document (static data from pre-defined JSON)
+   */
+  private generateMockAIAnalysis(documentTypeId: string, file: File, requestDocument: IRequestDocument): {
+    summary: string;
+    warnings: string[];
+    extractedData?: any;
+  } {
+    const docName = requestDocument.DocumentName || '';
+    
+    // Determine document type key
+    let docTypeKey = 'generic';
+    const docNameLower = docName.toLowerCase();
+    if (docNameLower.includes('license') || docNameLower.includes('ترخيص') || docNameLower.includes('lic')) {
+      docTypeKey = 'license';
+    } else if (docNameLower.includes('plan') || docNameLower.includes('مخطط')) {
+      docTypeKey = 'plan';
+    } else if (docNameLower.includes('permit') || docNameLower.includes('رخصة بناء') || docNameLower.includes('building')) {
+      docTypeKey = 'permit';
+    }
+
+    // Get static extracted data from JSON
+    const staticData = this.staticExtractedData.get(docTypeKey) || {};
+    
+    // Debug logs
+    console.log('Document Name:', docName);
+    console.log('Document Type Key:', docTypeKey);
+    console.log('Static Data Retrieved:', staticData);
+    
+    // Prepare extracted data (localized) - copy all static data
+    const extractedData: any = {
+      documentType: docName,
+      fileSize: file.size,
+      analyzedAt: new Date().toISOString()
+    };
+
+    // Copy static data to extractedData based on document type
+    // Always add data if staticData exists (for debugging, we'll use license data as default)
+    if (docTypeKey === 'license' && staticData.licenseNumber) {
+      extractedData.licenseNumber = staticData.licenseNumber;
+      extractedData.issueDate = staticData.issueDate;
+      extractedData.expiryDate = staticData.expiryDate;
+      extractedData.licenseStatus = staticData.licenseStatus;
+      extractedData.licenseHolder = this.isRTL() ? staticData.licenseHolder : staticData.licenseHolderEn;
+    } else if (docTypeKey === 'plan' && staticData.plotArea) {
+      extractedData.plotArea = staticData.plotArea;
+      extractedData.coordinates = { ...staticData.coordinates }; // Deep copy
+      extractedData.zone = this.isRTL() ? staticData.zone : staticData.zoneEn;
+      extractedData.approvalDate = staticData.approvalDate;
+    } else if (docTypeKey === 'permit' && staticData.permitNumber) {
+      extractedData.permitNumber = staticData.permitNumber;
+      extractedData.buildingHeight = staticData.buildingHeight;
+      extractedData.numberOfFloors = staticData.numberOfFloors;
+      extractedData.issueDate = staticData.issueDate;
+      extractedData.validUntil = staticData.validUntil;
+    } else {
+      // Default: Use license data for any document type if no match found
+      const defaultLicenseData = this.staticExtractedData.get('license');
+      if (defaultLicenseData) {
+        extractedData.licenseNumber = defaultLicenseData.licenseNumber;
+        extractedData.issueDate = defaultLicenseData.issueDate;
+        extractedData.expiryDate = defaultLicenseData.expiryDate;
+        extractedData.licenseStatus = defaultLicenseData.licenseStatus;
+        extractedData.licenseHolder = this.isRTL() ? defaultLicenseData.licenseHolder : defaultLicenseData.licenseHolderEn;
+      }
+    }
+    
+    // Debug log
+    console.log('Document Type Key:', docTypeKey);
+    console.log('Static Data:', staticData);
+    console.log('Extracted Data:', extractedData);
+
+    // Static summary (localized)
+    let summary = '';
+    if (docTypeKey === 'license') {
+      summary = this.isRTL() 
+        ? `تم تحليل المستند بنجاح. تم استخراج معلومات الترخيص: رقم الترخيص ${extractedData.licenseNumber}، تاريخ الإصدار ${extractedData.issueDate}، تاريخ الانتهاء ${extractedData.expiryDate}. حامل الترخيص: ${extractedData.licenseHolder}.`
+        : `Document analyzed successfully. Extracted license information: License Number ${extractedData.licenseNumber}, Issue Date ${extractedData.issueDate}, Expiry Date ${extractedData.expiryDate}. License Holder: ${extractedData.licenseHolder}.`;
+    } else if (docTypeKey === 'plan') {
+      summary = this.isRTL()
+        ? `تم تحليل المخطط بنجاح. المساحة: ${extractedData.plotArea}، الإحداثيات: ${extractedData.coordinates.lat}, ${extractedData.coordinates.lng}، المنطقة: ${extractedData.zone}، تاريخ الموافقة: ${extractedData.approvalDate}.`
+        : `Plan analyzed successfully. Area: ${extractedData.plotArea}, Coordinates: ${extractedData.coordinates.lat}, ${extractedData.coordinates.lng}, Zone: ${extractedData.zone}, Approval Date: ${extractedData.approvalDate}.`;
+    } else if (docTypeKey === 'permit') {
+      summary = this.isRTL()
+        ? `تم تحليل رخصة البناء بنجاح. رقم الرخصة: ${extractedData.permitNumber}، الارتفاع: ${extractedData.buildingHeight} (${extractedData.numberOfFloors} طابق)، تاريخ الإصدار: ${extractedData.issueDate}، صالحة حتى: ${extractedData.validUntil}.`
+        : `Building permit analyzed successfully. Permit Number: ${extractedData.permitNumber}, Height: ${extractedData.buildingHeight} (${extractedData.numberOfFloors} floors), Issue Date: ${extractedData.issueDate}, Valid Until: ${extractedData.validUntil}.`;
+    } else {
+      summary = this.isRTL()
+        ? 'تم تحليل المستند بنجاح. تم استخراج المعلومات الأساسية والتحقق من صحة البيانات. المستند يحتوي على جميع المعلومات المطلوبة.'
+        : 'Document analyzed successfully. Basic information extracted and data validated. Document contains all required information.';
+    }
+
+    // Static warnings (pre-defined)
+    const warnings: string[] = [];
+    if (docTypeKey === 'license') {
+      warnings.push(
+        this.isRTL() 
+          ? '⚠️ الترخيص منتهي الصلاحية. تاريخ الانتهاء: 31 ديسمبر 2024. يرجى تجديد الترخيص قبل المتابعة.'
+          : '⚠️ License is expired. Expiry Date: December 31, 2024. Please renew the license before proceeding.'
+      );
+      warnings.push(
+        this.isRTL()
+          ? '📄 جودة الصورة منخفضة. يرجى التأكد من وضوح جميع المعلومات والنصوص.'
+          : '📄 Image quality is low. Please ensure all information and text are clearly visible.'
+      );
+    } else if (docTypeKey === 'plan') {
+      warnings.push(
+        this.isRTL()
+          ? '📅 عدم تطابق في التواريخ المكتوبة. يرجى التحقق من صحة جميع التواريخ في المستند.'
+          : '📅 Date mismatch detected in document. Please verify accuracy of all dates.'
+      );
+    } else if (docTypeKey === 'permit') {
+      warnings.push(
+        this.isRTL()
+          ? '⚠️ ارتفاع المبنى (18 متر) يتجاوز الحد المسموح (15 متر). قد تحتاج إلى موافقة إضافية.'
+          : '⚠️ Building height (18 meters) exceeds allowed limit (15 meters). Additional approval may be required.'
+      );
+      warnings.push(
+        this.isRTL()
+          ? '✍️ التوقيع غير واضح أو مفقود. يرجى التحقق من وجود توقيع صحيح وواضح.'
+          : '✍️ Signature is unclear or missing. Please verify a valid and clear signature is present.'
+      );
+    } else {
+      warnings.push(
+        this.isRTL()
+          ? '📄 جودة الصورة منخفضة. يرجى التأكد من وضوح جميع المعلومات والنصوص.'
+          : '📄 Image quality is low. Please ensure all information and text are clearly visible.'
+      );
+    }
+
+    return {
+      summary,
+      warnings,
+      extractedData
+    };
+  }
+
+  /**
+   * Gets AI analysis for a document type
+   */
+  getDocumentAnalysis(documentTypeId: string): { summary: string; warnings: string[]; extractedData?: any } | undefined {
+    return this.documentAnalysis.get(documentTypeId);
+  }
+
+  /**
+   * Gets extracted data items as key-value pairs for display
+   */
+  getExtractedDataItems(documentTypeId: string): Array<{ key: string; value: string }> {
+    const analysis = this.documentAnalysis.get(documentTypeId);
+    if (!analysis || !analysis.extractedData) {
+      console.log('No analysis or extractedData for', documentTypeId, 'Analysis:', analysis);
+      return [];
+    }
+
+    const items: Array<{ key: string; value: string }> = [];
+    const data = analysis.extractedData;
+    
+    console.log('Processing extracted data for', documentTypeId, 'Data keys:', Object.keys(data));
+
+    // License-specific data
+    if (data.licenseNumber) {
+      items.push({
+        key: this.isRTL() ? 'رقم الترخيص' : 'License Number',
+        value: data.licenseNumber
+      });
+    }
+    if (data.issueDate) {
+      items.push({
+        key: this.isRTL() ? 'تاريخ الإصدار' : 'Issue Date',
+        value: data.issueDate
+      });
+    }
+    if (data.expiryDate) {
+      items.push({
+        key: this.isRTL() ? 'تاريخ الانتهاء' : 'Expiry Date',
+        value: data.expiryDate
+      });
+    }
+    if (data.licenseStatus) {
+      items.push({
+        key: this.isRTL() ? 'حالة الترخيص' : 'License Status',
+        value: data.licenseStatus === 'Active' ? (this.isRTL() ? 'نشط' : 'Active') : (this.isRTL() ? 'منتهي' : 'Expired')
+      });
+    }
+    if (data.licenseHolder) {
+      items.push({
+        key: this.isRTL() ? 'حامل الترخيص' : 'License Holder',
+        value: data.licenseHolder
+      });
+    }
+
+    // Plan-specific data
+    if (data.plotArea) {
+      items.push({
+        key: this.isRTL() ? 'مساحة القطعة' : 'Plot Area',
+        value: data.plotArea
+      });
+    }
+    if (data.coordinates) {
+      items.push({
+        key: this.isRTL() ? 'الإحداثيات' : 'Coordinates',
+        value: `${data.coordinates.lat}, ${data.coordinates.lng}`
+      });
+    }
+    if (data.zone) {
+      items.push({
+        key: this.isRTL() ? 'المنطقة' : 'Zone',
+        value: data.zone
+      });
+    }
+    if (data.approvalDate) {
+      items.push({
+        key: this.isRTL() ? 'تاريخ الموافقة' : 'Approval Date',
+        value: data.approvalDate
+      });
+    }
+
+    // Building permit data
+    if (data.permitNumber) {
+      items.push({
+        key: this.isRTL() ? 'رقم الرخصة' : 'Permit Number',
+        value: data.permitNumber
+      });
+    }
+    if (data.buildingHeight) {
+      items.push({
+        key: this.isRTL() ? 'ارتفاع المبنى' : 'Building Height',
+        value: data.buildingHeight
+      });
+    }
+    if (data.numberOfFloors) {
+      items.push({
+        key: this.isRTL() ? 'عدد الطوابق' : 'Number of Floors',
+        value: data.numberOfFloors.toString()
+      });
+    }
+    if (data.validUntil) {
+      items.push({
+        key: this.isRTL() ? 'صالح حتى' : 'Valid Until',
+        value: data.validUntil
+      });
+    }
+
+    return items;
   }
 
   /**
