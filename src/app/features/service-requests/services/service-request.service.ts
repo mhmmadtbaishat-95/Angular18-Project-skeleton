@@ -73,10 +73,10 @@ export class ServiceRequestService {
   getDeveloperInfo(): Observable<IDeveloperInfo> {
     if (this.useMockData) {
       console.log('⚠️ Using MOCK data for developer info (useMockApi is true)');
-      // Mock data for development
+      // Mock data for development (in Arabic)
       const mockData: IDeveloperInfo = {
         developerRegistrationNumber: 'DEV-2024-001234',
-        developerName: 'Qatar Real Estate Development Co.',
+        developerName: 'شركة قطر للتطوير العقاري',
         developerType: 'Legal' as 'Natural' | 'Legal',
         licenseStatus: 'Active' as 'Active' | 'Expired' | 'Suspended' | 'Pending',
         licenseExpirationDate: '2025-12-31'
@@ -240,8 +240,13 @@ export class ServiceRequestService {
    * Gets available services
    */
   getAvailableServices(): Observable<Service[]> {
-    // In production: return this.httpClient.get<Service[]>('/api/services');
-    return of(this.getMockServices()).pipe(delay(500));
+    if (this.useMockData) {
+      // Use mock data (already filtered - the 3 services are not included)
+      return of(this.getMockServices()).pipe(delay(500));
+    }
+    
+    // Real API call
+    return this.httpClient.get<Service[]>(ENDPOINTS.SERVICE_REQUEST.SERVICES);
   }
 
   /**
@@ -475,51 +480,6 @@ getRequestLog(): Observable<RequestLogEntry[]> {
         active: true,
         popular: true
       },
-      {
-        id: '4',
-        code: 'MOCI-INV-004',
-        name: 'Investment License',
-        nameAr: 'ترخيص استثماري',
-        description: 'Apply for investment license for foreign investments',
-        descriptionAr: 'تقديم طلب للحصول على ترخيص استثماري للاستثمارات الأجنبية',
-        category: ServiceCategory.INVESTMENT,
-        fee: 10000,
-        currency: 'QAR',
-        estimatedProcessingTime: '10-14 business days',
-        formId: 'default',
-        active: true,
-        popular: false
-      },
-      {
-        id: '5',
-        code: 'MOCI-IP-005',
-        name: 'Trademark Registration',
-        nameAr: 'تسجيل العلامة التجارية',
-        description: 'Register your trademark with MOCI',
-        descriptionAr: 'تسجيل علامتك التجارية مع وزارة التجارة والصناعة',
-        category: ServiceCategory.INTELLECTUAL_PROPERTY,
-        fee: 3000,
-        currency: 'QAR',
-        estimatedProcessingTime: '14-21 business days',
-        formId: 'default',
-        active: true,
-        popular: false
-      },
-      {
-        id: '6',
-        code: 'MOCI-CP-006',
-        name: 'Consumer Complaint',
-        nameAr: 'شكوى المستهلك',
-        description: 'File a consumer protection complaint',
-        descriptionAr: 'تقديم شكوى حماية المستهلك',
-        category: ServiceCategory.CONSUMER_PROTECTION,
-        fee: 0,
-        currency: 'QAR',
-        estimatedProcessingTime: '5-10 business days',
-        formId: 'default',
-        active: true,
-        popular: true
-      }
     ];
   }
 
@@ -583,7 +543,7 @@ getRequestLog(): Observable<RequestLogEntry[]> {
         requestNumber: '487234',
         serviceId: '1',
         serviceName: 'Registration in the Real Estate Developers Register',
-        serviceNameAr: 'القيد بسجل المطورين العقاريين',
+        serviceNameAr: 'طلب اصدار رخصه مشروع عقاري',
         status: RequestStatus.IN_REVIEW,
         submittedAt: submissionDate.toISOString(),
         updatedAt: submissionDate.toISOString(),
@@ -598,7 +558,7 @@ getRequestLog(): Observable<RequestLogEntry[]> {
         requestNumber: '487234',
         serviceId: '1',
         serviceName: 'Registration in the Real Estate Developers Register',
-        serviceNameAr: 'القيد بسجل المطورين العقاريين',
+        serviceNameAr: 'طلب اصدار رخصه مشروع عقاري',
         status: RequestStatus.IN_REVIEW,
         submittedAt: submissionDate.toISOString(),
         updatedAt: submissionDate.toISOString(),
@@ -613,7 +573,7 @@ getRequestLog(): Observable<RequestLogEntry[]> {
         requestNumber: '487234',
         serviceId: '1',
         serviceName: 'Termination of Registration in the Real Estate Developers Register',
-        serviceNameAr: 'إنهاء القيد بسجل المطورين العقاريين',
+        serviceNameAr: 'إنهاء طلب اصدار رخصه مشروع عقاري',
         status: RequestStatus.CANCELLED,
         submittedAt: submissionDate.toISOString(),
         updatedAt: submissionDate.toISOString(),
@@ -629,7 +589,7 @@ getRequestLog(): Observable<RequestLogEntry[]> {
         requestNumber: '487234',
         serviceId: '1',
         serviceName: 'Registration in the Real Estate Developers Register',
-        serviceNameAr: 'القيد بسجل المطورين العقاريين',
+        serviceNameAr: 'طلب اصدار رخصه مشروع عقاري',
         status: RequestStatus.APPROVED,
         submittedAt: submissionDate.toISOString(),
         updatedAt: submissionDate.toISOString(),
@@ -645,7 +605,7 @@ getRequestLog(): Observable<RequestLogEntry[]> {
         requestNumber: '487234',
         serviceId: '1',
         serviceName: 'Termination of Registration in the Real Estate Developers Register',
-        serviceNameAr: 'إنهاء القيد بسجل المطورين العقاريين',
+        serviceNameAr: 'إنهاء طلب اصدار رخصه مشروع عقاري',
         status: RequestStatus.REJECTED,
         submittedAt: submissionDate.toISOString(),
         updatedAt: submissionDate.toISOString(),

@@ -19,6 +19,7 @@ import { StepWizardComponent, StepConfig } from '../components/step-wizard/step-
 import { IDocumentType, IUploadedDocument } from '../models/document.model';
 import { IServiceRequestResponse, ICreateAndSubmitRequestPayload, ICreateAndSubmitRequestResponse, IRequestDocument, ICreateDocumentPayload, IAttachment } from '../models/api-request.model';
 import { environment } from '../../../../environments/environment';
+import { MapSelectorComponent, LandDetails } from '@shared/ui/map-selector/map-selector.component';
 
 /**
  * Service request page component
@@ -34,6 +35,7 @@ import { environment } from '../../../../environments/environment';
     RouterLink,
     TranslatePipe,
     StepWizardComponent,
+    MapSelectorComponent,
   ],
   templateUrl: './service-request.page.html',
   styleUrls: ['./service-request.page.scss'],
@@ -98,26 +100,25 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       licenseStatus: [{ value: '', disabled: true }],
       licenseExpirationDate: [{ value: '', disabled: true }],
 
-      // Form A: Project Licenses Request (Pre-populated with demo data)
-      projectName: ['Al Wakra Residential Complex', Validators.required],
+      // Form A: Project Licenses Request (Pre-populated with demo data in Arabic)
+      projectName: ['مجمع الوكرة السكني', Validators.required],
       projectType: [0, Validators.required], // 0 = Residential
-      area: ['Al Wakra', Validators.required],
+      area: ['الوكرة', Validators.required],
       plotNumber: ['1234/2024', Validators.required],
       landArea: ['5000', Validators.required],
       numberOfUnits: ['120'],
       executionPeriod: ['24', Validators.required],
 
       // Form B: Master Plan & Preliminary Design (Pre-populated with demo data)
-      planType: [0, Validators.required], // 0 = Residential
       designStage: [1, Validators.required], // 1 = Final
       numberOfBuildings: ['5', Validators.required],
       numberOfDevelopmentStages: ['3', Validators.required],
       approximateHeight: ['12', Validators.required],
 
       // Form C: Escrow Account (optional initially, will be required if isOffPlan is true)
-      // Pre-populated with demo data for showcase
+      // Pre-populated with demo data for showcase in Arabic
       isOffPlan: [true], // Set to true by default for demo so Forms C & D are visible
-      bankName: ['Qatar National Bank', ''],
+      bankName: ['البنك الوطني القطري', ''],
       estimatedProjectValue: ['15000000', ''], // 15 million QAR
 
       // Form D: License Application (optional initially, will be required if isOffPlan is true)
@@ -132,6 +133,18 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   /**
    * Formats date for input[type="date"] (YYYY-MM-DD format)
    */
+  /**
+   * Handle land selection from map
+   */
+  onLandSelected(landDetails: LandDetails): void {
+    // Update form fields with selected land details
+    this.requestForm.patchValue({
+      area: landDetails.area,
+      plotNumber: landDetails.plotNumber,
+      // You can add more fields here if needed
+    }, { emitEvent: false });
+  }
+
   private formatDateForInput(date: Date): string {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -481,7 +494,6 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       LandArea: formValues.landArea || '',
       NumberOfUnits: String(formValues.numberOfUnits || ''),
       ExecutionPeriod: String(formValues.executionPeriod || ''),
-      PlanType: this.parseToNumber(formValues.planType) || 0,
       DesignStage: this.parseToNumber(formValues.designStage) || 0,
       NumberOfBuildings: String(formValues.numberOfBuildings || ''),
       NumberOfDevelopmentStages: String(formValues.numberOfDevelopmentStages || ''),
@@ -604,7 +616,6 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
         'plotNumber',
         'landArea',
         'executionPeriod',
-        'planType',
         'designStage',
         'numberOfBuildings',
         'numberOfDevelopmentStages',
@@ -789,7 +800,6 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
         ];
       case 1: // Form B: Master Plan & Preliminary Design
         return [
-          'planType',
           'designStage',
           'numberOfBuildings',
           'numberOfDevelopmentStages',
@@ -878,7 +888,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles document type selection
+   * Handles document type selection (deprecated - no longer needed with new UI)
    */
   onDocumentTypeSelect(documentTypeId: string): void {
     const documentType = this.documentTypes.find((dt) => dt.id === documentTypeId);
@@ -889,21 +899,17 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Handles file selection for document upload (single file per document type)
-   * Uploads document immediately one by one using the API
+   * Handles file selection for a specific document type
+   * Uploads document immediately using the API
    */
-  onFileSelected(event: Event): void {
-    if (!this.selectedDocumentType) {
-      this.notificationService.warning(
-        this.translateService.instant('serviceRequest.selectDocumentTypeFirst')
-      );
-      return;
-    }
-
+  onFileSelectedForType(event: Event, documentType: IDocumentType): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0]; // Only take first file
       this.documentErrors = [];
+      
+      // Set selected document type for validation
+      this.selectedDocumentType = documentType;
 
       // Validate file size
       const maxSize = this.selectedDocumentType.maxSize || 10 * 1024 * 1024; // Default 10MB
@@ -1075,6 +1081,13 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    */
   getDocumentTypeName(documentType: IDocumentType): string {
     return this.isRTL() ? documentType.nameAr : documentType.name;
+  }
+
+  /**
+   * Gets document type description (localized)
+   */
+  getDocumentDescription(documentType: IDocumentType): string {
+    return this.isRTL() ? (documentType.descriptionAr || '') : (documentType.description || '');
   }
 
   /**

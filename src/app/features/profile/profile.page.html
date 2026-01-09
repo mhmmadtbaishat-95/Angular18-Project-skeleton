@@ -1,0 +1,257 @@
+<div class="profile-page" [dir]="isRTL() ? 'rtl' : 'ltr'">
+  <!-- Header Section -->
+  <div class="profile-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1 class="page-title">{{ 'profile.title' | t }}</h1>
+      </div>
+      <!-- Breadcrumbs -->
+      <div class="breadcrumb-nav">
+        <a routerLink="/" class="breadcrumb-link">{{ 'services.breadcrumbHome' | t }}</a>
+        <span class="breadcrumb-separator">></span>
+        <span class="breadcrumb-current">{{ 'profile.title' | t }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content-layout">
+    <!-- Left Column: Profile Information -->
+    <div class="profile-column-wrapper">
+      <div class="profile-container">
+        <!-- Profile Form -->
+        <form [formGroup]="profileForm" class="profile-form">
+          <div class="form-section personal-information-section">
+            <h2 class="section-title">{{ 'profile.personalInformation' | t }}</h2>
+            <p class="section-description">{{ 'profile.personalInformationDesc' | t }}</p>
+
+            <div class="form-grid">
+              <!-- Left Column -->
+              <div class="form-column"> 
+                <div class="form-group">
+                  <label for="firstName" class="form-label">{{ 'profile.firstName' | t }}</label>
+                  <input 
+                    type="text" 
+                    id="firstName" 
+                    formControlName="firstName"
+                    class="form-input readonly-input" 
+                    readonly 
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="email" class="form-label">{{ 'profile.email' | t }}</label>
+                  <input 
+                    type="email" 
+                    id="email" 
+                    formControlName="email"
+                    class="form-input readonly-input" 
+                    readonly 
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="role" class="form-label">{{ 'profile.roleLabel' | t }}</label>
+                  <input 
+                    type="text" 
+                    id="role" 
+                    formControlName="role"
+                    class="form-input readonly-input" 
+                    readonly 
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="developerType" class="form-label">{{ 'serviceRequest.developerType' | t }}</label>
+                  <input 
+                    type="text" 
+                    id="developerType" 
+                    formControlName="developerType"
+                    class="form-input readonly-input" 
+                    readonly 
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="isEmailVerified" class="form-label">{{ 'profile.emailVerification' | t }}</label>
+                  <input 
+                    type="text" 
+                    id="isEmailVerified" 
+                    formControlName="isEmailVerified"
+                    class="form-input readonly-input" 
+                    readonly 
+                  />
+                </div>
+              </div>
+
+              <!-- Right Column -->
+              <div class="form-column">
+                <div class="form-group">
+                  <label for="lastName" class="form-label">{{ 'profile.lastName' | t }}</label>
+                  <input 
+                    type="text" 
+                    id="lastName" 
+                    formControlName="lastName"
+                    class="form-input readonly-input" 
+                    readonly 
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="username" class="form-label">{{ 'profile.username' | t }}</label>
+                  <input 
+                    type="text" 
+                    id="username" 
+                    formControlName="username"
+                    class="form-input readonly-input" 
+                    readonly 
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="isActive" class="form-label">{{ 'profile.accountStatus' | t }}</label>
+                  <input 
+                    type="text" 
+                    id="isActive" 
+                    formControlName="isActive"
+                    class="form-input readonly-input" 
+                    readonly 
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="lastLoginAt" class="form-label">{{ 'profile.lastLogin' | t }}</label>
+                  <input 
+                    type="text" 
+                    id="lastLoginAt" 
+                    formControlName="lastLoginAt"
+                    class="form-input readonly-input" 
+                    readonly 
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Account Information Section -->
+            <div class="form-section account-section">
+              <h2 class="section-title">{{ 'profile.accountInformation' | t }}</h2>
+              <div class="form-grid">
+                <div class="form-column">
+                  <div class="form-group">
+                    <label for="createdAt" class="form-label">{{ 'profile.memberSince' | t }}</label>
+                    <input 
+                      type="text" 
+                      id="createdAt" 
+                      formControlName="createdAt"
+                      class="form-input readonly-input" 
+                      readonly 
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="licenseNumber" class="form-label">{{ 'profile.licenseNumber' | t }}</label>
+                    <input 
+                      type="text" 
+                      id="licenseNumber" 
+                      formControlName="licenseNumber"
+                      class="form-input readonly-input" 
+                      readonly 
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="licensedProjectsCount" class="form-label">{{ 'profile.licensedProjectsCount' | t }}</label>
+                    <input 
+                      type="text" 
+                      id="licensedProjectsCount" 
+                      formControlName="licensedProjectsCount"
+                      class="form-input readonly-input" 
+                      readonly 
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="myRequests" class="form-label">{{ 'profile.myRequests' | t }}</label>
+                    <input 
+                      type="text" 
+                      id="myRequests" 
+                      formControlName="myRequests"
+                      class="form-input readonly-input" 
+                      readonly 
+                    />
+                  </div>
+                </div>
+
+                <div class="form-column">
+                  <div class="form-group">
+                    <label for="preferredLanguage" class="form-label">{{ 'profile.preferredLanguage' | t }}</label>
+                    <input 
+                      type="text" 
+                      id="preferredLanguage" 
+                      formControlName="preferredLanguage"
+                      class="form-input readonly-input" 
+                      readonly 
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label">{{ 'profile.preferredCommunicationChannel' | t }}</label>
+                    <div class="radio-group">
+                      <label class="radio-option" *ngFor="let channel of communicationChannels">
+                        <input 
+                          type="radio" 
+                          [value]="channel.value"
+                          formControlName="preferredCommunicationChannel"
+                          class="radio-input"
+                        />
+                        <span class="radio-label">{{ channel.label | t }}</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="checkbox-option">
+                      <input 
+                        type="checkbox" 
+                        formControlName="newsletterSubscription"
+                        class="checkbox-input"
+                      />
+                      <span class="checkbox-label">{{ 'profile.newsletterSubscription' | t }}</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Right Column: Related Services -->
+    <div class="services-column-wrapper">
+      <div class="related-services-container">
+        <h2 class="services-title">{{ 'profile.relatedServices' | t }}</h2>
+        <p class="services-description">{{ 'profile.relatedServicesDesc' | t }}</p>
+
+        <div class="services-grid">
+          <div
+            *ngFor="let service of relatedServices"
+            class="service-card"
+            [routerLink]="service.route"
+          >
+            <div class="service-icon">
+              <i [class]="service.icon"></i>
+            </div>
+            <div class="service-content">
+              <h3 class="service-title">{{ service.titleKey | t }}</h3>
+              <p class="service-description">{{ service.descriptionKey | t }}</p>
+            </div>
+            <div class="service-arrow">
+              <i [class]="isRTL() ? 'fas fa-chevron-left' : 'fas fa-chevron-right'"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

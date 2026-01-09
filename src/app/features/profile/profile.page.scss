@@ -1,0 +1,349 @@
+.profile-page {
+  @apply w-full;
+  min-height: calc(100vh - 12rem);
+  padding: 2rem 1rem;
+}
+
+.profile-header {
+  @apply mb-6;
+  width: 100%;
+  max-width: 7xl;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header-content {
+  @apply flex flex-col gap-4;
+}
+
+.breadcrumb-nav {
+  @apply flex items-center gap-2 mb-4;
+  font-size: 0.75rem;
+}
+
+.breadcrumb-link {
+  @apply text-gray-300 hover:text-white transition-colors;
+}
+
+.breadcrumb-separator {
+  @apply text-gray-400;
+}
+
+.breadcrumb-current {
+  @apply text-white font-medium;
+}
+
+.title-section {
+  @apply flex items-center gap-3;
+}
+
+.page-title {
+  @apply text-2xl md:text-3xl lg:text-4xl font-bold;
+  background: #A19576;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+  flex: 1;
+}
+
+/* Main Content Layout: Two Columns */
+.main-content-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+  max-width: 7xl;
+  margin-left: auto;
+  margin-right: auto;
+
+  @media (min-width: 1024px) {
+    flex-direction: row;
+  }
+}
+
+/* Left Column: Profile Information */
+.profile-column-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-container {
+  width: 100%;
+}
+
+/* Profile Avatar Section */
+.profile-avatar-section {
+  @apply mb-8 text-center;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-avatar-large {
+  @apply w-24 h-24 rounded-full bg-qatar-maroon flex items-center justify-center mx-auto mb-4;
+  @apply text-white text-3xl font-semibold;
+  text-transform: uppercase;
+}
+
+.profile-name {
+  @apply text-white text-2xl font-semibold mb-2;
+}
+
+.profile-email {
+  @apply text-gray-300 text-sm;
+}
+
+/* Profile Form */
+.profile-form {
+  width: 100%;
+}
+
+.form-section {
+  @apply mb-8;
+}
+
+.personal-information-section {
+  padding: 2rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 1rem;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.account-section {
+  @apply mt-8 pt-8;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-title {
+  @apply text-xl font-semibold text-white mb-2;
+}
+
+.section-description {
+  @apply text-gray-300 text-sm mb-6;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  @apply text-white text-sm font-medium;
+}
+
+.form-input {
+  @apply w-full px-4 py-3 rounded-lg border border-gray-600 bg-gray-800/50 text-white;
+  @apply focus:outline-none focus:ring-2 focus:ring-qatar-maroon focus:border-transparent;
+  @apply transition-all;
+  font-size: 0.875rem;
+}
+
+.readonly-input {
+  @apply bg-gray-900/50 border-gray-700 cursor-not-allowed;
+  opacity: 0.8;
+}
+
+/* Radio Buttons */
+.radio-group {
+  @apply flex flex-col gap-3;
+}
+
+.radio-option {
+  @apply flex items-center gap-3 cursor-pointer;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.radio-input {
+  @apply w-5 h-5;
+  accent-color: #8B1538;
+  cursor: pointer;
+}
+
+.radio-label {
+  @apply text-white text-sm;
+  cursor: pointer;
+}
+
+/* Checkbox */
+.checkbox-option {
+  @apply flex items-center gap-3 cursor-pointer;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+}
+
+.checkbox-input {
+  @apply w-5 h-5;
+  accent-color: #8B1538;
+  cursor: pointer;
+}
+
+.checkbox-label {
+  @apply text-white text-sm;
+  cursor: pointer;
+}
+
+/* Right Column: Related Services */
+.services-column-wrapper {
+  width: 100%;
+
+  @media (min-width: 1024px) {
+    width: 400px;
+    flex-shrink: 0;
+  }
+}
+
+.related-services-container {
+  width: 100%;
+  position: sticky;
+  top: 2rem;
+}
+
+.services-title {
+  @apply text-xl font-semibold text-white mb-2;
+}
+
+.services-description {
+  @apply text-gray-300 text-sm mb-6;
+}
+
+.services-grid {
+  @apply grid grid-cols-1 gap-4;
+}
+
+.service-card {
+  @apply rounded-xl p-4 border border-gray-700/50;
+  @apply hover:bg-gray-800/95 hover:border-gray-600 hover:shadow-xl transition-all cursor-pointer;
+  @apply flex flex-col gap-3;
+  position: relative;
+  backdrop-filter: blur(30px);
+  background: rgba(255, 255, 255, 0.05);
+  min-height: 140px;
+}
+
+.service-icon {
+  @apply w-10 h-10 rounded-lg bg-qatar-maroon flex items-center justify-center text-white;
+  font-size: 1.25rem;
+}
+
+.service-content {
+  @apply flex-1;
+}
+
+.service-title {
+  @apply text-white font-semibold mb-2;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.service-description {
+  @apply text-gray-300 leading-relaxed;
+  font-size: 0.75rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.service-arrow {
+  @apply absolute bottom-4 right-4;
+  @apply w-8 h-8 flex items-center justify-center;
+  @apply hover:bg-qatar-maroon-dark transition-all rounded-full;
+  color: white;
+
+  i {
+    font-size: 0.75rem;
+  }
+}
+
+/* RTL Support */
+.profile-page[dir='rtl'],
+[dir='rtl'] .profile-page,
+:host-context([dir='rtl']) .profile-page,
+:host-context(.rtl) .profile-page {
+  direction: rtl !important;
+  text-align: right !important;
+
+  .breadcrumb-nav {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .title-section {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+
+  .service-arrow {
+    right: auto;
+    left: 1rem;
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .main-content-layout {
+    flex-direction: column;
+  }
+
+  .services-column-wrapper {
+    width: 100%;
+  }
+
+  .related-services-container {
+    position: static;
+  }
+
+  .services-grid {
+    @apply grid-cols-2;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .services-grid {
+    @apply grid-cols-1;
+  }
+
+  .profile-avatar-section {
+    padding: 1.5rem;
+  }
+
+  .profile-avatar-large {
+    @apply w-20 h-20 text-2xl;
+  }
+}

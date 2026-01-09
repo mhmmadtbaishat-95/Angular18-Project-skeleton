@@ -140,6 +140,7 @@
       "orders": "الطلبات",
       "growth": "النمو"
     },
+    "title": "لوحة التحكم",
     "welcomeBack": "مرحباً بعودتك",
     "portalName": "بوابة وزارة التجارة والصناعة",
     "services": "الخدمات",
@@ -195,6 +196,51 @@
       "jumailiya": "الجوما يلييه",
       "wakrah": "الوكرة",
       "jariyanBatnah": "جريان البطنة"
+    }
+  },
+  "profile": {
+    "title": "ملفي الشخصي",
+    "personalInformation": "المعلومات الشخصية",
+    "personalInformationDesc": "تفاصيلك الشخصية ومعلومات حسابك",
+    "accountInformation": "معلومات الحساب",
+    "relatedServices": "الخدمات ذات الصلة",
+    "relatedServicesDesc": "وصول سريع إلى الخدمات التي قد تحتاجها",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "email": "البريد الإلكتروني",
+    "username": "اسم المستخدم",
+    "emailVerification": "التحقق من البريد الإلكتروني",
+    "accountStatus": "حالة الحساب",
+    "lastLogin": "آخر تسجيل دخول",
+    "memberSince": "عضو منذ",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "verified": "متحقق",
+    "notVerified": "غير متحقق",
+    "never": "أبداً",
+    "user": "مستخدم",
+    "roleLabel": "الدور",
+    "role": {
+      "user": "مطور عقاري",
+      "admin": "مدير",
+      "moderator": "مشرف",
+      "manager": "مدير",
+      "guest": "ضيف"
+    },
+    "licenseNumber": "رقم الرخصة",
+    "licensedProjectsCount": "عدد المشاريع المرخصة",
+    "myRequests": "طلباتي",
+    "preferredLanguage": "اللغة المفضلة",
+    "preferredCommunicationChannel": "قناة التواصل المفضلة",
+    "newsletterSubscription": "الاشتراك في نشرات الأخبار",
+    "preferences": "التفضيلات",
+    "yes": "نعم",
+    "no": "لا",
+    "communicationChannel": {
+      "email": "البريد الإلكتروني",
+      "sms": "رسالة نصية",
+      "phone": "الهاتف",
+      "whatsapp": "واتساب"
     }
   },
   "users": {
@@ -375,10 +421,10 @@
       "termination": "إنهاء"
     },
     "requests": {
-      "registration": "القيد بسجل المطورين العقاريين",
-      "renewal": "تجديد القيد بسجل المطورين العقاريين",
-      "modification": "تعديل القيد بسجل المطورين العقاريين",
-      "termination": "إنهاء القيد بسجل المطورين العقاريين"
+      "registration": "طلب اصدار رخصة مشروع عقاري",
+      "renewal": "تجديد طلب اصدار رخصه مشروع عقاري",
+      "modification": "تعديل طلب اصدار رخصه مشروع عقاري",
+      "termination": "إنهاء طلب اصدار رخصه مشروع عقاري"
     },
     "actions": {
       "details": "تفاصيل",
@@ -457,7 +503,7 @@
     "pleaseCompleteAllRequiredFields": "يرجى إكمال جميع الحقول المطلوبة قبل المتابعة"
   },
   "serviceRequest": {
-    "applicationTitle": "طلب القيد بسجل المطورين العقاريين",
+    "applicationTitle": " طلب اصدار رخصه مشروع عقاري",
     "submitApplication": "تقديم طلب",
     "basicData": "البيانات الاساسية",
     "companyName": "اسم الشركة",
@@ -478,9 +524,9 @@
     "goToServicesList": "الذهاب لقائمة الخدمات",
     "requestInformation": "معلومات الطلب",
     "requestInformationDesc": "يرجى مراجعة معلومات المطور أدناه",
-    "developerRegistrationNumber": "رقم تسجيل المطور",
+    "developerRegistrationNumber": "رقم رخصة المطور",
     "developerName": "اسم المطور",
-    "developerType": "نوع المطور",
+    "developerType": "تصنيف المطور",
     "licenseStatus": "حالة الترخيص",
     "licenseExpirationDate": "تاريخ انتهاء الترخيص",
     "readonlyNote": "يتم عرض بيانات مقدم الطلب تلقائياً من ملفه الشخصي ولا يمكن تعديلها ضمن هذا النموذج.",
@@ -501,6 +547,10 @@
     "uploadAtLeastOneDocument": "يرجى رفع مستند واحد على الأقل قبل الإرسال",
     "missingRequiredDocuments": "المستندات المطلوبة المفقودة",
     "uploadedDocuments": "المستندات المرفوعة",
+    "uploaded": "تم الرفع",
+    "replace": "استبدال",
+    "upload": "رفع",
+    "maxSize": "الحد الأقصى",
     "status": "الحالة",
     "submittedAt": "تاريخ الإرسال",
     "message": "الرسالة",
@@ -564,9 +614,17 @@
       "approximateHeight": "الارتفاع التقريبي (عدد الطوابق)",
       "approximateHeightPlaceholder": "أدخل الارتفاع التقريبي بعدد الطوابق"
     },
+    "mapSelector": {
+      "title": "اختر موقع الأرض",
+      "description": "انقر على الخريطة أو اسحب العلامة لتحديد موقع الأرض",
+      "loading": "جاري تحميل الخريطة...",
+      "loadingHint": "إذا لم يتم تحميل الخريطة، يرجى تحديث الصفحة",
+      "error": "فشل تحميل الخريطة. يرجى التحقق من رمز Mapbox أو الاتصال بالإنترنت.",
+      "instructions": "انقر في أي مكان على الخريطة لتحديد موقع، أو اسحب العلامة لتعديل الموضع"
+    },
     "formC": {
       "title": "ج - حساب الضمان",
-      "isOffPlan": "هل المشروع من نوع خارج المخطط؟",
+      "isOffPlan": "هل المشروع تطوير عقاري على الخارطة؟",
       "bankName": "اسم البنك",
       "bankNamePlaceholder": "أدخل اسم البنك",
       "estimatedProjectValue": "القيمة المقدرة للمشروع",
@@ -575,7 +633,7 @@
       "no": "لا"
     },
     "formD": {
-      "title": "د - طلب الترخيص",
+      "title": "د - طلب ترخيص بيع",
       "numberOfUnitsForSale": "عدد الوحدات للبيع",
       "numberOfUnitsForSalePlaceholder": "أدخل عدد الوحدات للبيع",
       "startSaleDate": "تاريخ بدء البيع",

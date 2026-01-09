@@ -45,6 +45,12 @@ export const environment = {
     apiVersion: '2022-03-01-preview',
     // Enable/disable chatbot
     enabled: true
+  },
+  // Mapbox configuration
+  mapbox: {
+    // Get your free token from: https://account.mapbox.com/access-tokens/
+    // For production, use your own token
+    accessToken: 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXV4NTFmZ2Y2cW4zN2p1M2g1MjcifQ.rJcFIG214AriISLbB6B5aw'
   }
 };
 

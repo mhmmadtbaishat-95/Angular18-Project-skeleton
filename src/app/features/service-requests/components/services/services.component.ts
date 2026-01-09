@@ -323,24 +323,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
       titleKey: 'services.service5.title',
       descriptionKey: 'services.service5.description',
       route: '/service-requests/service/5',
-    },
-    {
-      id: '6',
-      titleKey: 'services.service6.title',
-      descriptionKey: 'services.service6.description',
-      route: '/service-requests/service/6',
-    },
-    {
-      id: '7',
-      titleKey: 'services.service7.title',
-      descriptionKey: 'services.service7.description',
-      route: '/service-requests/service/7',
-    },
-    {
-      id: '8',
-      titleKey: 'services.service8.title',
-      descriptionKey: 'services.service8.description',
-      route: '/service-requests/service/8',
-    },
+    }
   ];
 }
