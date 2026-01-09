@@ -34,6 +34,10 @@ export const routes: Routes = [
         path: 'fines',
         loadChildren: () => import('../../features/fines/routes').then((m) => m.finesRoutes),
       },
+      {
+        path: 'profile',
+        loadChildren: () => import('../../features/profile/routes').then((m) => m.routes),
+      },
     ],
   },
   {

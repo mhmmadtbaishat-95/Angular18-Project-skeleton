@@ -211,6 +211,11 @@
   @apply flex flex-col gap-6;
 }
 
+.map-selector-group {
+  grid-column: 1 / -1; // Span full width in grid
+  margin-bottom: 1.5rem;
+}
+
 .form-group {
   @apply flex flex-col gap-2;
 }
@@ -615,36 +620,144 @@
   @apply w-full;
 }
 
-.upload-area {
-  @apply relative;
+/* Document Types List - Row-based layout */
+.document-types-list {
+  @apply flex flex-col gap-4;
+  margin-top: 1.5rem;
 }
 
-.file-input {
-  @apply absolute opacity-0 w-0 h-0;
-}
-
-.upload-label {
-  @apply flex flex-col items-center justify-center border-2 border-dashed rounded-lg p-8 cursor-pointer transition-all;
-  border-color: rgba(75, 85, 99, 0.5);
+.document-type-row {
+  @apply flex items-start justify-between gap-4 p-4 rounded-lg;
   background: rgba(0, 0, 0, 0.2);
-  min-height: 200px;
+  border: 1px solid rgba(75, 85, 99, 0.5);
+  transition: all 0.2s ease;
 
   &:hover {
-    border-color: rgba(212, 175, 55, 0.5);
+    border-color: rgba(139, 21, 56, 0.5);
     background: rgba(0, 0, 0, 0.3);
   }
 }
 
-.upload-icon {
-  @apply w-12 h-12 text-gray-400 mb-4;
+.document-type-info {
+  @apply flex-1 flex flex-col gap-2;
 }
 
-.upload-text {
-  @apply text-white font-medium mb-2;
+.document-type-header {
+  @apply flex items-center gap-2;
 }
 
-.upload-hint {
-  @apply text-gray-400 text-sm;
+.document-type-name {
+  @apply text-white text-base font-semibold;
+}
+
+.required-badge {
+  @apply text-red-400 font-bold;
+  font-size: 1rem;
+}
+
+.uploaded-badge {
+  @apply inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium;
+  background: rgba(34, 197, 94, 0.2);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: #4ade80;
+
+  .check-icon {
+    @apply w-3 h-3;
+  }
+}
+
+.document-type-details {
+  @apply flex flex-wrap items-center gap-3 text-sm;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.document-description {
+  @apply text-gray-300;
+}
+
+.document-formats {
+  @apply text-gray-400;
+}
+
+.document-size-limit {
+  @apply text-gray-400;
+}
+
+.uploaded-file-info {
+  @apply flex items-center gap-2 mt-2 p-2 rounded;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+
+  .file-icon {
+    @apply w-5 h-5 text-green-400 flex-shrink-0;
+  }
+
+  .file-name {
+    @apply text-white text-sm font-medium flex-1;
+  }
+
+  .file-size {
+    @apply text-gray-400 text-xs;
+  }
+
+  .remove-file-btn {
+    @apply w-6 h-6 rounded flex items-center justify-center transition-all;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    cursor: pointer;
+    color: #ef4444;
+
+    &:hover {
+      background: rgba(239, 68, 68, 0.3);
+    }
+
+    svg {
+      @apply w-4 h-4;
+    }
+  }
+}
+
+.document-upload-action {
+  @apply flex-shrink-0;
+}
+
+.file-input-hidden {
+  @apply absolute opacity-0 w-0 h-0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.upload-btn {
+  @apply inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all cursor-pointer;
+  background: rgba(139, 21, 56, 0.8);
+  border: 1px solid rgba(139, 21, 56, 0.5);
+  color: white;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(139, 21, 56, 1);
+    border-color: rgba(139, 21, 56, 0.8);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  &.uploaded {
+    background: rgba(34, 197, 94, 0.8);
+    border-color: rgba(34, 197, 94, 0.5);
+
+    &:hover {
+      background: rgba(34, 197, 94, 1);
+      border-color: rgba(34, 197, 94, 0.8);
+    }
+  }
+
+  &.required {
+    border-color: rgba(239, 68, 68, 0.5);
+  }
+
+  .upload-icon {
+    @apply w-4 h-4;
+  }
 }
 
 .document-errors {

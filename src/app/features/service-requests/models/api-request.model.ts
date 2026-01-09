@@ -32,7 +32,6 @@ export interface IServiceRequestPayload {
   executionPeriod: number;
 
   // Form B: Master Plan & Preliminary Design
-  planType: string;
   designStage: string;
   numberOfBuildings: number;
   numberOfDevelopmentStages: number;
@@ -100,7 +99,6 @@ export interface ICreateAndSubmitRequestPayload {
   LandArea: string;
   NumberOfUnits: string;
   ExecutionPeriod: string;
-  PlanType: number;
   DesignStage: number;
   NumberOfBuildings: string;
   NumberOfDevelopmentStages: string;

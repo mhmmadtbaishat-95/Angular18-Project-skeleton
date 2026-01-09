@@ -1,0 +1,28 @@
+<div class="map-selector-container">
+  <div class="map-header">
+    <h3 class="map-title">{{ 'serviceRequest.mapSelector.title' | t }}</h3>
+    <p class="map-description">{{ 'serviceRequest.mapSelector.description' | t }}</p>
+  </div>
+  
+  <div class="map-wrapper">
+    <div #mapContainer class="map-container"></div>
+    <div *ngIf="!isMapLoaded()" class="map-loading">
+      <div class="loading-spinner"></div>
+      <p>{{ 'serviceRequest.mapSelector.loading' | t }}</p>
+      <p class="loading-hint">{{ 'serviceRequest.mapSelector.loadingHint' | t }}</p>
+    </div>
+    <!-- Error message if map fails to load -->
+    <div *ngIf="mapError()" class="map-error">
+      <i class="fas fa-exclamation-triangle"></i>
+      <p>{{ 'serviceRequest.mapSelector.error' | t }}</p>
+      <p class="error-details">Check browser console for details</p>
+    </div>
+  </div>
+  
+  <div class="map-instructions">
+    <p class="instructions-text">
+      <i class="fas fa-info-circle"></i>
+      {{ 'serviceRequest.mapSelector.instructions' | t }}
+    </p>
+  </div>
+</div>

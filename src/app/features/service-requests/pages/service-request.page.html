@@ -123,6 +123,17 @@
                     </div>
 
                     <div class="form-group">
+                      <label for="plotNumber" class="form-label">{{ 'serviceRequest.formA.plotNumber' | t }}</label>
+                      <input type="text" id="plotNumber" formControlName="plotNumber" class="form-input"
+                        [class.error]="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
+                        placeholder="{{ 'serviceRequest.formA.plotNumberPlaceholder' | t }}" />
+                      <span *ngIf="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
+                        class="error-message">
+                        {{ getFieldError('plotNumber') }}
+                      </span>
+                    </div>
+
+                    <div class="form-group">
                       <label for="landArea" class="form-label">{{ 'serviceRequest.formA.landArea' | t }}</label>
                       <input type="number" id="landArea" formControlName="landArea" class="form-input"
                         [class.error]="requestForm.get('landArea')?.invalid && requestForm.get('landArea')?.touched"
@@ -139,40 +150,6 @@
                       <input type="number" id="numberOfUnits" formControlName="numberOfUnits" class="form-input"
                         placeholder="{{ 'serviceRequest.formA.numberOfUnitsPlaceholder' | t }}" />
                     </div>
-                  </div>
-
-                  <div class="form-column">
-                    <div class="form-group">
-                      <label for="projectType" class="form-label">{{ 'serviceRequest.formA.projectType' | t }}</label>
-                      <select id="projectType" formControlName="projectType" class="form-input"
-                        [class.error]="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched">
-                        <option value="" disabled>
-                          {{ 'serviceRequest.formA.projectTypePlaceholder' | t }}
-                        </option>
-                        <option *ngFor="let project of [
-    { value: 0, labelEn: 'Residential', labelAr: 'سكني' },
-    { value: 1, labelEn: 'Commercial', labelAr: 'تجاري' }
-  ]" [value]="project.value">
-                          {{ isRTL() ? project.labelAr : project.labelEn }}
-                        </option>
-
-                      </select>
-                      <span *ngIf="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched"
-                        class="error-message">
-                        {{ getFieldError('projectType') }}
-                      </span>
-                    </div>
-
-                    <div class="form-group">
-                      <label for="plotNumber" class="form-label">{{ 'serviceRequest.formA.plotNumber' | t }}</label>
-                      <input type="text" id="plotNumber" formControlName="plotNumber" class="form-input"
-                        [class.error]="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
-                        placeholder="{{ 'serviceRequest.formA.plotNumberPlaceholder' | t }}" />
-                      <span *ngIf="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
-                        class="error-message">
-                        {{ getFieldError('plotNumber') }}
-                      </span>
-                    </div>
 
                     <div class="form-group">
                       <label for="executionPeriod" class="form-label">{{ 'serviceRequest.formA.executionPeriod' | t
@@ -187,6 +164,37 @@
                       </span>
                     </div>
                   </div>
+
+                  <div class="form-column">
+                    <div class="form-group">
+                      <label for="projectType" class="form-label">{{ 'serviceRequest.formA.projectType' | t }}</label>
+                      <select id="projectType" formControlName="projectType" class="form-input"
+                        [class.error]="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched">
+                        <option value="" disabled>
+                          {{ 'serviceRequest.formA.projectTypePlaceholder' | t }}
+                        </option>
+                        <option *ngFor="let project of [
+    { value: 0, labelEn: 'Residential', labelAr: 'سكني' },
+    { value: 1, labelEn: 'Commercial', labelAr: 'تجاري' },
+    { value: 3, labelEn: 'Tourist', labelAr: 'اداري' },
+    { value: 2, labelEn: 'Industrial', labelAr: 'سكني استثماري' },
+    { value: 4, labelEn: 'Other', labelAr: 'أخرى' }
+  ]" [value]="project.value">
+                          {{ isRTL() ? project.labelAr : project.labelEn }}
+                        </option>
+
+                      </select>
+                      <span *ngIf="requestForm.get('projectType')?.invalid && requestForm.get('projectType')?.touched"
+                        class="error-message">
+                        {{ getFieldError('projectType') }}
+                      </span>
+                    </div>
+
+                    <!-- Map Selector for Land Location -->
+                    <div class="form-group map-selector-group">
+                      <app-map-selector (landSelected)="onLandSelected($event)"></app-map-selector>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -197,27 +205,6 @@
               <div class="form-section">
                 <div class="form-grid">
                   <div class="form-column">
-                    <div class="form-group">
-                      <label for="planType" class="form-label">{{ 'serviceRequest.formB.planType' | t }}</label>
-                      <select id="planType" formControlName="planType" class="form-input"
-                        [class.error]="requestForm.get('planType')?.invalid && requestForm.get('planType')?.touched">
-                        <option value="" disabled selected>
-                          {{ 'serviceRequest.formB.planTypePlaceholder' | t }}
-                        </option>
-                        <option *ngFor="let plan of [
-    { value: 0, labelEn: 'Residential', labelAr: 'سكني' },
-    { value: 1, labelEn: 'Commercial', labelAr: 'تجاري' }
-  ]" [value]="plan.value">
-                          {{ isRTL() ? plan.labelAr : plan.labelEn }}
-                        </option>
-                      </select>
-
-
-                      <span *ngIf="requestForm.get('planType')?.invalid && requestForm.get('planType')?.touched"
-                        class="error-message">
-                        {{ getFieldError('planType') }}
-                      </span>
-                    </div>
 
                     <div class="form-group">
                       <label for="numberOfBuildings" class="form-label">{{ 'serviceRequest.formB.numberOfBuildings' | t
@@ -415,39 +402,66 @@
                   <p>{{ 'common.loading' | t }}</p>
                 </div>
 
-                <!-- Document Type Selection and Upload -->
-                <div *ngIf="!isLoadingDocumentTypes && documentTypes.length > 0" class="document-upload-controls">
-                  <!-- Document Type Dropdown -->
-                  <div class="form-group">
-                    <label for="documentType" class="form-label">{{ 'serviceRequest.documents' | t }}</label>
-                    <select id="documentType" class="form-input" [ngModel]="selectedDocumentType?.id || ''"
-                      (ngModelChange)="onDocumentTypeSelect($event)" [ngModelOptions]="{standalone: true}">
-                      <option value="">{{ 'serviceRequest.selectDocument' | t }}</option>
-                      <option *ngFor="let docType of documentTypes" [value]="docType.id">
-                        {{ getDocumentTypeName(docType) }}<span *ngIf="docType.required"> *</span>
-                      </option>
-                    </select>
-                  </div>
-
-                  <!-- File Upload Area -->
-                  <div *ngIf="selectedDocumentType" class="upload-area">
-                    <input type="file" [id]="'documentUpload-' + selectedDocumentType.id" class="file-input"
-                      [accept]="getAcceptedFormats(selectedDocumentType)" (change)="onFileSelected($event)" />
-                    <label [for]="'documentUpload-' + selectedDocumentType.id" class="upload-label">
-                      <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                      </svg>
-                      <span class="upload-text">{{ 'serviceRequest.browseFiles' | t }}</span>
-                      <span class="upload-hint">{{ getUploadHint(selectedDocumentType) }}</span>
-                    </label>
-                  </div>
-
-                  <!-- Document Errors -->
-                  <div *ngIf="documentErrors.length > 0" class="document-errors">
-                    <div *ngFor="let error of documentErrors" class="error-message">
-                      {{ error }}
+                <!-- Document Types List - Each with its own upload button -->
+                <div *ngIf="!isLoadingDocumentTypes && documentTypes.length > 0" class="document-types-list">
+                  <div *ngFor="let docType of documentTypes" class="document-type-row">
+                    <div class="document-type-info">
+                      <div class="document-type-header">
+                        <span class="document-type-name">{{ getDocumentTypeName(docType) }}</span>
+                        <span *ngIf="docType.required" class="required-badge">*</span>
+                        <span *ngIf="getUploadedDocument(docType.id)" class="uploaded-badge">
+                          <svg class="check-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                          </svg>
+                          {{ 'serviceRequest.uploaded' | t }}
+                        </span>
+                      </div>
+                      <div class="document-type-details">
+                        <span class="document-description">{{ getDocumentDescription(docType) }}</span>
+                        <span class="document-formats">{{ getAcceptedFormats(docType) }}</span>
+                        <span class="document-size-limit">{{ 'serviceRequest.maxSize' | t }}: {{ formatFileSize(docType.maxSize || 10 * 1024 * 1024) }}</span>
+                      </div>
+                      <!-- Show uploaded file info if exists -->
+                      <div *ngIf="getUploadedDocument(docType.id)" class="uploaded-file-info">
+                        <svg class="file-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        <span class="file-name">{{ getUploadedDocument(docType.id)!.file.name }}</span>
+                        <span class="file-size">{{ formatFileSize(getUploadedDocument(docType.id)!.file.size) }}</span>
+                        <button type="button" class="remove-file-btn" (click)="removeDocument(docType.id)"
+                          aria-label="Remove document">
+                          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
                     </div>
+                    <div class="document-upload-action">
+                      <input type="file" 
+                        [id]="'documentUpload-' + docType.id" 
+                        class="file-input-hidden"
+                        [accept]="getAcceptedFormats(docType)" 
+                        (change)="onFileSelectedForType($event, docType)" />
+                      <label [for]="'documentUpload-' + docType.id" 
+                        class="upload-btn"
+                        [class.uploaded]="getUploadedDocument(docType.id)"
+                        [class.required]="docType.required">
+                        <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <span>{{ getUploadedDocument(docType.id) ? ('serviceRequest.replace' | t) : ('serviceRequest.upload' | t) }}</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Document Errors -->
+                <div *ngIf="documentErrors.length > 0" class="document-errors">
+                  <div *ngFor="let error of documentErrors" class="error-message">
+                    {{ error }}
                   </div>
                 </div>
 
@@ -470,35 +484,6 @@
                   </div>
                 </div>
 
-                <!-- Uploaded Documents List -->
-                <div *ngIf="uploadedDocuments.size > 0" class="uploaded-documents">
-                  <h3 class="documents-title">{{ 'serviceRequest.uploadedDocuments' | t }}</h3>
-                  <div class="documents-list">
-                    <div *ngFor="let docType of documentTypes" class="document-type-group">
-                      <div *ngIf="getUploadedDocument(docType.id)" class="document-item">
-                        <div class="document-info">
-                          <svg class="document-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                          <div class="document-details">
-                            <span class="document-type-name">{{ getDocumentTypeName(docType) }}</span>
-                            <span class="document-name">{{ getUploadedDocument(docType.id)!.file.name }}</span>
-                            <span class="document-size">{{ formatFileSize(getUploadedDocument(docType.id)!.file.size)
-                              }}</span>
-                          </div>
-                        </div>
-                        <button type="button" class="remove-document-btn" (click)="removeDocument(docType.id)"
-                          aria-label="Remove document">
-                          <svg class="remove-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

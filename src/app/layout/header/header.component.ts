@@ -26,7 +26,7 @@ import { ClickOutsideDirective } from '@shared/pipes-directives/click-outside.di
             <div class="brand-logo-icon">
               <img 
                 src="assets/logo.png" 
-                alt="AQARAT"
+                alt="Aqarat Logo"
                 class="logo-image"
               />
             </div>
@@ -61,22 +61,21 @@ import { ClickOutsideDirective } from '@shared/pipes-directives/click-outside.di
             <!-- Authenticated: Profile Dropdown -->
             <div *ngIf="isAuthenticated()" class="profile-dropdown-container" (clickOutside)="closeProfileDropdown()">
               <button 
-                class="profile-avatar-btn" 
+                class="profile-btn" 
                 type="button" 
                 (click)="toggleProfileDropdown()"
                 [attr.aria-label]="'Profile menu'"
                 [attr.aria-expanded]="isProfileDropdownOpen()"
-                [title]="getDisplayName()"
               >
                 <div class="profile-avatar">
-                  {{ getUserInitial() }}
+                  {{ getFirstNameInitial() }}
                 </div>
               </button>
               
               <div *ngIf="isProfileDropdownOpen()" class="profile-dropdown">
                 <div class="profile-dropdown-header">
                   <div class="profile-dropdown-avatar">
-                    {{ getUserInitial() }}
+                    {{ getFirstNameInitial() }}
                   </div>
                   <div class="profile-dropdown-info">
                     <div class="profile-dropdown-name">{{ getDisplayName() }}</div>
@@ -191,27 +190,20 @@ import { ClickOutsideDirective } from '@shared/pipes-directives/click-outside.di
       @apply relative;
     }
 
-    .profile-avatar-btn {
-      @apply p-0 rounded-full transition-all;
+    .profile-btn {
+      @apply flex items-center justify-center p-2 rounded-lg hover:bg-white/20 transition-all;
+      @apply text-white text-sm;
       border: none;
       cursor: pointer;
-      background: transparent;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .profile-avatar-btn:hover {
-      transform: scale(1.1);
+      min-width: fit-content;
     }
 
     .profile-avatar {
       @apply w-8 h-8 rounded-full bg-qatar-maroon flex items-center justify-center;
-      @apply text-white text-sm font-semibold;
+      @apply text-white text-xs font-semibold;
       flex-shrink: 0;
       font-size: 0.875rem;
-      font-weight: 600;
-      transition: transform 0.2s ease;
+      text-transform: uppercase;
     }
 
     .profile-chevron.rotated {
@@ -229,9 +221,10 @@ import { ClickOutsideDirective } from '@shared/pipes-directives/click-outside.di
     }
 
     .profile-dropdown-avatar {
-      @apply w-10 h-10 rounded-full bg-qatar-maroon flex items-center justify-center;
-      @apply text-white text-sm font-semibold;
+      @apply w-12 h-12 rounded-full bg-qatar-maroon flex items-center justify-center;
+      @apply text-white text-lg font-semibold;
       flex-shrink: 0;
+      text-transform: uppercase;
     }
 
     .profile-dropdown-info {
@@ -373,27 +366,28 @@ export class HeaderComponent implements OnInit, OnDestroy {
   getDisplayName(): string {
     const user = this.authService.getCurrentUser();
     if (user) {
-      // Return firstName (which is the username) or fallback to username/email
-      return user.firstName || user.username || user.email || 'User';
+      return `${user.firstName} ${user.lastName}`.trim() || user.username || user.email;
     }
     return 'User';
-  }
-
-  /**
-   * Gets the first letter of the user's name for avatar
-   */
-  getUserInitial(): string {
-    const user = this.authService.getCurrentUser();
-    if (user) {
-      const name = user.firstName || user.username || user.email || 'U';
-      return name.charAt(0).toUpperCase();
-    }
-    return 'U';
   }
 
   getCurrentUserEmail(): string {
     const user = this.authService.getCurrentUser();
     return user?.email || '';
+  }
+
+  getFirstNameInitial(): string {
+    const user = this.authService.getCurrentUser();
+    if (user?.firstName) {
+      return user.firstName.charAt(0).toUpperCase();
+    }
+    if (user?.username) {
+      return user.username.charAt(0).toUpperCase();
+    }
+    if (user?.email) {
+      return user.email.charAt(0).toUpperCase();
+    }
+    return 'U';
   }
 
   onLogout(): void {
