@@ -169,17 +169,6 @@
                       readonly 
                     />
                   </div>
-
-                  <div class="form-group">
-                    <label for="myRequests" class="form-label">{{ 'profile.myRequests' | t }}</label>
-                    <input 
-                      type="text" 
-                      id="myRequests" 
-                      formControlName="myRequests"
-                      class="form-input readonly-input" 
-                      readonly 
-                    />
-                  </div>
                 </div>
 
                 <div class="form-column">
@@ -224,6 +213,56 @@
             </div>
           </div>
         </form>
+
+        <!-- Requests Statistics Section -->
+        <div class="requests-stats-section">
+          <div class="stats-header">
+            <h2 class="stats-title">{{ 'profile.requestsStatistics' | t }}</h2>
+            <p class="stats-description">{{ 'profile.requestsStatisticsDesc' | t }}</p>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-file-alt"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">{{ getMyRequestsCount() }}</div>
+                <div class="stat-label">{{ 'profile.totalRequests' | t }}</div>
+              </div>
+              <a routerLink="/service-requests/my-requests" class="stat-link">
+                {{ 'profile.viewAll' | t }}
+                <i [class]="isRTL() ? 'fas fa-chevron-left' : 'fas fa-chevron-right'"></i>
+              </a>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon pending">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">{{ getPendingRequestsCount() }}</div>
+                <div class="stat-label">{{ 'profile.pendingRequests' | t }}</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon approved">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">{{ getApprovedRequestsCount() }}</div>
+                <div class="stat-label">{{ 'profile.approvedRequests' | t }}</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon completed">
+                <i class="fas fa-check-double"></i>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">{{ getCompletedRequestsCount() }}</div>
+                <div class="stat-label">{{ 'profile.completedRequests' | t }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

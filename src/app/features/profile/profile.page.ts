@@ -9,6 +9,8 @@ import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
 import { Subscription } from 'rxjs';
 import { IUser } from '@core/models/user.model';
 import { UserRole } from '@core/enums/user-role.enum';
+import { ServiceRequestService } from '@features/service-requests/services/service-request.service';
+import { ServiceRequest, RequestStatus } from '@features/service-requests/models/service.model';
 
 interface RelatedService {
   id: string;
@@ -39,12 +41,17 @@ export class ProfilePage implements OnInit, OnDestroy {
   private readonly i18nService = inject(I18nService);
   private readonly translateService = inject(TranslateService);
   private readonly fb = inject(FormBuilder);
+  private readonly serviceRequestService = inject(ServiceRequestService);
   private langChangeSubscription?: Subscription;
 
   profileForm: FormGroup;
   isRTL = signal(this.i18nService.isRTL());
   currentUser: IUser | null = null;
   displayUser: IUser | null = null; // User data to display (includes dummy data fallback)
+  
+  // Requests statistics
+  userRequests: ServiceRequest[] = [];
+  isLoadingRequests = false;
 
   // Communication channels options
   communicationChannels = [
@@ -101,7 +108,6 @@ export class ProfilePage implements OnInit, OnDestroy {
       lastLoginAt: [{ value: '', disabled: true }],
       licenseNumber: [{ value: '', disabled: true }],
       licensedProjectsCount: [{ value: '', disabled: true }],
-      myRequests: [{ value: '', disabled: true }],
       preferredLanguage: [{ value: '', disabled: true }],
       preferredCommunicationChannel: [{ value: '', disabled: false }], // Enabled for selection
       newsletterSubscription: [{ value: false, disabled: false }], // Checkbox - enabled
@@ -111,6 +117,9 @@ export class ProfilePage implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Load user data
     this.loadUserData();
+    
+    // Load requests statistics
+    this.loadRequestsStatistics();
 
     // Subscribe to language changes
     this.langChangeSubscription = this.translateService.onLangChange.subscribe(() => {
@@ -121,6 +130,7 @@ export class ProfilePage implements OnInit, OnDestroy {
     // Subscribe to auth state changes
     this.authService.authState$.subscribe(() => {
       this.loadUserData();
+      this.loadRequestsStatistics();
     });
   }
 
@@ -162,7 +172,6 @@ export class ProfilePage implements OnInit, OnDestroy {
           lastLoginAt: this.displayUser!.lastLoginAt ? this.formatDate(this.displayUser!.lastLoginAt) : translations['profile.never'],
           licenseNumber: user?.licenseNumber || 'LIC-2024-001234',
           licensedProjectsCount: user?.licensedProjectsCount?.toString() || '5',
-          myRequests: user?.myRequests?.toString() || '12',
           preferredLanguage: this.getLanguageDisplayName(user?.preferredLanguage || 'ar'),
           preferredCommunicationChannel: user?.preferredCommunicationChannel || 'email',
           newsletterSubscription: user?.newsletterSubscription ?? true,
@@ -196,7 +205,6 @@ export class ProfilePage implements OnInit, OnDestroy {
       // Additional profile fields
       licenseNumber: 'LIC-2024-001234',
       licensedProjectsCount: 5,
-      myRequests: 12,
       preferredLanguage: 'ar',
       preferredCommunicationChannel: 'email',
       newsletterSubscription: true,
@@ -306,5 +314,54 @@ export class ProfilePage implements OnInit, OnDestroy {
       return fullName || this.displayUser.username || this.displayUser.email;
     }
     return this.translateService.instant('profile.user');
+  }
+
+  /**
+   * Loads requests statistics
+   */
+  private loadRequestsStatistics(): void {
+    this.isLoadingRequests = true;
+    this.serviceRequestService.getUserRequests().subscribe({
+      next: (requests) => {
+        this.userRequests = requests;
+        this.isLoadingRequests = false;
+      },
+      error: (error) => {
+        console.error('Failed to load requests:', error);
+        this.isLoadingRequests = false;
+        // Use dummy data on error
+        this.userRequests = [];
+      },
+    });
+  }
+
+  /**
+   * Gets total requests count
+   */
+  getMyRequestsCount(): number {
+    return this.userRequests.length || 12; // Fallback to 12 for demo
+  }
+
+  /**
+   * Gets pending requests count
+   */
+  getPendingRequestsCount(): number {
+    return this.userRequests.filter(
+      (r) => r.status === RequestStatus.SUBMITTED || r.status === RequestStatus.IN_REVIEW
+    ).length || 3; // Fallback for demo
+  }
+
+  /**
+   * Gets approved requests count
+   */
+  getApprovedRequestsCount(): number {
+    return this.userRequests.filter((r) => r.status === RequestStatus.APPROVED).length || 5; // Fallback for demo
+  }
+
+  /**
+   * Gets completed requests count
+   */
+  getCompletedRequestsCount(): number {
+    return this.userRequests.filter((r) => r.status === RequestStatus.COMPLETED).length || 4; // Fallback for demo
   }
 }

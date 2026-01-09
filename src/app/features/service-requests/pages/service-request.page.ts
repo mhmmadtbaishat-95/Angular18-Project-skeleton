@@ -103,8 +103,8 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
     ['license', {
       licenseNumber: 'LIC-2024-001234',
       issueDate: '15 يناير 2022',
-      expiryDate: '31 ديسمبر 2024',
-      licenseStatus: 'Expired',
+      expiryDate: '31 ديسمبر 2026',
+      licenseStatus: 'Active',
       licenseHolder: 'شركة قطر للتطوير العقاري',
       licenseHolderEn: 'Qatar Real Estate Development Company'
     }],
@@ -1286,11 +1286,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
     // Static warnings (pre-defined)
     const warnings: string[] = [];
     if (docTypeKey === 'license') {
-      warnings.push(
-        this.isRTL() 
-          ? '⚠️ الترخيص منتهي الصلاحية. تاريخ الانتهاء: 31 ديسمبر 2024. يرجى تجديد الترخيص قبل المتابعة.'
-          : '⚠️ License is expired. Expiry Date: December 31, 2024. Please renew the license before proceeding.'
-      );
+      // License is active, so no expiration warning
       warnings.push(
         this.isRTL()
           ? '📄 جودة الصورة منخفضة. يرجى التأكد من وضوح جميع المعلومات والنصوص.'

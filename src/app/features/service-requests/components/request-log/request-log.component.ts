@@ -60,14 +60,40 @@ export class RequestLogComponent implements OnInit {
     this.isLoading = true;
     this.serviceRequestService.getRequestLog().subscribe({
       next: (logs) => {
-        this.requestLogs = logs;
-        this.filteredLogs = logs;
+        // Sort logs by requestNumber in descending order
+        this.requestLogs = this.sortLogsByNumber(logs);
+        this.filteredLogs = [...this.requestLogs];
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Failed to load request logs:', error);
         this.isLoading = false;
       },
+    });
+  }
+
+  /**
+   * Sorts logs by request number in descending order
+   */
+  private sortLogsByNumber(logs: RequestLogEntry[]): RequestLogEntry[] {
+    return [...logs].sort((a, b) => {
+      // Extract numeric part from request number (e.g., "SR-2024-001234" -> 2024001234)
+      const getNumericValue = (requestNumber: string): number => {
+        // Remove all non-numeric characters and convert to number
+        const numericStr = requestNumber.replace(/\D/g, '');
+        return numericStr ? parseInt(numericStr, 10) : 0;
+      };
+
+      const numA = getNumericValue(a.requestNumber);
+      const numB = getNumericValue(b.requestNumber);
+
+      // If numeric values are equal, compare as strings
+      if (numA === numB) {
+        return b.requestNumber.localeCompare(a.requestNumber);
+      }
+
+      // Sort in descending order (newest first)
+      return numB - numA;
     });
   }
 
@@ -79,7 +105,9 @@ export class RequestLogComponent implements OnInit {
     if (status === 'all') {
       this.filteredLogs = [...this.requestLogs];
     } else {
-      this.filteredLogs = this.requestLogs.filter((r) => r.status === status);
+      // Filter and maintain descending order by request number
+      const filtered = this.requestLogs.filter((r) => r.status === status);
+      this.filteredLogs = this.sortLogsByNumber(filtered);
     }
   }
 

@@ -60,14 +60,40 @@ export class RequestListComponent implements OnInit {
     this.isLoading = true;
     this.serviceRequestService.getUserRequests().subscribe({
       next: (requests) => {
-        this.requests = requests;
-        this.filteredRequests = requests;
+        // Sort requests by requestNumber in descending order
+        this.requests = this.sortRequestsByNumber(requests);
+        this.filteredRequests = [...this.requests];
         this.isLoading = false;
       },
       error: (error) => {
         console.error('Failed to load requests:', error);
         this.isLoading = false;
       },
+    });
+  }
+
+  /**
+   * Sorts requests by request number in descending order
+   */
+  private sortRequestsByNumber(requests: ServiceRequest[]): ServiceRequest[] {
+    return [...requests].sort((a, b) => {
+      // Extract numeric part from request number (e.g., "SR-2024-001234" -> 2024001234)
+      const getNumericValue = (requestNumber: string): number => {
+        // Remove all non-numeric characters and convert to number
+        const numericStr = requestNumber.replace(/\D/g, '');
+        return numericStr ? parseInt(numericStr, 10) : 0;
+      };
+
+      const numA = getNumericValue(a.requestNumber);
+      const numB = getNumericValue(b.requestNumber);
+
+      // If numeric values are equal, compare as strings
+      if (numA === numB) {
+        return b.requestNumber.localeCompare(a.requestNumber);
+      }
+
+      // Sort in descending order (newest first)
+      return numB - numA;
     });
   }
 
@@ -79,7 +105,9 @@ export class RequestListComponent implements OnInit {
     if (status === 'all') {
       this.filteredRequests = [...this.requests];
     } else {
-      this.filteredRequests = this.requests.filter((r) => r.status === status);
+      // Filter and maintain descending order by request number
+      const filtered = this.requests.filter((r) => r.status === status);
+      this.filteredRequests = this.sortRequestsByNumber(filtered);
     }
   }
 

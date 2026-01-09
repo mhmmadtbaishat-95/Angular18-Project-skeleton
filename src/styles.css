@@ -1,5 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Almarai:wght@300;400;700;800&display=swap');
 
+/* Lusail Font - Add @font-face if you have the font files locally */
+/* If you have Lusail font files, uncomment and update the paths */
+/*
+@font-face {
+  font-family: 'Lusail';
+  src: url('/assets/fonts/Lusail-Regular.woff2') format('woff2'),
+       url('/assets/fonts/Lusail-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lusail';
+  src: url('/assets/fonts/Lusail-Bold.woff2') format('woff2'),
+       url('/assets/fonts/Lusail-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+*/
+
+/* Using a similar elegant font as fallback - You can replace with Lusail when available */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -17,21 +42,24 @@
 
   body {
     @apply h-full m-0 p-0;
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    /* Lusail Font - Replace 'Playfair Display' with 'Lusail' when font files are available */
+    font-family: 'Lusail', 'Playfair Display', 'Cormorant Garamond', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     @apply bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:bg-gradient-to-br dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 text-gray-900 dark:text-gray-50 transition-colors duration-300;
   }
 
-  /* RTL Support with Arabic Font */
+  /* RTL Support with Arabic Font - Using Lusail for Arabic as well */
   body.rtl {
     direction: rtl;
-    font-family: 'Almarai', 'Segoe UI', Tahoma, Arial, sans-serif;
+    /* Lusail Font for Arabic - Replace 'Cormorant Garamond' with 'Lusail' when font files are available */
+    font-family: 'Lusail', 'Cormorant Garamond', 'Almarai', 'Segoe UI', Tahoma, Arial, sans-serif;
   }
 
   body.ltr {
     direction: ltr;
-    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    /* Lusail Font - Replace 'Playfair Display' with 'Lusail' when font files are available */
+    font-family: 'Lusail', 'Playfair Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   }
 
   /* RTL-specific adjustments */
