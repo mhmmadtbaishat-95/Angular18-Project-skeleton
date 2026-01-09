@@ -343,25 +343,10 @@ export class ProfilePage implements OnInit, OnDestroy {
   }
 
   /**
-   * Gets pending requests count
+   * Gets licensed projects count
    */
-  getPendingRequestsCount(): number {
-    return this.userRequests.filter(
-      (r) => r.status === RequestStatus.SUBMITTED || r.status === RequestStatus.IN_REVIEW
-    ).length || 3; // Fallback for demo
-  }
-
-  /**
-   * Gets approved requests count
-   */
-  getApprovedRequestsCount(): number {
-    return this.userRequests.filter((r) => r.status === RequestStatus.APPROVED).length || 5; // Fallback for demo
-  }
-
-  /**
-   * Gets completed requests count
-   */
-  getCompletedRequestsCount(): number {
-    return this.userRequests.filter((r) => r.status === RequestStatus.COMPLETED).length || 4; // Fallback for demo
+  getLicensedProjectsCount(): number {
+    const user = this.displayUser as any;
+    return user?.licensedProjectsCount || 5; // Fallback for demo
   }
 }

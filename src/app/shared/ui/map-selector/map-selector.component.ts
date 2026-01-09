@@ -33,17 +33,17 @@ export class MapSelectorComponent implements OnInit, AfterViewInit, OnDestroy {
   isMapLoaded = signal(false);
   mapError = signal(false);
   
-  // Default location: Doha, Qatar
-  private readonly defaultLat = 25.2854;
-  private readonly defaultLng = 51.5310;
+  // Default location: Lusail City, Qatar
+  private readonly defaultLat = 25.4200;
+  private readonly defaultLng = 51.5000;
   
   // Static land details (pre-populated)
   private readonly staticLandDetails: LandDetails = {
-    latitude: 25.2854,
-    longitude: 51.5310,
-    address: 'الوكرة، الدوحة، قطر',
+    latitude: 25.4200,
+    longitude: 51.5000,
+    address: 'لوسيل، الدوحة، قطر',
     plotNumber: '1234/2024',
-    area: 'الوكرة',
+    area: 'لوسيل',
     cadastralNumber: 'QAT-2024-1234'
   };
 

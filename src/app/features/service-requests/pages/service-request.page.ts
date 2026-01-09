@@ -13,6 +13,7 @@ import { NotificationService } from '@core/services/notification/notification.se
 import { TranslateService } from '@ngx-translate/core';
 import { I18nService } from '@core/services/i18n/i18n.service';
 import { TranslatePipe } from '@shared/pipes-directives/translate.pipe';
+import { NumberFormatDirective } from '@shared/pipes-directives/number-format.directive';
 import { DOCUMENT } from '@angular/common';
 import { Subscription, filter } from 'rxjs';
 import { StepWizardComponent, StepConfig } from '../components/step-wizard/step-wizard.component';
@@ -36,6 +37,7 @@ import { MapSelectorComponent, LandDetails } from '@shared/ui/map-selector/map-s
     TranslatePipe,
     StepWizardComponent,
     MapSelectorComponent,
+    NumberFormatDirective,
   ],
   templateUrl: './service-request.page.html',
   styleUrls: ['./service-request.page.scss'],
@@ -86,6 +88,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   // Map modal properties
   showMapModal = false;
   pendingLandDetails: LandDetails | null = null;
+  isLocationSelectedFromMap = false; // Track if location was selected from map
 
   // AI Document Analysis properties
   documentAnalysis: Map<string, {
@@ -143,12 +146,12 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       licenseStatus: [{ value: '', disabled: true }],
       licenseExpirationDate: [{ value: '', disabled: true }],
 
-      // Form A: Project Licenses Request (No pre-populated data)
-      projectName: ['', Validators.required],
-      projectType: ['', Validators.required],
-      area: ['', Validators.required],
-      plotNumber: ['', Validators.required], // Will be populated only after map selection
-      landArea: ['', Validators.required],
+        // Form A: Project Licenses Request (No pre-populated data)
+        projectName: ['', Validators.required],
+        projectType: ['', Validators.required],
+        area: [{ value: '', disabled: true }, Validators.required], // Disabled until map selection
+        plotNumber: [{ value: '', disabled: true }, Validators.required], // Disabled until map selection
+        landArea: ['', Validators.required],
       numberOfUnits: [''],
       executionPeriod: ['', Validators.required],
 
@@ -158,8 +161,9 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       numberOfDevelopmentStages: ['', Validators.required],
       approximateHeight: ['', Validators.required],
 
-      // Form C: Escrow Account (optional initially, will be required if isOffPlan is true)
-      isOffPlan: [false],
+      // Form C: Escrow Account (optional initially, will be required if isOffPlan is 0 (yes))
+      // 0 = Yes (off-plan), 1 = No (not off-plan)
+      isOffPlan: [1], // Default to 1 (No)
       bankName: ['', ''],
       estimatedProjectValue: ['', ''],
 
@@ -201,10 +205,16 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    */
   confirmMapSelection(): void {
     if (this.pendingLandDetails) {
+      this.isLocationSelectedFromMap = true; // Mark that location was selected
       this.requestForm.patchValue({
         area: this.pendingLandDetails.area,
         plotNumber: this.pendingLandDetails.plotNumber,
       }, { emitEvent: false });
+      
+      // Enable fields for editing after map selection
+      this.requestForm.get('area')?.enable();
+      this.requestForm.get('plotNumber')?.enable();
+      
       this.notificationService.success(
         this.translateService.instant('serviceRequest.mapSelector.locationSelected')
       );
@@ -468,12 +478,13 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
    * If isOffPlan is true, makes forms required; if false, makes them optional
    */
   toggleOffPlanForms(isOffPlan: any): void {
-    // Convert string to boolean if needed
-    const isOffPlanBool = isOffPlan === true || isOffPlan === 'true' || isOffPlan === 'True';
+    // Convert to number: 0 = Yes (off-plan), 1 = No (not off-plan)
+    const isOffPlanValue = typeof isOffPlan === 'string' ? parseInt(isOffPlan, 10) : isOffPlan;
+    const isOffPlanSelected = isOffPlanValue === 0; // 0 means Yes (off-plan)
     const formCFields = ['bankName', 'estimatedProjectValue'];
     const formDFields = ['numberOfUnitsForSale', 'startSaleDate', 'expectedDeliveryDate', 'downPaymentPercentage'];
     
-    if (isOffPlanBool) {
+    if (isOffPlanSelected) {
       // Make Form C and D fields required
       formCFields.forEach(field => {
         this.requestForm.get(field)?.setValidators([Validators.required]);
@@ -573,7 +584,7 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
       NumberOfBuildings: String(formValues.numberOfBuildings || ''),
       NumberOfDevelopmentStages: String(formValues.numberOfDevelopmentStages || ''),
       ApproximateHeight: String(formValues.approximateHeight || ''),
-      IsTheProjectOffPlanSale: formValues.isOffPlan ? 1 : 0,
+      IsTheProjectOffPlanSale: formValues.isOffPlan === 0 ? 0 : 1, // 0 = Yes, 1 = No
       BankName: formValues.bankName || '',
       EstimatedValueOfProject: String(formValues.estimatedProjectValue || ''),
       NumberOfUnitsForSale: String(formValues.numberOfUnitsForSale || ''),
@@ -829,12 +840,14 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Checks if off-plan is selected (converts string to boolean)
+   * Checks if off-plan is selected
+   * Returns true if value is 0 (Yes), false if value is 1 (No)
    */
   isOffPlanSelected(): boolean {
     const value = this.requestForm.get('isOffPlan')?.value;
-    // Handle both boolean and string values from select
-    return value === true || value === 'true' || value === 'True';
+    // Convert to number: 0 = Yes (off-plan), 1 = No (not off-plan)
+    const numValue = typeof value === 'string' ? parseInt(value, 10) : value;
+    return numValue === 0; // 0 means Yes (off-plan)
   }
 
   /**

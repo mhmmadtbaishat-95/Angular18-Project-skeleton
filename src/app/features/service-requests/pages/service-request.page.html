@@ -136,7 +136,8 @@
 
                     <div class="form-group">
                       <label for="landArea" class="form-label">{{ 'serviceRequest.formA.landArea' | t }}</label>
-                      <input type="number" id="landArea" formControlName="landArea" class="form-input"
+                      <input type="text" id="landArea" formControlName="landArea" class="form-input"
+                        appNumberFormat [decimals]="2" [allowDecimals]="true"
                         [class.error]="requestForm.get('landArea')?.invalid && requestForm.get('landArea')?.touched"
                         placeholder="{{ 'serviceRequest.formA.landAreaPlaceholder' | t }}" />
                       <span *ngIf="requestForm.get('landArea')?.invalid && requestForm.get('landArea')?.touched"
@@ -188,12 +189,12 @@
                       <input type="text" id="area" formControlName="area" class="form-input"
                         [class.error]="requestForm.get('area')?.invalid && requestForm.get('area')?.touched"
                         placeholder="{{ 'serviceRequest.formA.areaPlaceholder' | t }}"
-                        [readonly]="true" />
+                        [readonly]="!isLocationSelectedFromMap" />
                       <span *ngIf="requestForm.get('area')?.invalid && requestForm.get('area')?.touched"
                         class="error-message">
                         {{ getFieldError('area') }}
                       </span>
-                      <small class="field-hint">{{ 'serviceRequest.mapSelector.selectFromMapHint' | t }}</small>
+                      <small *ngIf="!isLocationSelectedFromMap" class="field-hint">{{ 'serviceRequest.mapSelector.selectFromMapHint' | t }}</small>
                     </div>
 
                     <div class="form-group">
@@ -201,12 +202,12 @@
                       <input type="text" id="plotNumber" formControlName="plotNumber" class="form-input"
                         [class.error]="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
                         placeholder="{{ 'serviceRequest.formA.plotNumberPlaceholder' | t }}"
-                        [readonly]="true" />
+                        [readonly]="!isLocationSelectedFromMap" />
                       <span *ngIf="requestForm.get('plotNumber')?.invalid && requestForm.get('plotNumber')?.touched"
                         class="error-message">
                         {{ getFieldError('plotNumber') }}
                       </span>
-                      <small class="field-hint">{{ 'serviceRequest.mapSelector.selectFromMapHint' | t }}</small>
+                      <small *ngIf="!isLocationSelectedFromMap" class="field-hint">{{ 'serviceRequest.mapSelector.selectFromMapHint' | t }}</small>
                     </div>
                   </div>
                 </div>
@@ -293,8 +294,8 @@
                   <label class="form-label" for="isOffPlan">{{ 'serviceRequest.formC.isOffPlan' | t }}</label>
                   <select id="isOffPlan" formControlName="isOffPlan" class="form-input"
                     [class.error]="requestForm.get('isOffPlan')?.invalid && requestForm.get('isOffPlan')?.touched">
-                    <option [value]="false">{{ 'serviceRequest.formC.no' | t }}</option>
-                    <option [value]="true">{{ 'serviceRequest.formC.yes' | t }}</option>
+                    <option [value]="0">{{ 'serviceRequest.formC.yes' | t }}</option>
+                    <option [value]="1">{{ 'serviceRequest.formC.no' | t }}</option>
                   </select>
                 </div>
               </div>
@@ -322,8 +323,9 @@
                     <div class="form-group">
                       <label for="estimatedProjectValue" class="form-label">{{
                         'serviceRequest.formC.estimatedProjectValue' | t }}</label>
-                      <input type="number" id="estimatedProjectValue" formControlName="estimatedProjectValue"
+                      <input type="text" id="estimatedProjectValue" formControlName="estimatedProjectValue"
                         class="form-input"
+                        appNumberFormat [decimals]="2" [allowDecimals]="true"
                         [class.error]="requestForm.get('estimatedProjectValue')?.invalid && requestForm.get('estimatedProjectValue')?.touched"
                         placeholder="{{ 'serviceRequest.formC.estimatedProjectValuePlaceholder' | t }}" />
                       <span
@@ -486,8 +488,8 @@
                         <div class="ai-header">
                           <i class="fas fa-robot ai-icon"></i>
                           <span class="ai-title">{{ 'serviceRequest.aiAnalysis' | t }}</span>
-                        </div>
-                        
+                  </div>
+
                         <!-- AI Summary -->
                         <div class="ai-summary">
                           <div class="ai-summary-label">{{ 'serviceRequest.aiSummary' | t }}:</div>
@@ -533,20 +535,20 @@
                         class="upload-btn"
                         [class.uploaded]="getUploadedDocument(docType.id)"
                         [class.required]="docType.required">
-                        <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
+                      <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
                         <span>{{ getUploadedDocument(docType.id) ? ('serviceRequest.replace' | t) : ('serviceRequest.upload' | t) }}</span>
-                      </label>
+                    </label>
                     </div>
                   </div>
-                </div>
+                  </div>
 
-                <!-- Document Errors -->
-                <div *ngIf="documentErrors.length > 0" class="document-errors">
-                  <div *ngFor="let error of documentErrors" class="error-message">
-                    {{ error }}
+                  <!-- Document Errors -->
+                  <div *ngIf="documentErrors.length > 0" class="document-errors">
+                    <div *ngFor="let error of documentErrors" class="error-message">
+                      {{ error }}
                   </div>
                 </div>
 

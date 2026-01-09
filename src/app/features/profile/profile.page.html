@@ -213,61 +213,38 @@
             </div>
           </div>
         </form>
-
-        <!-- Requests Statistics Section -->
-        <div class="requests-stats-section">
-          <div class="stats-header">
-            <h2 class="stats-title">{{ 'profile.requestsStatistics' | t }}</h2>
-            <p class="stats-description">{{ 'profile.requestsStatisticsDesc' | t }}</p>
-          </div>
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon">
-                <i class="fas fa-file-alt"></i>
-              </div>
-              <div class="stat-content">
-                <div class="stat-value">{{ getMyRequestsCount() }}</div>
-                <div class="stat-label">{{ 'profile.totalRequests' | t }}</div>
-              </div>
-              <a routerLink="/service-requests/my-requests" class="stat-link">
-                {{ 'profile.viewAll' | t }}
-                <i [class]="isRTL() ? 'fas fa-chevron-left' : 'fas fa-chevron-right'"></i>
-              </a>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon pending">
-                <i class="fas fa-clock"></i>
-              </div>
-              <div class="stat-content">
-                <div class="stat-value">{{ getPendingRequestsCount() }}</div>
-                <div class="stat-label">{{ 'profile.pendingRequests' | t }}</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon approved">
-                <i class="fas fa-check-circle"></i>
-              </div>
-              <div class="stat-content">
-                <div class="stat-value">{{ getApprovedRequestsCount() }}</div>
-                <div class="stat-label">{{ 'profile.approvedRequests' | t }}</div>
-              </div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-icon completed">
-                <i class="fas fa-check-double"></i>
-              </div>
-              <div class="stat-content">
-                <div class="stat-value">{{ getCompletedRequestsCount() }}</div>
-                <div class="stat-label">{{ 'profile.completedRequests' | t }}</div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
-    <!-- Right Column: Related Services -->
+    <!-- Right Column: Stats Boxes & Related Services -->
     <div class="services-column-wrapper">
+      <!-- Stats Boxes -->
+      <div class="stats-boxes-container">
+        <div class="stat-box">
+          <div class="stat-box-icon">
+            <i class="fas fa-building"></i>
+          </div>
+          <div class="stat-box-content">
+            <div class="stat-box-value">{{ getLicensedProjectsCount() }}</div>
+            <div class="stat-box-label">{{ 'profile.licensedProjectsCount' | t }}</div>
+          </div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-icon">
+            <i class="fas fa-file-alt"></i>
+          </div>
+          <div class="stat-box-content">
+            <div class="stat-box-value">4</div>
+            <div class="stat-box-label">{{ 'profile.totalRequests' | t }}</div>
+          </div>
+          <a routerLink="/my-cases" class="stat-box-link">
+            {{ 'profile.viewAll' | t }}
+            <i [class]="isRTL() ? 'fas fa-chevron-left' : 'fas fa-chevron-right'"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Related Services -->
       <div class="related-services-container">
         <h2 class="services-title">{{ 'profile.relatedServices' | t }}</h2>
         <p class="services-description">{{ 'profile.relatedServicesDesc' | t }}</p>
