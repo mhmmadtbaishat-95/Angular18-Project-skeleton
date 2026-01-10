@@ -107,8 +107,7 @@ export class ProfilePage implements OnInit, OnDestroy {
       createdAt: [{ value: '', disabled: true }],
       lastLoginAt: [{ value: '', disabled: true }],
       licenseNumber: [{ value: '', disabled: true }],
-      licensedProjectsCount: [{ value: '', disabled: true }],
-      preferredLanguage: [{ value: '', disabled: true }],
+      preferredLanguage: [{ value: '', disabled: false }], // Enabled for selection
       preferredCommunicationChannel: [{ value: '', disabled: false }], // Enabled for selection
       newsletterSubscription: [{ value: false, disabled: false }], // Checkbox - enabled
     });
@@ -171,8 +170,7 @@ export class ProfilePage implements OnInit, OnDestroy {
           createdAt: this.formatDate(this.displayUser!.createdAt),
           lastLoginAt: this.displayUser!.lastLoginAt ? this.formatDate(this.displayUser!.lastLoginAt) : translations['profile.never'],
           licenseNumber: user?.licenseNumber || 'LIC-2024-001234',
-          licensedProjectsCount: user?.licensedProjectsCount?.toString() || '5',
-          preferredLanguage: this.getLanguageDisplayName(user?.preferredLanguage || 'ar'),
+          preferredLanguage: user?.preferredLanguage || this.i18nService.getCurrentLanguage() || 'ar',
           preferredCommunicationChannel: user?.preferredCommunicationChannel || 'email',
           newsletterSubscription: user?.newsletterSubscription ?? true,
         });
@@ -252,6 +250,23 @@ export class ProfilePage implements OnInit, OnDestroy {
       return developerType === 'Legal' ? 'قانوني' : 'طبيعي';
     }
     return developerType;
+  }
+
+  /**
+   * Handles language change from dropdown
+   */
+  onLanguageChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedLanguage = selectElement.value as 'ar' | 'en';
+    
+    // Update the language in the i18n service
+    this.i18nService.setLanguage(selectedLanguage);
+    
+    // Update RTL state
+    this.updateRTLState();
+    
+    // Reload user data to update translations
+    this.loadUserData();
   }
 
   /**

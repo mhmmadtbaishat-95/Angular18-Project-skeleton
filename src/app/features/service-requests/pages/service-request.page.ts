@@ -201,19 +201,54 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Confirms map selection and updates form
+   * Confirms map selection and updates form with Arabic pre-populated data
    */
   confirmMapSelection(): void {
     if (this.pendingLandDetails) {
       this.isLocationSelectedFromMap = true; // Mark that location was selected
+      
+      // Calculate future dates for the form
+      const today = new Date();
+      const startSaleDate = new Date(today);
+      startSaleDate.setMonth(today.getMonth() + 2); // 2 months from now
+      const expectedDeliveryDate = new Date(today);
+      expectedDeliveryDate.setFullYear(today.getFullYear() + 2); // 2 years from now
+
+      // Pre-populate form with Arabic data after map selection
       this.requestForm.patchValue({
-        area: this.pendingLandDetails.area,
-        plotNumber: this.pendingLandDetails.plotNumber,
+        // Form A: Project Licenses Request
+        projectName: 'مشروع لوسيل السكني',
+        projectType: 0, // 0 = Residential (سكني)
+        area: this.pendingLandDetails.area, // From map
+        plotNumber: this.pendingLandDetails.plotNumber, // From map
+        landArea: '5000.00',
+        numberOfUnits: '120',
+        executionPeriod: '24', // 24 months
+
+        // Form B: Master Plan & Preliminary Design
+        designStage: 1, // 1 = Final (نهائي)
+        numberOfBuildings: '8',
+        numberOfDevelopmentStages: '2',
+        approximateHeight: '45.5', // meters
+
+        // Form C: Escrow Account
+        isOffPlan: 0, // 0 = Yes (off-plan)
+        bankName: 'بنك قطر الوطني',
+        estimatedProjectValue: '50000000.00', // 50 million QAR
+
+        // Form D: License Application
+        numberOfUnitsForSale: '100',
+        startSaleDate: this.formatDateForInput(startSaleDate),
+        expectedDeliveryDate: this.formatDateForInput(expectedDeliveryDate),
+        downPaymentPercentage: '20',
       }, { emitEvent: false });
       
       // Enable fields for editing after map selection
       this.requestForm.get('area')?.enable();
       this.requestForm.get('plotNumber')?.enable();
+      
+      // Trigger validation for off-plan forms since we set isOffPlan to 0 (Yes)
+      this.toggleOffPlanForms(0);
       
       this.notificationService.success(
         this.translateService.instant('serviceRequest.mapSelector.locationSelected')

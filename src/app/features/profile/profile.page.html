@@ -158,29 +158,20 @@
                       readonly 
                     />
                   </div>
-
-                  <div class="form-group">
-                    <label for="licensedProjectsCount" class="form-label">{{ 'profile.licensedProjectsCount' | t }}</label>
-                    <input 
-                      type="text" 
-                      id="licensedProjectsCount" 
-                      formControlName="licensedProjectsCount"
-                      class="form-input readonly-input" 
-                      readonly 
-                    />
-                  </div>
                 </div>
 
                 <div class="form-column">
                   <div class="form-group">
                     <label for="preferredLanguage" class="form-label">{{ 'profile.preferredLanguage' | t }}</label>
-                    <input 
-                      type="text" 
+                    <select 
                       id="preferredLanguage" 
                       formControlName="preferredLanguage"
-                      class="form-input readonly-input" 
-                      readonly 
-                    />
+                      class="form-input"
+                      (change)="onLanguageChange($event)"
+                    >
+                      <option value="ar">{{ 'profile.language.arabic' | t }}</option>
+                      <option value="en">{{ 'profile.language.english' | t }}</option>
+                    </select>
                   </div>
 
                   <div class="form-group">

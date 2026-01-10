@@ -237,6 +237,10 @@
     "completedRequests": "مكتملة",
     "viewAll": "عرض الكل",
     "preferredLanguage": "اللغة المفضلة",
+    "language": {
+      "arabic": "العربية",
+      "english": "English"
+    },
     "preferredCommunicationChannel": "قناة التواصل المفضلة",
     "newsletterSubscription": "الاشتراك في نشرات الأخبار",
     "preferences": "التفضيلات",
@@ -526,7 +530,7 @@
     "submitRequest": "تقديم طلب",
     "serviceName": "اسم الخدمة",
     "successTitle": "تم تسليم الطلب بنجاح",
-    "successMessage": "تم تقديم طلب الخدمة الخاص بك [{{requestNumber}}] لخدمة {{serviceName}} بنجاح و هو الآن قيد المراجعة",
+    "successMessage": "تم تقديم طلب الخدمة الخاص بك [{{requestNumber}}]  بنجاح هو الآن قيد المراجعة",
     "goToServicesList": "الذهاب لقائمة الخدمات",
     "requestInformation": "معلومات الطلب",
     "requestInformationDesc": "يرجى مراجعة معلومات المطور أدناه",

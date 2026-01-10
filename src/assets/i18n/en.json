@@ -181,6 +181,10 @@
     "completedRequests": "Completed",
     "viewAll": "View All",
     "preferredLanguage": "Preferred Language",
+    "language": {
+      "arabic": "العربية",
+      "english": "English"
+    },
     "preferredCommunicationChannel": "Preferred Communication Channel",
     "newsletterSubscription": "Newsletter Subscription",
     "preferences": "Preferences",
