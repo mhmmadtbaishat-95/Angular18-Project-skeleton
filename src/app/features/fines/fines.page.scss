@@ -73,7 +73,7 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -0.02em;
-  line-height: 1.2;
+  line-height: normal !important;
   margin: 0;
   color: #A19576;
 }

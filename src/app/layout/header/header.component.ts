@@ -25,7 +25,7 @@ import { ClickOutsideDirective } from '@shared/pipes-directives/click-outside.di
           <div class="header-brand">
             <div class="brand-logo-icon">
               <img 
-                src="assets/logo.png" 
+                src="assets/aqarat-logo-removebg-preview.png" 
                 alt="Aqarat Logo"
                 class="logo-image"
               />
@@ -167,7 +167,7 @@ import { ClickOutsideDirective } from '@shared/pipes-directives/click-outside.di
     }
 
     .logo-image {
-      height: 40px;
+      height: 50px;
       width: auto;
       object-fit: contain;
     }

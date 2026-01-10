@@ -34,17 +34,19 @@ import { RouterLink } from '@angular/router';
     }
 
     .main-title-ar {
-      @apply text-6xl md:text-7xl lg:text-8xl font-bold mb-4;
+      @apply font-bold;
       background: #A19576;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+            font-size:6rem;
       text-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
     }
 
     .main-title-en {
-      @apply text-3xl md:text-4xl lg:text-5xl font-semibold;
+      @apply font-semibold;
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      font-size:3rem;
       color: #A19576;
     }
 

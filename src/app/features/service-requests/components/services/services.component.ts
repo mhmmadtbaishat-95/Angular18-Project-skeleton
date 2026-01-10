@@ -105,6 +105,8 @@ interface ServiceItem {
         @apply text-2xl md:text-3xl lg:text-4xl font-bold text-white;
         margin: 0;
         color: #a19576;
+          line-height: normal !important;
+
       }
 
       .refresh-btn {
@@ -235,6 +237,8 @@ interface ServiceItem {
 
         .page-title {
           @apply text-xl md:text-2xl;
+            line-height: normal !important;
+
         }
 
         .title-section {

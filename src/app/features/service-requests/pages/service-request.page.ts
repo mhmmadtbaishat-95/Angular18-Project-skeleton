@@ -104,12 +104,12 @@ export class ServiceRequestPage implements OnInit, OnDestroy {
   private staticExtractedData: Map<string, any> = new Map([
     // License documents
     ['license', {
-      licenseNumber: 'LIC-2024-001234',
-      issueDate: '15 يناير 2022',
+      licenseNumber: 'CR-AX-2026-45872',
+      issueDate: '1 يناير 2026',
       expiryDate: '31 ديسمبر 2026',
       licenseStatus: 'Active',
-      licenseHolder: 'شركة قطر للتطوير العقاري',
-      licenseHolderEn: 'Qatar Real Estate Development Company'
+      licenseHolder: 'شركة AX للبناء ذ.م.م',
+      licenseHolderEn: 'AX Building LLC'
     }],
     // Plan documents
     ['plan', {
